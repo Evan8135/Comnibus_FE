@@ -39,6 +39,7 @@ export class ReviewsComponent {
       this.showReviewForm = true;
     } else {
       this.router.navigate(['/login']);
+      console.log("this is a test");
     }
   }
 
