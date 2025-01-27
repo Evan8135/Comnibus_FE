@@ -1,0 +1,134 @@
+.book-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.book-header {
+  margin-bottom: 30px;
+}
+
+.book-header h4 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.book-header p {
+  font-size: 18px;
+  color: #555;
+}
+
+.book-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.book-card img {
+  width: 100%;
+  height: 250px;
+  object-fit:scale-down;
+}
+
+.book-card-body {
+  padding: 20px;
+}
+
+.book-card-body p {
+  font-size: 16px;
+  color: #333;
+}
+
+.book-card-body ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.book-card-body ul li {
+  font-size: 14px;
+  color: #666;
+}
+
+.same-author-books {
+  margin-top: 40px;
+}
+
+.same-author-books h4 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.grid-container.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
+  gap: 20px;
+}
+
+.same-author-books-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.same-author-books-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+
+.same-author-books-card-body {
+  padding: 10px;
+}
+
+.same-author-books-card-body h5 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.same-author-books-card-body p {
+  font-size: 14px;
+  color: #777;
+}
+
+.same-author-books-card-body ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.same-author-books-card-body ul li {
+  font-size: 14px;
+  color: #555;
+}
+
+.book-details, .same-author-books-card-body {
+  padding: 15px;
+}
+
+.book-details h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.book-details p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.book-details ul {
+  margin-top: 10px;
+}
+
+.card-header h4,
+.card-header h5 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.card-header p {
+  font-size: 16px;
+  color: #777;
+}

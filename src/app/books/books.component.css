@@ -1,0 +1,63 @@
+.book-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.book-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin-top: 56px;
+}
+
+
+.filters input {
+  padding: 10px;
+  font-size: 16px;
+  width: 200px;
+}
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.book-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.book-cover {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.book-details {
+  padding: 10px;
+}
+
+.book-details h2 {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  background-color: #f0f0f0;
+}

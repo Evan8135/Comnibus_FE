@@ -1,0 +1,109 @@
+<div class="container book-container" style="margin-top: 80px;">
+  <div class="row">
+    <!-- Display the main book details -->
+    <div class="col-sm-12">
+      <div class="card text-dark bg-light mb-3 book-card">
+        <div class="card-header book-header">
+          <h4>{{ book.title }}</h4>
+          <p><strong>Author:</strong>
+            <span *ngFor="let author of book.author?.length ? book.author : [] ; let isLast = last">
+              <button (click)="filterByAuthor(author)" class="btn btn-link">
+                {{ author }}
+              </button>
+              <span *ngIf="!isLast">, </span>
+            </span>
+          </p>
+        </div>
+        <div class="card-body book-card-body">
+          <!-- Content Details -->
+          <div class="row">
+            <div class="col-md-4">
+              <img src="{{ book.coverImg }}" alt="{{ book.title }}" class="img-fluid">
+            </div>
+            <h4>Content Warning!</h4>
+            <p> {{ book.triggers }} </p>
+            <button class="btn btn-outline-dark ms-auto"  type="button">Add Content/Trigger Warnings</button>
+            <p><strong>Description:</strong></p>
+            <div class="col-md-8">
+              <p>{{ book.description }}</p>
+            </div>
+
+            <div class="col-md-8">
+              <h4>Characters</h4>
+              <ul>
+                <li *ngFor="let character of book.characters">{{ character }}</li>
+              </ul>
+            </div>
+            <h4 style="text-align: center;">Additional Details</h4>
+            <div class="col-md-8">
+              <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+              <p><strong>Published:</strong> {{ book.publishDate || 'Unknown' }}</p>
+              <p><strong>Language:</strong> {{ book.language }}</p>
+              <p><strong>Format:</strong> {{ book.bookFormat }}</p>
+              <p><strong>Pages:</strong> {{ book.pages }}</p>
+              <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+              <p><strong>Price:</strong> ${{ book.price }}</p>
+              <p><strong>Genres:</strong></p>
+              <li *ngFor="let genre of book.genres">
+                <button (click)="filterByGenre(genre)" class="btn btn-link">{{ genre }}</button>
+              </li>
+              <p><strong>Awards:</strong></p>
+              <ul>
+                <li *ngFor="let award of book.awards">{{ award }}</li>
+              </ul>
+              <div class="card-footer">
+                <p><strong>User Score:</strong> {{ book.user_score }} out of 5</p>
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-link" [routerLink]="['/books', book._id, 'reviews']">Show All Reviews >>></button>
+                </div>
+                <p><strong>User Reviews:</strong></p>
+                <div *ngFor="let review of topReviews">
+                  <div class="row" style="margin-top: 70px">
+                    <div class="card bg-light mb-3">
+                      <div class="card-header"><p>{{ review.name }}</p></div>
+                      <div class="card-header"><strong>{{ review.title }}</strong></div>
+                      <div class="card-footer">
+                        Rating:
+                        <span *ngFor="let star of getStarCount(review.stars)">
+                          <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
+                          <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
+                        </span>
+                      </div>
+                      <div>Likes: {{ review.likes }} <button><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+                      <div style="display: right;">Dislikes: {{ review.dislikes }} <button><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 same-author-books">
+      <h4>Other Books by "{{ book.author[0] }}"</h4>
+      <div class="d-flex justify-content-end">
+        <button (click)="filterByAuthor(book.author[0])" class="btn btn-link">Show All</button>
+      </div>
+
+      <div *ngIf="Same_Author_Books.length === 0">
+        <p>No other books by this author</p>
+      </div>
+
+      <div class="grid-container">
+        <div *ngFor="let book of Same_Author_Books; trackBy: trackBook" class="card text-dark bg-light mb-3 same-author-books-card" style="width: 18rem; margin-right: 10px;">
+          <div class="card-body same-author-books-card-body" style="cursor: pointer" [routerLink]="['/books', book._id]">
+            <div class="row">
+                <img src="{{ book.coverImg }}" alt="{{ book.title }}" class="img-fluid">
+            </div>
+          </div>
+          <div class="card-header" style="cursor: pointer" [routerLink]="['/books', book._id]">
+            <h5>{{ book.title }}</h5>
+            <p><strong>Author:</strong> {{ book.author[0] }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

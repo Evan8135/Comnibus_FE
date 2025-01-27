@@ -1,0 +1,86 @@
+/* General styling for the inbox container */
+.inbox-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inbox-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Styling for the message cards */
+.message-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.message-card .card-header {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.message-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 5px 0;
+}
+
+.message-card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.message-card .card-footer button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.message-card .card-footer button:hover {
+  background-color: #0056b3;
+}
+
+.message-card .card-footer button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Loader */
+.loading-spinner {
+  text-align: center;
+  padding: 50px;
+}
+
+.loading-spinner img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Message not found */
+.no-message {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+}

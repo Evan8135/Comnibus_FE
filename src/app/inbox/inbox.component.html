@@ -1,0 +1,18 @@
+<div class="messages-container">
+  <h1>All Messages</h1>
+
+  <!-- Displaying messages -->
+  <div *ngIf="messages.length > 0; else noMessages">
+    <div *ngFor="let message of messages; trackBy: trackMessage" class="message-card">
+      <h3>{{ message.recipient_name }}</h3>
+      <p>{{ message.content }}</p>
+      <p><strong>Sent at:</strong> {{ message.timestamp }}</p>
+      <button (click)="showMessage(message._id)">Show</button>
+      <button (click)="deleteMessage(message._id)">Delete</button>
+    </div>
+  </div>
+
+  <ng-template #noMessages>
+    <p>No messages available.</p>
+  </ng-template>
+</div>

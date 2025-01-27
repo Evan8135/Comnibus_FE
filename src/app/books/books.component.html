@@ -1,0 +1,52 @@
+<div class="book-container">
+  <div class="filters">
+    <!-- Title filter input -->
+    <input
+      type="text"
+      placeholder="Search by Title"
+      [(ngModel)]="titleFilter"
+      (input)="applyFilters()"
+    />
+    <!-- Author filter input -->
+    <input
+      type="text"
+      placeholder="Filter by Author"
+      [(ngModel)]="authorFilter"
+      (input)="applyFilters()"
+    />
+    <!-- Genre filter input -->
+    <input
+      type="text"
+      placeholder="Filter by Genre"
+      [(ngModel)]="genreFilter"
+      (input)="applyFilters()"
+    />
+  </div>
+
+  <div *ngIf="selectedGenre" class="genre-heading">
+    <h3>"{{ selectedGenre }}" Books</h3>
+    <button class="btn btn-sm btn-outline-dark" (click)="clearGenreFilter()">Clear Filter</button>
+  </div>
+
+  <div *ngIf="selectedAuthor" class="author-heading">
+    <h3>Written by "{{ selectedAuthor }}"</h3>
+    <button class="btn btn-sm btn-outline-dark" (click)="clearAuthorFilter()">Clear Filter</button>
+  </div>
+
+  <div class="book-list">
+    <div *ngFor="let book of book_list" class="book-card">
+      <img [src]="book.coverImg" alt="Book Cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]"/>
+      <div class="book-details" style="cursor: pointer" [routerLink]="['/books', book._id]">
+        <h2>{{ book.title }}</h2>
+        <p>by {{ book.author.join(', ') }}</p>
+        <p><strong>Genres:</strong> {{ book.genres.join(', ') }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button [disabled]="page === 1" (click)="previousPage()">Previous</button>
+    <span>Page {{ page }}</span>
+    <button (click)="nextPage()">Next</button>
+  </div>
+</div>
