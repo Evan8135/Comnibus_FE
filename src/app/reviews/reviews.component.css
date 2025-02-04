@@ -37,3 +37,14 @@
   font-size: 1.5rem;
   font-weight: bold;
 }
+
+.char-count {
+  font-size: 14px;
+  color: gray;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.error-count {
+  color: red; /* Change color to red when under 1000 characters */
+}

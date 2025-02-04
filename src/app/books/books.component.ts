@@ -52,24 +52,28 @@ export class BooksComponent {
    * Fetch books from the web service
    */
   fetchBooks() {
-    // Make sure filters are passed correctly when fetching books
+    // Convert filters to lowercase for case-insensitive comparison
+    const titleFilterLower = this.titleFilter.toLowerCase();
+    const authorFilterLower = this.authorFilter.toLowerCase();
+    const genreFilterLower = this.genreFilter.toLowerCase();
+
     this.webService
-      .getBooks(this.page, this.titleFilter, this.authorFilter, this.genreFilter)
+      .getBooks(this.page, titleFilterLower, authorFilterLower, genreFilterLower)
       .subscribe((response) => {
         this.book_list = response;
       });
   }
+
 
   /**
    * Apply both author and genre filters
    */
   applyFilters() {
     this.page = 1;
-    this.router.navigate(['/books'], { queryParams: { title: this.titleFilter } });
-    this.router.navigate(['/books'], { queryParams: { genres: this.genreFilter } });
-    this.router.navigate(['/books'], { queryParams: { author: this.authorFilter } });
+    this.router.navigate(['/books'], { queryParams: { title: this.titleFilter, genre: this.genreFilter, author: this.authorFilter } });
     this.fetchBooks();
   }
+
 
 
   /**

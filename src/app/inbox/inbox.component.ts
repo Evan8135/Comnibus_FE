@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
+import { MessageService } from '../message.service'; // Import the shared service
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'inbox',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [CommonModule],
   providers: [WebService, AuthService],
   templateUrl: './inbox.component.html',
   styleUrls: ['./inbox.component.css']
@@ -21,8 +21,9 @@ export class InboxComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private webService: WebService,
-    private authService: AuthService
+    public webService: WebService,
+    private authService: AuthService,
+    private messageService: MessageService // Inject the shared service
   ) {
     this.loggedInUserName = this.authService.getLoggedInName();
   }
@@ -40,10 +41,16 @@ export class InboxComponent implements OnInit {
 
   getMessages() {
     this.webService.getMessages().subscribe({
-      next: (data: any[]) => {
-        this.messages = data;
+      next: (response: any) => {
+        if (response && response.messages) {
+          this.messages = response.messages;
+          const hasUnreadMessages = response.hasUnreadMessages || false;
+          this.messageService.setUnreadMessages(hasUnreadMessages); // Update shared service
+        } else {
+          this.messages = [];
+          this.messageService.setUnreadMessages(false); // Update shared service
+        }
         this.loading = false;
-        console.log("Messages fetched:", this.messages);
       },
       error: (err) => {
         console.error("Error fetching messages:", err);
@@ -73,12 +80,29 @@ export class InboxComponent implements OnInit {
     this.webService.getMessage(id).subscribe({
       next: (message: any) => {
         console.log("Message details:", message);
+        this.markMessageAsRead(id);
       },
       error: (err) => {
         console.error("Error fetching message details:", err);
       }
     });
   }
+
+  markMessageAsRead(id: string) {
+    this.webService.markAsRead(id).subscribe({
+      next: () => {
+        console.log("Message marked as read:", id);
+        this.getMessages(); // Refresh messages
+        // After refreshing messages, update unread message status
+        const hasUnreadMessages = this.messages.some(message => !message.read);
+        this.messageService.setUnreadMessages(hasUnreadMessages);
+      },
+      error: (err) => {
+        console.error("Error marking message as read:", err);
+      }
+    });
+  }
+
 
   trackMessage(index: number, message: any): string {
     return message._id;

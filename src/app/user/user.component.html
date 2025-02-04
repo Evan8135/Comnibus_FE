@@ -1,0 +1,33 @@
+<div class="container user-container" style="margin-top: 80px;">
+  <div class="row">
+    <!-- Display the main user details -->
+    <div class="col-sm-12">
+      <div class="card text-dark bg-light mb-3 user-card">
+        <div class="card-header user-header">
+          <h4>{{ user.username }}</h4>
+          <h3><strong> {{ user.name }}</strong></h3>
+          <h5> {{ followersCount }} Followers</h5>
+          <h5> {{ followingCount }} Following</h5>
+        </div>
+        <div class="card-body user-card-body">
+          <h4>Feed</h4>
+          <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
+            <div class="card-header">
+              <p><strong>{{ review.title }}</strong></p>
+            </div>
+            <div class="card-body">
+              <p>{{ review.comment }}</p>
+              <div class="card-footer">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- If no reviews, show a message -->
+    <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
+      <p>No reviews by this user.</p>
+    </div>
+  </div>
+</div>

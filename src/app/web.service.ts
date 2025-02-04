@@ -4,6 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 
+
 @Injectable()
 export class WebService {
   pageSize: number = 10;
@@ -44,6 +45,8 @@ export class WebService {
     return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id);
   }
 
+//------------------------------------------------------------------------------------------------------------------
+// 2. REVIEW CALLS
   postReview(id: any, review: any) {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
@@ -87,6 +90,8 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/reviews/' + review._id + '/dislike', {}, {headers});
   }
 
+//------------------------------------------------------------------------------------------------------------------
+// 3. INBOX CALLS
   getMessages() {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
@@ -103,6 +108,14 @@ export class WebService {
     }
     return this.http.get<any>('http://localhost:5000/api/v1.0/inbox/' + id, {headers});
   }
+  markAsRead(id: string) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.put<any>('http://localhost:5000/api/v1.0/inbox/' + id + '/read', {headers});
+  }
   deleteMessage(id: string) {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
@@ -110,5 +123,34 @@ export class WebService {
       headers = headers.set('x-access-token', token);
     }
     return this.http.delete<any>('http://localhost:5000/api/v1.0/inbox/' + id, {headers});
+  }
+
+//------------------------------------------------------------------------------------------------------------------
+// 4. USER CALLS
+  getUsers() {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/users', {headers});
+  }
+
+  getUser(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/users/' + id, {headers});
+  }
+
+  getProfile(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/profile/' + id, {headers});
   }
 }

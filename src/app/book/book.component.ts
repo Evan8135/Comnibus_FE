@@ -78,12 +78,6 @@ export class BookComponent implements OnInit {
   }
 
   onSubmit() {
-    this.webService.postReview(
-      this.route.snapshot.paramMap.get('id'),
-      this.reviewForm.value)
-      .subscribe((response) => {
-        this.reviewForm.reset();
-    });
     this.webService.getReviews(this.route.snapshot.paramMap.get('id'))
       .subscribe((response: any) => {
         this.reviews = [response];

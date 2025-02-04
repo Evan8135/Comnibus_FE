@@ -1,26 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { WebService } from './web.service';  // Import WebService
 
 @Component({
   selector: 'navigation',
   standalone: true,
   imports: [RouterOutlet, RouterModule, CommonModule],
-  templateUrl: './nav.component.html'
+  templateUrl: './nav.component.html',
+  providers: [WebService]
 })
-
-export class NavComponent {
+export class NavComponent implements OnInit {
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
+  hasUnreadMessages: boolean = false;
 
-  constructor() {
+  constructor(private webService: WebService) {
     this.updateAuthStatus();
   }
 
+  ngOnInit(): void {
+    // Fetch unread messages on component initialization
+    this.checkUnreadMessages();
+  }
 
   updateAuthStatus() {
     const token = localStorage.getItem('x-access-token');
     this.isLoggedIn = token !== null;
+    this.checkUnreadMessages();
 
     if (token) {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -30,6 +37,19 @@ export class NavComponent {
     }
   }
 
+  checkUnreadMessages() {
+    if (this.isLoggedIn) {
+      this.webService.getMessages().subscribe({
+        next: (response: any) => {
+          // Update unread messages status based on backend response
+          this.hasUnreadMessages = response.hasUnreadMessages || false;
+        },
+        error: (err) => {
+          console.error('Error fetching unread messages:', err);
+        }
+      });
+    }
+  }
 
   toggleLogin() {
     if (this.isLoggedIn) {
@@ -39,7 +59,6 @@ export class NavComponent {
     }
     this.updateAuthStatus();
   }
-
 
   toggleAdmin() {
     console.warn('Admin privileges cannot be toggled directly in the component.');

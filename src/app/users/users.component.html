@@ -1,0 +1,33 @@
+<div class="users-container" style="margin-top: 80px;">
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search by username..." [(ngModel)]="searchTerm" (input)="filterUsers()" />
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="loading">Loading users...</div>
+
+  <!-- Table to display users -->
+  <table *ngIf="!loading && users.length > 0">
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>
+          <!-- Link to the user profile page, passing the user's id -->
+          <a [routerLink]="['/users', user._id]" class="username-link">{{ user.username }}</a>
+        </td>
+        <td>
+          <!-- Ban button for admins -->
+          <button *ngIf="authService.isAdmin()" (click)="banUser(user)" class="ban-btn">
+            Ban User
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No users message if the list is empty -->
+  <div *ngIf="!loading && users.length === 0" class="no-users">
+    No users found.
+  </div>
+
+</div>

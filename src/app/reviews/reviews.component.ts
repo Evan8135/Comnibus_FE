@@ -27,7 +27,7 @@ export class ReviewsComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public webService: WebService,
+    private webService: WebService,
     public authService: AuthService,
     private formBuilder: FormBuilder
   ) {
@@ -49,7 +49,7 @@ export class ReviewsComponent {
     this.reviewForm = this.formBuilder.group({
           username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
           title: ['', Validators.required],
-          comment: ['', Validators.required],
+          comment: ['', [Validators.required, Validators.minLength(1000)]],
           stars: 5
     });
     this.bookId = this.route.snapshot.paramMap.get('id');

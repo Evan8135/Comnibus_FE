@@ -4,6 +4,8 @@ import { BookComponent } from './book/book.component';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { LoginComponent } from './auth/login/login.component';
 import { InboxComponent } from './inbox/inbox.component';
+import { UsersComponent } from './users/users.component';
+import { UserComponent } from './user/user.component';
 
 
 export const routes: Routes = [
@@ -26,5 +28,13 @@ export const routes: Routes = [
   {
     path: 'inbox',
     component: InboxComponent
+  },
+  {
+    path: 'users',
+    component: UsersComponent
+  },
+  {
+    path: 'users/:id',
+    component: UserComponent
   }
 ];

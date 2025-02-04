@@ -32,7 +32,7 @@
           </textarea>
           </div>
           <div class="form-group">
-            <label for="comment">Please leave your review below</label>
+            <label for="comment">Please leave your review below (<i>Min: 1,000 Characters</i>)</label>
             <textarea
               name="comment"
               id="comment"
@@ -40,6 +40,9 @@
               formControlName="comment"
               [ngClass]="{'error': isInvalid('comment')}">
             </textarea>
+            <div class="char-count" [ngClass]="{'error-count': reviewForm.controls.comment.value?.length < 1000}">
+              <p>{{ reviewForm.controls.comment.value?.length }} characters entered</p>
+            </div>
           </div>
           <div class="form-group">
             <label for="stars">Please provide a rating (between 1 and 5)</label>
