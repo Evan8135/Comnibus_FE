@@ -45,6 +45,22 @@ export class WebService {
     return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id);
   }
 
+  getRecommendations(page: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+
+    return this.http.get<{ recommended_books: any[] }>('http://localhost:5000/api/v1.0/recommendations', { params, headers });
+  }
+
+
+
+
+
+
 //------------------------------------------------------------------------------------------------------------------
 // 2. REVIEW CALLS
   postReview(id: any, review: any) {
@@ -62,6 +78,9 @@ export class WebService {
   }
   getReviews(id: any) {
     return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id + '/reviews');
+  }
+  getReview(id: any, review: any) {
+    return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id + '/reviews/' + review._id);
   }
   deleteReview(id: any, review: any) {
     const token = localStorage.getItem('x-access-token');
@@ -145,12 +164,12 @@ export class WebService {
     return this.http.get<any>('http://localhost:5000/api/v1.0/users/' + id, {headers});
   }
 
-  getProfile(id: any) {
+  getProfile() {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
     if (token) {
       headers = headers.set('x-access-token', token);
     }
-    return this.http.get<any>('http://localhost:5000/api/v1.0/profile/' + id, {headers});
+    return this.http.get<any>('http://localhost:5000/api/v1.0/profile', {headers});
   }
 }

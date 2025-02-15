@@ -1,0 +1,17 @@
+<div class="container" style="margin-top: 80px;">
+
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner-border text-dark"></div>
+    <span>Loading...</span>
+  </div>
+
+  <div *ngIf="review">
+    <h3>{{ review.title }}</h3>
+    <p><strong>By:</strong> {{ review.username }}</p>
+    <p>{{ review.comment }}</p>
+    <p><strong>Rating:</strong> {{ review.stars }} stars</p>
+    <button (click)="deleteReview()" class="btn btn-danger">Delete</button>
+  </div>
+
+  <p *ngIf="!review && !loading">No review available.</p>
+</div>

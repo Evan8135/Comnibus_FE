@@ -1,0 +1,110 @@
+/* Styling for the container */
+.signup-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading for the form */
+h2 {
+  text-align: center;
+}
+
+/* Style for the form-group (form fields) */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Input and select styling */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Error styling for form control */
+.form-control.error {
+  border-color: red;
+}
+
+/* Genre search result list styling */
+.genre-results {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.genre-results ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.genre-results li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.genre-results li:hover {
+  background-color: #f0f0f0;
+}
+
+.author-results {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.author-results ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.author-results li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.author-results li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Selected genre styling */
+.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Button styling */
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Error message styling */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.error-message span {
+  font-weight: bold;
+}

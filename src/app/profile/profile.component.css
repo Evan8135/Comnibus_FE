@@ -1,0 +1,132 @@
+.profile-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.profile-header {
+  margin-bottom: 30px;
+}
+
+.profile-header h4 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.profile-header p {
+  font-size: 18px;
+  color: #555;
+}
+
+.profile-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header img {
+  width: 100px;
+  height: 100px;
+  object-fit:scale-down;
+  border-radius: 50%;
+}
+
+.profile-card-body {
+  padding: 20px;
+}
+
+.profile-card-body p {
+  font-size: 16px;
+  color: #333;
+}
+
+.profile-card-body ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.profile-card-body ul li {
+  font-size: 14px;
+  color: #666;
+}
+
+.reviews-by-profile {
+  margin-top: 40px;
+}
+
+.reviews-by-profile h4 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.grid-container.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
+  gap: 20px;
+}
+
+.reviews-by-profile-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+
+
+
+.reviews-by-profile-card-body {
+  padding: 10px;
+}
+
+.reviews-by-profile-card-body h5 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.reviews-by-profile-card-body p {
+  font-size: 14px;
+  color: #777;
+}
+
+.reviews-by-profile-card-body ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.reviews-by-profile-card-body ul li {
+  font-size: 14px;
+  color: #555;
+}
+
+.profile-details, .reviews-by-profile-card-body {
+  padding: 15px;
+}
+
+.profile-details h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.profile-details p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.profile-details ul {
+  margin-top: 10px;
+}
+
+.card-header h4,
+.card-header h5 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.card-header p {
+  font-size: 16px;
+  color: #777;
+}

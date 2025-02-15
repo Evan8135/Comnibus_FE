@@ -8,6 +8,35 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  signup(
+    name: string,
+    username: string,
+    password: string,
+    email: string,
+    user_type: string,
+    favourite_genres?: string,
+    favourite_authors?: string,
+    admin: boolean = false
+  ) {
+    const body = new FormData();
+    body.append('name', name);
+    body.append('username', username);
+    body.append('password', password);
+    body.append('email', email);
+    body.append('user_type', user_type);
+    body.append('admin', admin.toString());
+
+    if (favourite_genres) {
+      body.append('favourite_genres', favourite_genres);
+    }
+    if (favourite_authors) {
+      body.append('favourite_authors', favourite_authors);
+    }
+
+    return this.http.post('http://localhost:5000/api/v1.0/signup', body);
+  }
+
+
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + btoa(username + ':' + password)

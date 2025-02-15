@@ -59,6 +59,7 @@ export class LoginComponent {
       this.authService.login(username, password).subscribe({
         next: (response: any) => {
           this.authService.setToken(response.token);
+          window.location.reload();
           this.router.navigate(['']);
         },
         error: (error: any) => {

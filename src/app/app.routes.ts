@@ -6,12 +6,20 @@ import { LoginComponent } from './auth/login/login.component';
 import { InboxComponent } from './inbox/inbox.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ReviewComponent } from './review/review.component';
+import { RecommendationsComponent } from './recommendations/recommendations.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'signup',
+    component: SignupComponent
   },
   {
     path: 'books',
@@ -26,6 +34,10 @@ export const routes: Routes = [
     component: ReviewsComponent
   },
   {
+    path: 'books/:id/reviews/:id',
+    component:ReviewComponent
+  },
+  {
     path: 'inbox',
     component: InboxComponent
   },
@@ -36,5 +48,13 @@ export const routes: Routes = [
   {
     path: 'users/:id',
     component: UserComponent
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent
+  },
+  {
+    path: 'recommendations',
+    component: RecommendationsComponent
   }
 ];

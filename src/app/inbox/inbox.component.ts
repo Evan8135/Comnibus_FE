@@ -66,6 +66,7 @@ export class InboxComponent implements OnInit {
         next: () => {
           console.log("Message deleted successfully.");
           this.getMessages();
+          window.location.reload();
         },
         error: (err) => {
           console.error("Error deleting message:", err);

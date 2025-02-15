@@ -22,7 +22,7 @@ export class BooksComponent {
   genreFilter: string = '';
   selectedGenre: string = '';
 
-  constructor(public webService: WebService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private webService: WebService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     // Handle query parameters from the URL

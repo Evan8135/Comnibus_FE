@@ -95,7 +95,10 @@
       </div>
       <h3>{{ review.title }}</h3>
       <p><strong>Written By:</strong> {{ review.username }}</p>
-      <p> {{ review.comment }} </p>
+      <p style="cursor: pointer">
+        {{ review.comment | slice:0:200 }}...
+        <a [routerLink]="['/books', bookId, 'reviews', review._id]" class="show-more">Show more</a>
+      </p>
       <div>Likes: {{ review.likes }} <button (click)="like(review)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
       <div style="display: right;">Dislikes: {{ review.dislikes }} <button (click)="dislike(review)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
       <div *ngIf="review.username === loggedInUserName || authService.isAdmin()">

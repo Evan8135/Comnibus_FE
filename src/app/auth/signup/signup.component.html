@@ -1,0 +1,145 @@
+<div class="container signup-container" style="margin-top: 80px;">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2 class="text-center">Sign Up</h2>
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+        <!-- Name field -->
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="form-control"
+            formControlName="name"
+            [ngClass]="{'error': isInvalid('name')}"
+          />
+        </div>
+
+        <!-- Username field -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="form-control"
+            formControlName="username"
+            [ngClass]="{'error': isInvalid('username')}"
+          />
+        </div>
+
+        <!-- User type dropdown -->
+        <div class="form-group">
+          <label for="pronouns">Pronouns</label>
+          <select
+            id="pronouns"
+            class="form-control"
+            formControlName="pronouns"
+            [ngClass]="{'error': isInvalid('pronouns')}"
+          >
+            <option value="he/him">He/Him</option>
+            <option value="she/her">She/Her</option>
+            <option value="they/them">They/Them</option>
+            <option value="prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+
+        <!-- Email field -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            [ngClass]="{'error': isInvalid('email')}"
+          />
+        </div>
+
+        <!-- Password field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            [ngClass]="{'error': isInvalid('password')}"
+          />
+        </div>
+
+
+
+        <!-- User type dropdown -->
+        <div class="form-group">
+          <label for="user_type">User Type</label>
+          <select
+            id="user_type"
+            class="form-control"
+            formControlName="user_type"
+            [ngClass]="{'error': isInvalid('user_type')}"
+          >
+            <option value="reader">Reader</option>
+            <option value="author">Author</option>
+          </select>
+        </div>
+
+        <!-- Genre search field -->
+        <div class="form-group">
+          <label>Favourite Genres (Pick at least 3):</label>
+          <!-- Bind formControlName for search bar -->
+          <input
+            type="text"
+            formControlName="genreSearch"
+            (keyup)="onSearchGenres()"
+            class="form-control"
+            placeholder="Search genres..."
+          />
+
+
+          <!-- Display filtered genres -->
+          <div *ngIf="filteredGenres.length > 0" class="genre-results">
+            <ul>
+              <li *ngFor="let genre of filteredGenres" (click)="toggleGenre(genre)" [class.selected]="selectedGenres.includes(genre)">
+                {{ genre }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Error message if fewer than 3 genres are selected -->
+          <div *ngIf="favouriteGenres.errors?.['minlength']" class="error-message">You must select at least 3 genres.</div>
+        </div>
+
+        <!-- Favourite authors field (optional) -->
+        <div class="form-group">
+          <label>Favourite Authors (Optional):</label>
+          <input
+            type="text"
+            formControlName="authorSearch"
+            (keyup)="onSearchAuthors()"
+            class="form-control"
+            placeholder="Search authors..."
+          />
+          <div *ngIf="filteredAuthors.length > 0" class="author-results">
+            <ul>
+              <li *ngFor="let author of filteredAuthors" (click)="toggleAuthor(author)" [class.selected]="selectedAuthors.includes(author)">
+                {{ author }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Error message display -->
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <!-- Submit button -->
+        <button *ngIf="!isIncomplete()" class="btn btn-primary" type="submit" style="margin-top: 20px">Sign Up</button>
+        <span *ngIf="isIncomplete()" class="error-message">Please complete all fields</span>
+      </form>
+    </div>
+  </div>
+</div>
