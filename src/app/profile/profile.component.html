@@ -9,6 +9,8 @@
           <h3><strong> {{ user.name }}</strong></h3>
           <h5> {{ followersCount }} Followers</h5>
           <h5> {{ followingCount }} Following</h5>
+          <p><strong>Favourite Genres:</strong> {{ user.favourite_genres.join(', ') }}</p>
+          <p><strong>Favourite Authors:</strong> {{ user.favourite_authors.join(', ') }}</p>
         </div>
         <div class="card-body user-card-body">
           <h4>Feed</h4>

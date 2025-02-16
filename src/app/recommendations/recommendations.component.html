@@ -1,17 +1,33 @@
 <div class="book-container">
   <h2>Recommended Books</h2>
 
+  <!-- Display Error Message if present -->
   <div *ngIf="errorMessage" class="error-message">
     <p>{{ errorMessage }}</p>
   </div>
 
+  <!-- Display No Recommendations message if there are no books to recommend -->
   <div *ngIf="!errorMessage && recommendations.length === 0" class="no-recommendations">
     <p>No recommendations available.</p>
   </div>
 
   <div *ngIf="!errorMessage && recommendations.length > 0">
-    <!-- Loop over different genres -->
-    <div class="genre-section" *ngFor="let genre of getGenres()">
+    <!-- Display Books Matching At Least 3 Favorite Genres -->
+    <div *ngIf="booksMatchingMultipleGenres.length > 0" class="genre-section">
+      <h3>Perfect Match</h3>
+      <div class="genre-row">
+        <div *ngFor="let book of booksMatchingMultipleGenres" class="book-card">
+          <img [src]="book.coverImg" alt="Book Cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]" />
+          <div class="book-details" style="cursor: pointer" [routerLink]="['/books', book._id]">
+            <h2>{{ book.title }}</h2>
+            <p>by {{ isArrayOfAuthors(book.author) ? book.author.join(', ') : book.author }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loop over different genres and display books by genre -->
+    <div *ngFor="let genre of getGenres()" class="genre-section">
       <h3>{{ genre }} Books</h3>
       <div class="genre-row">
         <div *ngFor="let book of getBooksByGenre(genre)" class="book-card">
@@ -24,21 +40,24 @@
       </div>
     </div>
 
-    <!-- Books by the same author -->
-    <div *ngIf="sameAuthorBooks.length > 0" class="author-section">
-      <h3>More Books Written by {{ recommendations[0]?.author || 'Unknown Author' }}</h3>
-      <div class="author-row">
-        <div *ngFor="let book of sameAuthorBooks" class="book-card">
-          <img [src]="book.coverImg" alt="Book Cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]" />
-          <div class="book-details" style="cursor: pointer" [routerLink]="['/books', book._id]">
-            <h2>{{ book.title }}</h2>
-            <p>by {{ isArrayOfAuthors(book.author) ? book.author.join(', ') : book.author }}</p>
+    <!-- Loop over books grouped by author -->
+    <div *ngFor="let author of booksByAuthor | keyvalue" class="author-section">
+      <div *ngIf="author.value.length > 0">
+        <h3>More Books Written by {{ author.key }}</h3>
+        <div class="author-row">
+          <div *ngFor="let book of author.value" class="book-card">
+            <img [src]="book.coverImg" alt="Book Cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]" />
+            <div class="book-details" style="cursor: pointer" [routerLink]="['/books', book._id]">
+              <h2>{{ book.title }}</h2>
+              <p>by {{ isArrayOfAuthors(book.author) ? book.author.join(', ') : book.author }}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Pagination Controls -->
   <div class="pagination">
     <button [disabled]="page === 1" (click)="previousPage()">Previous</button>
     <span>Page {{ page }}</span>

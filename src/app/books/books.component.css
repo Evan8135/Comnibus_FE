@@ -1,14 +1,8 @@
 .book-container {
   font-family: Arial, sans-serif;
   padding: 20px;
-}
-
-.book-container {
-  font-family: Arial, sans-serif;
-  padding: 20px;
   margin-top: 56px;
 }
-
 
 .filters input {
   padding: 10px;
@@ -27,6 +21,11 @@
   border-radius: 5px;
   overflow: hidden;
   background-color: #fff;
+  transition: transform 0.3s ease-in-out; /* Added transition effect */
+}
+
+.book-card:hover {
+  transform: scale(1.05); /* Scale effect on hover */
 }
 
 .book-cover {
@@ -42,6 +41,11 @@
 .book-details h2 {
   font-size: 18px;
   margin: 5px 0;
+}
+
+.book-details p {
+  font-size: 16px;
+  color: #666;
 }
 
 .pagination {
@@ -60,4 +64,27 @@
 .pagination button:disabled {
   cursor: not-allowed;
   background-color: #f0f0f0;
+}
+
+.pagination span {
+  margin-top: 7px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.error-message, .no-recommendations {
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+}
+
+.genre-section, .author-section {
+  margin-bottom: 30px;
+}
+
+.genre-row, .author-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding-bottom: 20px;
 }

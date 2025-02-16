@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -14,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent {
   signupForm: any;
   successMessage: string | null = null;
   errorMessage: string | null = null;
@@ -27,7 +28,7 @@ export class SignupComponent implements OnInit {
   genreSearch: string = '';  // Stores the search query
   authorSearch: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private http: HttpClient, private router: Router) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       username: ['', Validators.required],
@@ -157,7 +158,7 @@ export class SignupComponent implements OnInit {
         next: () => {
           this.successMessage = 'Signup successful!';
           this.errorMessage = null;
-          this.signupForm.reset();
+          this.router.navigate(['/login']);
         },
         error: (error) => {
           this.successMessage = null;
