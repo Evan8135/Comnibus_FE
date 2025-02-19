@@ -15,6 +15,12 @@
     <li class="nav-item">
       <a class="nav-link" [routerLink]="['/books']">Books</a>
     </li>
+    <li class="nav-item" *ngIf="isAdmin">
+      <a class="nav-link" [routerLink]="['/requests']">Requests</a>
+    </li>
+    <li class="nav-item" *ngIf="isLoggedIn">
+      <a class="nav-link" [routerLink]="['/add-requests']">Request A Book</a>
+    </li>
     <li class="nav-item" *ngIf="isLoggedIn">
       <a class="nav-link" [routerLink]="['/inbox']">
         <img [src]="hasUnreadMessages ? '/images/inbox_unread.png' : '/images/inbox.png'"

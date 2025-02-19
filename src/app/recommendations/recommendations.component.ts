@@ -11,7 +11,7 @@ import { WebService } from '../web.service';  // Import WebService
   providers: [WebService],
   standalone: true
 })
-export class RecommendationsComponent implements OnInit {
+export class RecommendationsComponent {
   recommendations: any[] = [];
   booksByAuthor: { [author: string]: any[] } = {}; // Map to store books by author
   booksMatchingMultipleGenres: any[] = [];  // To store books matching 3 or more genres

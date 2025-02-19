@@ -10,6 +10,9 @@ import { ProfileComponent } from './profile/profile.component';
 import { ReviewComponent } from './review/review.component';
 import { RecommendationsComponent } from './recommendations/recommendations.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { AddRequestComponent } from './book requests/add requests/add-request.component';
+import { RequestsComponent } from './book requests/requests/requests.component';
+import { RequestComponent } from './book requests/request/request.component';
 
 
 export const routes: Routes = [
@@ -56,5 +59,17 @@ export const routes: Routes = [
   {
     path: 'recommendations',
     component: RecommendationsComponent
+  },
+  {
+    path: 'add-requests',
+    component: AddRequestComponent
+  },
+  {
+    path: 'requests',
+    component: RequestsComponent
+  },
+  {
+    path: 'requests/:id',
+    component: RequestComponent
   }
 ];

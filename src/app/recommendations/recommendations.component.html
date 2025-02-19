@@ -14,7 +14,7 @@
   <div *ngIf="!errorMessage && recommendations.length > 0">
     <!-- Display Books Matching At Least 3 Favorite Genres -->
     <div *ngIf="booksMatchingMultipleGenres.length > 0" class="genre-section">
-      <h3>Perfect Match</h3>
+      <h3>Perfect Match For You</h3>
       <div class="genre-row">
         <div *ngFor="let book of booksMatchingMultipleGenres" class="book-card">
           <img [src]="book.coverImg" alt="Book Cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]" />

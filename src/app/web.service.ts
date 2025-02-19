@@ -172,4 +172,67 @@ export class WebService {
     }
     return this.http.get<any>('http://localhost:5000/api/v1.0/profile', {headers});
   }
+
+//------------------------------------------------------------------------------------------------------------------
+// 5. BOOK REQUEST CALLS
+  getRequests(page: number) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+
+    let params = new HttpParams()
+      .set('pn', page.toString()) // Page number
+      .set('ps', this.pageSize.toString()); // Page size
+
+    return this.http
+      .get<any>('http://localhost:5000/api/v1.0/requests', { params, headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching books:', error);
+          return throwError(() => new Error('Failed to fetch books.'));
+        })
+      );
+  }
+
+  getRequest(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/requests/' + id, { headers });
+  }
+
+  postBookRequest(request: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+
+    let postData = new FormData();
+    postData.append('username', request.username);
+    postData.append('title', request.title);
+    postData.append('author', request.author);
+    postData.append('genres', request.genres);
+    postData.append('language', request.language);
+
+    // Append optional fields if provided
+    if (request.series) {
+      postData.append('series', request.series);
+    }
+    if (request.publishDate) {
+      postData.append('publishDate', request.publishDate);
+    }
+    if (request.isbn) {
+      postData.append('isbn', request.isbn);
+    }
+
+    return this.http.post<any>('http://localhost:5000/api/v1.0/add-requests', postData, { headers });
+  }
+
+
 }

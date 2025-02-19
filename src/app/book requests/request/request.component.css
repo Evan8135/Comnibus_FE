@@ -1,23 +1,23 @@
-.book-container {
+.request-container {
   font-family: Arial, sans-serif;
   padding: 20px;
 }
 
-.book-header {
+.request-header {
   margin-bottom: 30px;
 }
 
-.book-header h4 {
+.request-header h4 {
   font-size: 32px;
   margin-bottom: 10px;
 }
 
-.book-header p {
+.request-header p {
   font-size: 18px;
   color: #555;
 }
 
-.book-card {
+.request-card {
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #fff;
@@ -25,37 +25,36 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.book-card img {
+.request-card img {
   width: 100%;
   height: 250px;
   object-fit:scale-down;
-
 }
 
-.book-card-body {
+.request-card-body {
   padding: 20px;
 }
 
-.book-card-body p {
+.request-card-body p {
   font-size: 16px;
   color: #333;
 }
 
-.book-card-body ul {
+.request-card-body ul {
   list-style-type: none;
   padding-left: 0;
 }
 
-.book-card-body ul li {
+.request-card-body ul li {
   font-size: 14px;
   color: #666;
 }
 
-.same-author-books {
+.same-author-requests {
   margin-top: 40px;
 }
 
-.same-author-books h4 {
+.same-author-requests h4 {
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -66,65 +65,60 @@
   gap: 20px;
 }
 
-.same-author-books-card {
+.same-author-requests-card {
   border: 1px solid #ddd;
   border-radius: 5px;
   overflow: hidden;
   background-color: #fff;
-  transition: transform 0.3s ease-in-out;
 }
 
-.same-author-books-card:hover {
-  transform: scale(1.05); /* Scale effect on hover */
-}
-
-.same-author-books-card img {
+.same-author-requests-card img {
   width: 100%;
   height: 250px;
   object-fit: cover;
 }
 
 
-.same-author-books-card-body {
+.same-author-requests-card-body {
   padding: 10px;
 }
 
-.same-author-books-card-body h5 {
+.same-author-requests-card-body h5 {
   font-size: 20px;
   margin-bottom: 10px;
 }
 
-.same-author-books-card-body p {
+.same-author-requests-card-body p {
   font-size: 14px;
   color: #777;
 }
 
-.same-author-books-card-body ul {
+.same-author-requests-card-body ul {
   list-style-type: none;
   padding-left: 0;
 }
 
-.same-author-books-card-body ul li {
+.same-author-requests-card-body ul li {
   font-size: 14px;
   color: #555;
 }
 
-.book-details, .same-author-books-card-body {
+.request-details, .same-author-requests-card-body {
   padding: 15px;
 }
 
-.book-details h2 {
+.request-details h2 {
   font-size: 22px;
   margin-bottom: 15px;
 }
 
-.book-details p {
+.request-details p {
   font-size: 16px;
   margin-bottom: 10px;
   color: #555;
 }
 
-.book-details ul {
+.request-details ul {
   margin-top: 10px;
 }
 

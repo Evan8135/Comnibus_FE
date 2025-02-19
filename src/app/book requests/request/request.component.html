@@ -1,0 +1,27 @@
+<div class="container request-container" style="margin-top: 80px;">
+  <div class="row">
+    <!-- Display the main request details -->
+    <div class="col-sm-12">
+      @for(request of request_list; track request.title){
+      <div class="card text-dark bg-light mb-3 request-card">
+        <div class="card-header request-header">
+          <h4>Request Submitted by {{ request.username }}</h4>
+        </div>
+        <div class="card-body request-card-body">
+          <!-- Content Details -->
+          <div class="row">
+            <div class="col-md-8">
+              <p><strong>Title: </strong>{{ request.title }}</p>
+              <p><strong>Author: </strong>{{ request.author }}</p>
+              <p><strong>Published: </strong> {{ request?.publishDate || 'Unknown' }}</p>
+              <p><strong>Language: </strong> {{ request?.language }}</p>
+              <p><strong>ISBN: </strong> {{ request?.isbn || 'Unknown'}}</p>
+              <p><strong>Genres: </strong>{{ request.genres }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    </div>
+  </div>
+</div>

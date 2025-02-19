@@ -1,0 +1,108 @@
+<div class="container">
+  <h2>Submit a Book Request</h2>
+  <form [formGroup]="RequestForm" (ngSubmit)="onSubmit()">
+    <!-- Title Input -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" formControlName="title" class="form-control" />
+      <div *ngIf="RequestForm.get('title')?.invalid && RequestForm.get('title')?.touched" class="text-danger">
+        Title is required.
+      </div>
+    </div>
+
+    <!-- Author Input -->
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input id="author" formControlName="author" class="form-control" />
+      <div *ngIf="RequestForm.get('author')?.invalid && RequestForm.get('author')?.touched" class="text-danger">
+        Author is required.
+      </div>
+    </div>
+
+    <!-- Genre Search and Selection -->
+    <div class="form-group">
+      <label for="genres">Genres</label>
+      <!-- Use formControlName for genre search -->
+      <input
+        id="genres"
+        type="text"
+        formControlName="genreSearch"
+        (keyup)="onSearchGenres()"
+        class="form-control"
+        placeholder="Search genres..."
+      />
+
+      <!-- Filtered genre results -->
+      <div *ngIf="filteredGenres.length > 0" class="genre-results">
+        <ul>
+          <li *ngFor="let genre of filteredGenres"
+              (click)="toggleGenre(genre)"
+              [class.selected]="selectedGenres.includes(genre)">
+            {{ genre }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Error message if genres are required -->
+      <div *ngIf="RequestForm.get('genres')?.invalid && RequestForm.get('genres')?.touched" class="text-danger">
+        Genres are required.
+      </div>
+    </div>
+
+    <!-- Language Input -->
+    <div class="form-group">
+      <label for="language">Language</label>
+      <input id="language" formControlName="language" class="form-control" />
+      <div *ngIf="RequestForm.get('language')?.invalid && RequestForm.get('language')?.touched" class="text-danger">
+        Language is required.
+      </div>
+    </div>
+
+    <!-- Series Input (Optional) -->
+    <div class="form-group">
+      <label for="series">Series</label>
+      <input id="series" formControlName="series" class="form-control" />
+    </div>
+
+    <!-- Publish Date Input (Optional) -->
+    <div class="form-group">
+      <label for="publishDate">Publish Date</label>
+      <input id="publishDate" type="date" formControlName="publishDate" class="form-control" />
+    </div>
+
+    <!-- ISBN Input (Optional) -->
+    <div class="form-group">
+      <label for="isbn">ISBN</label>
+      <input id="isbn" formControlName="isbn" class="form-control" />
+    </div>
+
+    <div>
+      <label for="username">Name</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              class="form-control"
+              formControlName="username"
+              [value]="loggedInUserName"
+              readonly
+            />
+    </div>
+
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" [disabled]="RequestForm.invalid || isLoading">
+      Submit Request
+    </button>
+  </form>
+
+  <!-- Submission Message -->
+  <div *ngIf="submissionMessage" class="alert mt-3" [ngClass]="{ 'alert-success': !isLoading, 'alert-danger': isLoading }">
+    {{ submissionMessage }}
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="spinner-border text-primary mt-3" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
