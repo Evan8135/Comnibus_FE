@@ -132,3 +132,33 @@
   font-size: 16px;
   color: #777;
 }
+
+/* Genre search result list styling */
+.genre-results {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.genre-results ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.genre-results li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.genre-results li:hover {
+  background-color: #f0f0f0;
+}
+
+.genre-results li.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+

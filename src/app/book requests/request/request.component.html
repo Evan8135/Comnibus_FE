@@ -1,27 +1,121 @@
 <div class="container request-container" style="margin-top: 80px;">
   <div class="row">
-    <!-- Display the main request details -->
     <div class="col-sm-12">
-      @for(request of request_list; track request.title){
+      @for(request of requests; track request.title){
       <div class="card text-dark bg-light mb-3 request-card">
         <div class="card-header request-header">
           <h4>Request Submitted by {{ request.username }}</h4>
         </div>
         <div class="card-body request-card-body">
-          <!-- Content Details -->
           <div class="row">
             <div class="col-md-8">
               <p><strong>Title: </strong>{{ request.title }}</p>
               <p><strong>Author: </strong>{{ request.author }}</p>
               <p><strong>Published: </strong> {{ request?.publishDate || 'Unknown' }}</p>
               <p><strong>Language: </strong> {{ request?.language }}</p>
-              <p><strong>ISBN: </strong> {{ request?.isbn || 'Unknown'}}</p>
+              <p><strong>ISBN: </strong> {{ request?.isbn || 'Unknown' }}</p>
               <p><strong>Genres: </strong>{{ request.genres }}</p>
             </div>
           </div>
+          <button class="btn btn-success mt-3" (click)="openApprovalForm(request)">Approve</button>
         </div>
       </div>
-    }
+      }
     </div>
+  </div>
+</div>
+
+<!-- Approval Form (shown only when an admin clicks "Approve") -->
+<div *ngIf="showApproveForm" class="card mt-4">
+  <div class="card-header">Approve Request</div>
+  <div class="card-body">
+    <form [formGroup]="approveForm" (ngSubmit)="submitApproval()">
+      <div class="form-group">
+        <label>Title</label>
+        <input class="form-control" formControlName="title">
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input class="form-control" formControlName="author">
+      </div>
+      <div class="form-group">
+        <label for="genres">Genres</label>
+        <input type="text" name="genres" id="genres" class="form-control" formControlName="genres" readonly />
+        <input id="genres" type="text" formControlName="genreSearch" (keyup)="onSearchGenres()" class="form-control" placeholder="Search genres..." />
+        <div *ngIf="filteredGenres.length > 0" class="genre-results">
+          <ul>
+            <li *ngFor="let genre of filteredGenres" (click)="toggleGenre(genre)" [class.selected]="selectedGenres.includes(genre)">
+              {{ genre }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Language</label>
+        <input class="form-control" formControlName="language">
+      </div>
+      <div class="form-group">
+        <label>Series</label>
+        <input class="form-control" formControlName="series">
+      </div>
+      <div class="form-group">
+        <label>Publish Date</label>
+        <input class="form-control" formControlName="publishDate" type="date">
+      </div>
+      <div class="form-group">
+        <label>ISBN</label>
+        <input class="form-control" formControlName="isbn">
+      </div>
+      <div class="form-group">
+        <label>User Score</label>
+        <input class="form-control" formControlName="user_score" type="number" min="0" max="10">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Characters</label>
+        <input class="form-control" formControlName="characters">
+      </div>
+      <div class="form-group">
+        <label>Triggers</label>
+        <input class="form-control" formControlName="triggers">
+      </div>
+      <div class="form-group">
+        <label>Book Format</label>
+        <input class="form-control" formControlName="bookFormat">
+      </div>
+      <div class="form-group">
+        <label>Edition</label>
+        <input class="form-control" formControlName="edition">
+      </div>
+      <div class="form-group">
+        <label>Pages</label>
+        <input class="form-control" formControlName="pages" type="number">
+      </div>
+      <div class="form-group">
+        <label>Publisher</label>
+        <input class="form-control" formControlName="publisher">
+      </div>
+      <div class="form-group">
+        <label>First Publish Date</label>
+        <input class="form-control" formControlName="firstPublishDate" type="date">
+      </div>
+      <div class="form-group">
+        <label>Awards</label>
+        <input class="form-control" formControlName="awards">
+      </div>
+      <div class="form-group">
+        <label>Cover Image</label>
+        <input type="file-to-url" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Price</label>
+        <input class="form-control" formControlName="price" type="number" step="0.01">
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Submit Approval</button>
+    </form>
   </div>
 </div>

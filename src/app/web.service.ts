@@ -234,5 +234,24 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/add-requests', postData, { headers });
   }
 
+  approveRequest(id: any, approveData: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/requests/'+ id + '/approve', approveData, { headers });
+  }
+
+  rejectRequest(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/requests/'+ id, '/reject', { headers });
+  }
+
+
 
 }

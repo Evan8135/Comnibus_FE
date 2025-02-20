@@ -39,8 +39,8 @@ export class AddRequestComponent implements OnInit {
     this.RequestForm = this.fb.group({
       title: ['', Validators.required],
       author: ['', Validators.required],
-      genreSearch: ['', Validators.required],
-      genres: [[], Validators.required],  // Array for genres
+      genreSearch: [''],
+      genres: this.fb.array([]),
       language: ['', Validators.required],
       series: [''],
       publishDate: [''],
@@ -73,20 +73,21 @@ export class AddRequestComponent implements OnInit {
     );
   }
 
-  // Toggle genre selection
+  // Toggle genre selection with FormArray synchronization
   toggleGenre(genre: string) {
+    const genresArray = this.RequestForm.get('genres') as FormArray;
     const index = this.selectedGenres.indexOf(genre);
+
     if (index === -1) {
       this.selectedGenres.push(genre);
+      genresArray.push(this.fb.control(genre)); // Add to FormArray
     } else {
       this.selectedGenres.splice(index, 1);
+      genresArray.removeAt(index); // Remove from FormArray
     }
-
-    // Update the FormArray for genres
-    this.RequestForm.get('genres')?.setValue(this.selectedGenres);
   }
 
-  // Form submission handler
+
   onSubmit(): void {
     if (this.RequestForm.invalid) {
       this.submissionMessage = 'Please fill all required fields!';
@@ -94,7 +95,7 @@ export class AddRequestComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const request = this.RequestForm.value;
+    const request = { ...this.RequestForm.value, genres: this.selectedGenres };
 
     this.webService.postBookRequest(request).subscribe(
       (response) => {
@@ -107,4 +108,5 @@ export class AddRequestComponent implements OnInit {
       }
     );
   }
+
 }
