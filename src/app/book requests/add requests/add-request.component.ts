@@ -67,7 +67,7 @@ export class AddRequestComponent implements OnInit {
 
   // Filter genres based on the search input
   onSearchGenres() {
-    const searchQuery = this.RequestForm.get('genreSearch')?.value.toLowerCase() || '';  // Ensure genreSearch has a value
+    const searchQuery = this.RequestForm.get('genreSearch')?.value?.toLowerCase() || '';
     this.filteredGenres = this.genres.filter(genre =>
       genre.toLowerCase().includes(searchQuery)  // Case-insensitive search
     );
@@ -76,16 +76,25 @@ export class AddRequestComponent implements OnInit {
   // Toggle genre selection with FormArray synchronization
   toggleGenre(genre: string) {
     const genresArray = this.RequestForm.get('genres') as FormArray;
-    const index = this.selectedGenres.indexOf(genre);
+    const genresToAdd = genre.split(', ').map(g => g.trim());
 
-    if (index === -1) {
-      this.selectedGenres.push(genre);
-      genresArray.push(this.fb.control(genre)); // Add to FormArray
-    } else {
-      this.selectedGenres.splice(index, 1);
-      genresArray.removeAt(index); // Remove from FormArray
-    }
+    genresToAdd.forEach(g => {
+      const index = this.selectedGenres.indexOf(genre);
+
+      if (index === -1) {
+        this.selectedGenres.push(genre);
+        genresArray.push(this.fb.control(genre)); // Add to FormArray
+      } else {
+        this.selectedGenres.splice(index, 1);
+        genresArray.removeAt(index); // Remove from FormArray
+      }
+    });
   }
+
+
+
+
+
 
 
   onSubmit(): void {

@@ -67,10 +67,6 @@
         <input class="form-control" formControlName="isbn">
       </div>
       <div class="form-group">
-        <label>User Score</label>
-        <input class="form-control" formControlName="user_score" type="number" min="0" max="10">
-      </div>
-      <div class="form-group">
         <label>Description</label>
         <textarea class="form-control" formControlName="description"></textarea>
       </div>
@@ -108,7 +104,7 @@
       </div>
       <div class="form-group">
         <label>Cover Image</label>
-        <input type="file-to-url" class="form-control">
+        <input type="file" class="form-control" (change)="onFileSelected($event)" />
       </div>
 
       <div class="form-group">

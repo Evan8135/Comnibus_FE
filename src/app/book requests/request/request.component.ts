@@ -55,7 +55,6 @@ export class RequestComponent implements OnInit {
       series: [request.series || ''],
       publishDate: [request.publishDate || ''],
       isbn: [request.isbn || ''],
-      user_score: [0],
       description: [''],
       characters: [''],
       triggers: [''],
@@ -71,7 +70,32 @@ export class RequestComponent implements OnInit {
     this.fetchGenres();
   }
 
+  uploadCoverImage(image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
 
+    this.http.post<any>('https://api.imgur.com/3/image', formData, {
+      headers: {
+        'Authorization': 'Client-ID 8cc2c21f701f179'  // Replace with your Imgur Client ID
+      }
+    }).subscribe(response => {
+      if (response.success) {
+        this.approveForm.patchValue({ coverImg: response.data.link });  // Set the cover image URL in the form
+        console.log('Cover image uploaded successfully!', response.data.link);
+      } else {
+        console.error('Error uploading cover image:', response);
+      }
+    }, error => {
+      console.error('Error uploading cover image:', error);
+    });
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.uploadCoverImage(file);  // Upload the image when a file is selected
+    }
+  }
 
   fetchGenres() {
     this.http.get<string[]>('http://localhost:5000/api/v1.0/genres').subscribe({
