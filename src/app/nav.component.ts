@@ -14,15 +14,20 @@ export class NavComponent implements OnInit {
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
   hasUnreadMessages: boolean = false;
+  profilePicUrl: string = '/images/profile.png';
 
   constructor(private webService: WebService) {
     this.updateAuthStatus();
   }
 
   ngOnInit(): void {
-    // Fetch unread messages on component initialization
+    this.updateAuthStatus();
+    if (this.isLoggedIn) {
+      this.fetchUserProfile();
+    }
     this.checkUnreadMessages();
   }
+
 
   updateAuthStatus() {
     const token = localStorage.getItem('x-access-token');
@@ -34,6 +39,20 @@ export class NavComponent implements OnInit {
       this.isAdmin = payload && payload.admin === true;
     } else {
       this.isAdmin = false;
+    }
+  }
+
+  fetchUserProfile() {
+    if (this.isLoggedIn) {
+      this.webService.getProfile().subscribe({
+        next: (response: any) => {
+          // Set the profile picture URL to the one returned by the backend
+          this.profilePicUrl = response.profile_pic || '/images/profile.png';
+        },
+        error: (err) => {
+          console.error('Error fetching user profile:', err);
+        }
+      });
     }
   }
 

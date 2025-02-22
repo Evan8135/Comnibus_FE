@@ -1,16 +1,18 @@
 <div class="container profile-container" style="margin-top: 80px;">
   <div class="row">
-    <!-- Display the main user details -->
     <div class="col-sm-12">
       <div class="card text-dark bg-light mb-3 user-card">
         <div class="card-header profile-header">
           <h4>{{ user.username }}</h4>
-          <img src="/images/profile.png">
+          <img [src]="user.profile_pic || '/images/profile.png'" alt="Profile Picture">
           <h3><strong> {{ user.name }}</strong></h3>
           <h5> {{ followersCount }} Followers</h5>
           <h5> {{ followingCount }} Following</h5>
           <p><strong>Favourite Genres:</strong> {{ user.favourite_genres.join(', ') }}</p>
           <p><strong>Favourite Authors:</strong> {{ user.favourite_authors.join(', ') }}</p>
+          <button class="btn btn-primary" (click)="toggleEdit()">
+            {{ isEditing ? 'Cancel Edit' : 'Edit Profile' }}
+          </button>
         </div>
         <div class="card-body user-card-body">
           <h4>Feed</h4>
@@ -20,15 +22,52 @@
             </div>
             <div class="card-body">
               <p>{{ review.comment }}</p>
-              <div class="card-footer">
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- If no reviews, show a message -->
+    <div *ngIf="isEditing" class="card-body">
+      <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input id="name" formControlName="name" class="form-control" type="text">
+        </div>
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" formControlName="username" class="form-control" type="text">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" class="form-control" type="email">
+        </div>
+
+        <div class="form-group">
+          <label for="favourite_genres">Favourite Genres</label>
+          <input id="favourite_genres" formControlName="favourite_genres" class="form-control" type="text">
+        </div>
+
+        <div class="form-group">
+          <label for="favourite_authors">Favourite Authors</label>
+          <input id="favourite_authors" formControlName="favourite_authors" class="form-control" type="text">
+        </div>
+
+        <!--<div *ngIf="editProfileForm.value.profile_pic">
+          <button class="btn btn-danger" (click)="removeProfilePic()">Remove Profile Picture</button>
+        </div>-->
+
+        <div *ngIf="previewUrl">
+          <h5>Preview of selected profile picture:</h5>
+          <img [src]="previewUrl" alt="Profile Picture Preview" class="img-fluid" style="max-height: 200px;">
+        </div>
+        <input type="file" formControlName="profile_pic" class="form-control" (change)="onFileSelected($event)" />
+        <button type="submit" [disabled]="editProfileForm.invalid" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+
     <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
       <p>No reviews by this user.</p>
     </div>

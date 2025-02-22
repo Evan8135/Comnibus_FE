@@ -1,4 +1,4 @@
-<div class="container" style="margin-top: 80px;">
+<div class="login-container" style="margin-top: 80px;">
   <div class="row">
     <div class="col-sm-12">
       <h2>Login</h2>
@@ -26,6 +26,9 @@
           />
         </div>
         <span *ngIf="isIncomplete()">You must complete all fields</span>
+        <p>
+          New here? <a [routerLink]="['/signup']" class="register-link">Sign up</a>
+        </p>
         <button *ngIf="!isIncomplete()" class="btn btn-secondary" type="submit" style="margin-top: 20px">
           Login
         </button>

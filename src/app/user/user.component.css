@@ -17,6 +17,13 @@
   color: #555;
 }
 
+.user-header img {
+  width: 100px;
+  height: 100px;
+  object-fit:scale-down;
+  border-radius: 50%;
+}
+
 .user-card {
   border: 1px solid #ddd;
   border-radius: 5px;

@@ -14,12 +14,14 @@
             </span>
           </p>
         </div>
+        <div class="book-cover-container">
+          <div class="book-cover-background" [style.background-image]="'url(' + (book.coverImg || '/images/no_cover.png') + ')'"></div>
+          <img [src]="book.coverImg || 'images/no_cover.png'" [alt]="book.title" class="book-cover-img">
+        </div>
         <div class="card-body book-card-body">
           <!-- Content Details -->
           <div class="row">
-            <div class="col-md-4 d-flex justify-content-center">
-              <img src="{{ book.coverImg }}" alt="{{ book.title }}" class="img-fluid" style="max-height: 300px; object-fit: contain;">
-            </div>
+
             <h4>Content Warning!</h4>
             <p> {{ book.triggers }} </p>
             <button class="btn btn-outline-dark ms-auto"  type="button">Add Content/Trigger Warnings</button>

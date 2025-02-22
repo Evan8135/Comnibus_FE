@@ -5,6 +5,7 @@
       <div class="card text-dark bg-light mb-3 user-card">
         <div class="card-header user-header">
           <h4>{{ user.username }}</h4>
+          <img [src]="user.profile_pic || '/images/profile.png'">
           <h3><strong> {{ user.name }}</strong></h3>
           <h5> {{ followersCount }} Followers</h5>
           <h5> {{ followingCount }} Following</h5>

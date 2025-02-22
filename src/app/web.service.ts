@@ -173,6 +173,26 @@ export class WebService {
     return this.http.get<any>('http://localhost:5000/api/v1.0/profile', {headers});
   }
 
+  updateProfile(profileData: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.put<any>('http://localhost:5000/api/v1.0/profile', profileData, {headers});
+  }
+
+  removeProfilePic() {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/remove-profile-pic', {headers});
+  }
+
+
+
 //------------------------------------------------------------------------------------------------------------------
 // 5. BOOK REQUEST CALLS
   getRequests(page: number) {

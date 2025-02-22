@@ -13,9 +13,14 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { AddRequestComponent } from './book requests/add requests/add-request.component';
 import { RequestsComponent } from './book requests/requests/requests.component';
 import { RequestComponent } from './book requests/request/request.component';
+import { HomeComponent } from './home/home.component';
 
 
 export const routes: Routes = [
+  {
+    path: 'home',
+    component: HomeComponent
+  },
   {
     path: 'login',
     component: LoginComponent
