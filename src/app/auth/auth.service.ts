@@ -123,4 +123,13 @@ export class AuthService {
     return this.getLoggedInName() === reviewUsername;
   }
 
+  getUserHaveRead(userId: any): Observable<any> {
+    const token = this.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get('http://localhost:5000/api/v1.0/profile' + userId + '/have_read', { headers });
+  }
+
 }

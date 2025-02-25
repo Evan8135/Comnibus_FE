@@ -29,7 +29,7 @@
 <div *ngIf="showApproveForm" class="card mt-4">
   <div class="card-header">Approve Request</div>
   <div class="card-body">
-    <form [formGroup]="approveForm" (ngSubmit)="submitApproval()">
+    <form [formGroup]="approveForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>Title</label>
         <input class="form-control" formControlName="title">
@@ -102,10 +102,11 @@
         <label>Awards</label>
         <input class="form-control" formControlName="awards">
       </div>
-      <div class="form-group">
-        <label>Cover Image</label>
-        <input type="file" class="form-control" (change)="onFileSelected($event)" />
+      <div *ngIf="previewUrl">
+        <h5>Preview of selected cover picture:</h5>
+        <img [src]="previewUrl" alt="Cover Preview" class="img-fluid" style="max-height: 200px;">
       </div>
+      <input type="file" formControlName="coverImg" class="form-control" (change)="onFileSelected($event)" />
 
       <div class="form-group">
         <label>Price</label>

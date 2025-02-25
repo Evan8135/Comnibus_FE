@@ -25,6 +25,8 @@ export class RequestComponent implements OnInit {
   filteredGenres: string[] = [];
   selectedGenres: string[] = [];
   genreSearch: string = '';
+  previewUrl: string | null = null;
+  isApproving: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,9 +37,9 @@ export class RequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.webService.getRequest(this.route.snapshot.paramMap.get('id'))
-    .subscribe( (response: any) => {
-      this.requests = [response];
-    });
+      .subscribe((response: any) => {
+        this.requests = [response];
+      });
   }
 
   openApprovalForm(request: any) {
@@ -64,37 +66,41 @@ export class RequestComponent implements OnInit {
       publisher: [''],
       firstPublishDate: [''],
       awards: [''],
-      coverImg: [''],
+      coverImg: [''],  // Ensure this is included in the form
       price: [0.0]
     });
     this.fetchGenres();
   }
 
-  uploadCoverImage(image: File) {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    this.http.post<any>('https://api.imgur.com/3/image', formData, {
-      headers: {
-        'Authorization': 'Client-ID 8cc2c21f701f179'  // Replace with your Imgur Client ID
-      }
-    }).subscribe(response => {
-      if (response.success) {
-        this.approveForm.patchValue({ coverImg: response.data.link });  // Set the cover image URL in the form
-        console.log('Cover image uploaded successfully!', response.data.link);
-      } else {
-        console.error('Error uploading cover image:', response);
-      }
-    }, error => {
-      console.error('Error uploading cover image:', error);
-    });
-  }
-
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      this.uploadCoverImage(file);  // Upload the image when a file is selected
+      // Preview the image temporarily as a Blob URL
+      this.previewUrl = URL.createObjectURL(file);
+      this.approveForm.patchValue({ coverImg: file });
+
+      // Upload the image to the backend
+      this.uploadCoverImg(file);  // Upload the image when a file is selected
+      console.log("Image Url: ", this.previewUrl)
     }
+  }
+
+  uploadCoverImg(image: File) {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData)
+      .subscribe(response => {
+        if (response.url) {
+          // Update the coverImg with the permanent URL received from the backend
+          this.approveForm.patchValue({ coverImg: response.url });
+          this.previewUrl = response.url;  // Use this URL for preview
+        } else {
+          console.error('Failed to upload image:', response);
+        }
+      }, error => {
+        console.error('Error uploading image:', error);
+      });
   }
 
   fetchGenres() {
@@ -131,8 +137,19 @@ export class RequestComponent implements OnInit {
     this.approveForm.get('genres')?.setValue(this.selectedGenres);
   }
 
-  submitApproval() {
+  onSubmit() {
+    if (this.isApproving) {
+      console.log("Please wait for the image to finish uploading...");
+      return;
+    }
     if (this.approveForm.valid) {
+      const approvedBook = this.approveForm.value;
+
+      const confirmApproval = confirm("Are you sure you want to approve this request?");
+      if (!confirmApproval) {
+        return; // Stop submission if user cancels
+      }
+      console.log("Submitting request:", approvedBook);
       this.webService.approveRequest(this.selectedRequest._id, this.approveForm.value).subscribe(
         (response) => {
           alert('Request approved successfully!');
@@ -144,7 +161,4 @@ export class RequestComponent implements OnInit {
       );
     }
   }
-
-
-
 }

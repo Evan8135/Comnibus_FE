@@ -56,7 +56,26 @@ export class WebService {
     return this.http.get<{ recommended_books: any[] }>('http://localhost:5000/api/v1.0/recommendations', { params, headers });
   }
 
+  markBookAsRead(id: any, rating: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+    return this.http.post('http://localhost:5000/api/v1.0/books/' + id + '/have-read', { rating }, { headers })
+  }
 
+  removeBookFromRead(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.delete('http://localhost:5000/api/v1.0/books/' + id + '/have-read', {headers});
+  }
+
+  addToWantToRead(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/want-to-read', {}, { headers })
+  }
 
 
 

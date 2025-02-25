@@ -17,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProfileComponent implements OnInit {
   user: any = null;
   reviews_by_user: any[] = [];
+  tbrBooks: any[] = [];
   loading: boolean = true;
   token: string | null = null;
   loggedInUserName: string = '';
@@ -25,6 +26,7 @@ export class ProfileComponent implements OnInit {
   editProfileForm: any;
   isEditing: boolean = false;
   previewUrl: string | null = null;
+  isUploading: boolean = false;
 
   constructor(
     private webService: WebService,
@@ -43,6 +45,7 @@ export class ProfileComponent implements OnInit {
           this.reviews_by_user = response.reviews_by_user || [];
           this.followersCount = response.followers?.length || 0;
           this.followingCount = response.following?.length || 0;
+          this.tbrBooks = response.want_to_read || [];
 
           this.editProfileForm = this.fb.group({
             name: [this.user.name, Validators.required],
@@ -85,17 +88,22 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  onFileSelected(event: any) {
-  const file: File = event.target.files[0];
-  if (file) {
-    // Preview the image temporarily as a Blob URL
-    this.previewUrl = URL.createObjectURL(file);
-    this.editProfileForm.patchValue({ profile_pic: file });
+  onFileSelected(event: any): void {
+    const file = event.target.files[0]; // Get the selected file
 
-    // Upload the image to the backend
-    this.uploadProfilePic(file);  // Upload the image when a file is selected
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const base64Image = e.target.result;
+        this.editProfileForm.patchValue({ profile_pic: base64Image });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // If no file is selected, set profile_pic as an empty string
+      this.editProfileForm.patchValue({ profile_pic: "" });
+    }
   }
-}
+
 
 
   uploadProfilePic(image: File) {
@@ -108,6 +116,7 @@ export class ProfileComponent implements OnInit {
           // Update the profile_pic with the permanent URL received from the backend
           this.editProfileForm.patchValue({ profile_pic: response.url });
           this.previewUrl = response.url;  // Optionally, use this for preview
+          console.log(this.previewUrl)
         } else {
           console.error('Failed to upload image:', response);
         }
@@ -120,17 +129,30 @@ export class ProfileComponent implements OnInit {
 
 
   onSubmit(): void {
+    if (this.isUploading) {
+      console.log("Please wait for the image to finish uploading...");
+      return;
+    }
+
     if (this.editProfileForm.valid) {
       const updatedProfile = this.editProfileForm.value;
+
+      // Show a confirmation popup before proceeding
+      const confirmChange = confirm("Are you sure you want to update your profile?");
+      if (!confirmChange) {
+        return; // Stop submission if user cancels
+      }
+
       updatedProfile.favourite_genres = updatedProfile.favourite_genres.split(',').map((item: string) => item.trim());
       updatedProfile.favourite_authors = updatedProfile.favourite_authors.split(',').map((item: string) => item.trim());
 
-      // Call the WebService to update the profile
+      console.log("Submitting profile:", updatedProfile); // Debugging
+
       this.webService.updateProfile(updatedProfile).subscribe(
         (response: any) => {
           console.log('Profile updated successfully', response);
-          this.user = response;  // Update local user data with the response
-          this.isEditing = false; // Exit edit mode
+          this.user = response;
+          this.isEditing = false;
           window.location.reload();
         },
         (error: any) => {
@@ -139,5 +161,6 @@ export class ProfileComponent implements OnInit {
       );
     }
   }
+
 
 }

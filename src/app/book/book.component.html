@@ -13,6 +13,31 @@
               <span *ngIf="!isLast">, </span>
             </span>
           </p>
+          <button class="btn btn-outline-dark mt-2" (click)="toggleRateForm()">Mark as Read</button>
+          <div *ngIf="showRateForm">
+            <form [formGroup]="rateForm">
+              <label for="stars">Rate this book:</label>
+              <label for="stars">Please provide a rating (between 1 and 5)</label>
+              <select name="stars" id="stars" class="form-control" formControlName="stars">
+                <option [value]="0.5">1/2 star</option>
+                <option [value]="1">1 star</option>
+                <option [value]="1.5">1 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+                <option [value]="2">2 stars</option>
+                <option [value]="2.5">2 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+                <option [value]="3">3 stars</option>
+                <option [value]="3.5">3 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+                <option [value]="4">4 stars</option>
+                <option [value]="4.5">4 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+                <option [value]="5">5 stars</option>
+              </select>
+
+
+
+              <button (click)="markAsRead()" type="button">Submit Rating</button>
+            </form>
+
+          </div>
+          <button class="btn btn-outline-dark mt-2" *ngIf="!isAddedToTBR" (click)="addToTBR()">Add to TBR</button>
         </div>
         <div class="book-cover-container">
           <div class="book-cover-background" [style.background-image]="'url(' + (book.coverImg || '/images/no_cover.png') + ')'"></div>
@@ -21,10 +46,9 @@
         <div class="card-body book-card-body">
           <!-- Content Details -->
           <div class="row">
-
             <h4>Content Warning!</h4>
-            <p> {{ book.triggers }} </p>
-            <button class="btn btn-outline-dark ms-auto"  type="button">Add Content/Trigger Warnings</button>
+            <p>{{ book.triggers }}</p>
+            <button class="btn btn-outline-dark ms-auto" type="button">Add Content/Trigger Warnings</button>
             <p><strong>Description:</strong></p>
             <div class="col-md-8">
               <p>{{ book.description }}</p>
@@ -71,8 +95,8 @@
                           <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
                         </span>
                       </div>
-                      <div>Likes: {{ review.likes }} <button><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
-                      <div style="display: right;">Dislikes: {{ review.dislikes }} <button><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+                      <div>Likes: {{ review.likes }} <button (click)="like(review)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+                      <div style="display: right;">Dislikes: {{ review.dislikes }} <button (click)="dislike(review)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
                     </div>
                   </div>
                 </div>

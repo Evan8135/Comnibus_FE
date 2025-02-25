@@ -12,6 +12,9 @@
     <tbody>
       <tr *ngFor="let user of filteredUsers">
         <td>
+          <img [src]="user.profile_pic || '/images/profile.png'">
+        </td>
+        <td>
           <!-- Link to the user profile page, passing the user's id -->
           <a [routerLink]="['/users', user._id]" class="username-link">{{ user.username }}</a>
         </td>
