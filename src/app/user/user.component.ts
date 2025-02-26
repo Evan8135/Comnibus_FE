@@ -17,6 +17,8 @@ export class UserComponent implements OnInit {
   reviews_by_user: any[] = []; // Array for reviews by this user
   followersCount: number = 0;
   followingCount: number = 0;
+  isFollowing: boolean = false;
+  currentUser: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,8 +37,32 @@ export class UserComponent implements OnInit {
         this.reviews_by_user = response.reviews_by_user;  // Store reviews
         this.followersCount = response.user.followers.length;  // Assuming followers is an array
         this.followingCount = response.user.following.length;  // Assuming following is an array
+
+        this.webService.getProfile().subscribe((profileResponse: any) => {
+          this.currentUser = profileResponse;
+          this.isFollowing = this.user.followers.includes(this.currentUser._id);
+        });
       });
   }
+
+  followUser() {
+    if (!this.user) return;
+    this.webService.followUser(this.user._id).subscribe(() => {
+      this.isFollowing = true;
+      this.followersCount += 1;
+    });
+  }
+
+  unfollowUser() {
+    if (!this.user) return;
+    this.webService.unfollowUser(this.user._id).subscribe(() => {
+      this.isFollowing = false;
+      this.followersCount -= 1;
+    });
+  }
+
+
+
 
 
 }

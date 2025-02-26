@@ -17,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProfileComponent implements OnInit {
   user: any = null;
   reviews_by_user: any[] = [];
+  have_read_books: any[] =[];
   tbrBooks: any[] = [];
   loading: boolean = true;
   token: string | null = null;
@@ -46,6 +47,7 @@ export class ProfileComponent implements OnInit {
           this.followersCount = response.followers?.length || 0;
           this.followingCount = response.following?.length || 0;
           this.tbrBooks = response.want_to_read || [];
+          this.have_read_books = response.have_read || [];
 
           this.editProfileForm = this.fb.group({
             name: [this.user.name, Validators.required],
@@ -125,6 +127,12 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  getStarCount(stars: number): any[] {
+    const fullStars = Math.floor(stars);  // Get the number of full stars
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;  // Check if there's a half star
+
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];  // Return full stars and half star if needed
+  }
 
 
 

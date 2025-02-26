@@ -56,11 +56,17 @@ export class WebService {
     return this.http.get<{ recommended_books: any[] }>('http://localhost:5000/api/v1.0/recommendations', { params, headers });
   }
 
-  markBookAsRead(id: any, rating: any) {
+  markBookAsRead(id: string, rating: number) {
     const token = localStorage.getItem('x-access-token');
     const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
-    return this.http.post('http://localhost:5000/api/v1.0/books/' + id + '/have-read', { rating }, { headers })
+
+    const formData = new FormData();
+    formData.append("stars", rating.toString());
+
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/have-read', formData, { headers });
   }
+
+
 
   removeBookFromRead(id: any) {
     const token = localStorage.getItem('x-access-token');
@@ -181,6 +187,24 @@ export class WebService {
       headers = headers.set('x-access-token', token);
     }
     return this.http.get<any>('http://localhost:5000/api/v1.0/users/' + id, {headers});
+  }
+
+  followUser(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/users/' + id + '/follow', {}, {headers});
+  }
+
+  unfollowUser(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/users/' + id + '/unfollow', {}, {headers});
   }
 
   getProfile() {

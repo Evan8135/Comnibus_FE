@@ -78,6 +78,8 @@ export class RecommendationsComponent {
     });
   }
 
+
+
   // Group books by author but only for authors that are in the user's favorites
   groupBooksByAuthor(): void {
     this.booksByAuthor = {}; // Reset the map before populating it

@@ -27,7 +27,25 @@
         </div>
 
 
-      <div *ngIf="tbrBooks.length > 0" class="card-body">
+        <div *ngIf="have_read_books.length > 0" class="card-body">
+          <h4>Have Read List</h4>
+          <div *ngFor="let book of have_read_books" class="card text-dark bg-light mb-3">
+            <div class="card-body">
+              <img [src]="book.coverImg" alt="Book cover" style="max-height: 100px;">
+            </div>
+            <div class="card-header">
+              <p><strong>{{ book.title }}</strong></p>
+              <p><em>by {{ book.author.join(', ') }}</em></p>
+            </div>
+            <div class="card-footer">
+              <span *ngFor="let star of getStarCount(book.stars)">
+                <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
+                <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="tbrBooks.length > 0" class="card-body">
         <h4>TBR List</h4>
         <div *ngFor="let book of tbrBooks" class="card text-dark bg-light mb-3">
           <div class="card-body">

@@ -9,6 +9,13 @@
           <h3><strong> {{ user.name }}</strong></h3>
           <h5> {{ followersCount }} Followers</h5>
           <h5> {{ followingCount }} Following</h5>
+          <button *ngIf="!isFollowing" (click)="followUser()" class="follow-btn">
+            Follow
+          </button>
+
+          <button *ngIf="isFollowing" (click)="unfollowUser()" class="unfollow-btn">
+            Unfollow
+          </button>
         </div>
         <div class="card-body user-card-body">
           <h4>Feed</h4>
