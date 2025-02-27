@@ -13,15 +13,17 @@ import { WebService } from '../web.service';  // Import WebService
 })
 export class RecommendationsComponent {
   recommendations: any[] = [];
-  booksByAuthor: { [author: string]: any[] } = {}; // Map to store books by author
-  booksMatchingMultipleGenres: any[] = [];  // To store books matching 3 or more genres
+  booksByAuthor: { [author: string]: any[] } = {};
+  booksMatchingMultipleGenres: any[] = [];
+  haveReadBooksByAuthor: any[] = [];
+  additionalBooksByGenres: any[] = [];
   errorMessage: string | null = null;
   page: number = 1;
   pageSize: number = 10;
 
-  // User preferences for genres and authors
   favoriteGenres: string[] = [];
   favoriteAuthors: string[] = [];
+  haveReadBooks: any[] = [];
 
   constructor(private webService: WebService) {}
 
@@ -29,36 +31,36 @@ export class RecommendationsComponent {
     this.fetchRecommendations();
   }
 
-  // Fetch recommendations from the WebService API
   fetchRecommendations(): void {
     this.webService.getRecommendations(this.page, this.pageSize).subscribe(
       (data: any) => {
-        console.log(data); // Log the API response to inspect the data structure
         this.recommendations = data.recommended_books;
         this.favoriteGenres = data.favorite_genres || [];
         this.favoriteAuthors = data.favorite_authors || [];
+        this.haveReadBooks = data.have_read || [];
 
-        // Filter recommendations based on favorite genres and authors
+        const authorsOfReadBooks = this.haveReadBooks.flatMap((book: any) => book.author);
+        console.log("Authors of read books:", authorsOfReadBooks);  // Debug log to verify
+
+        // Now filter the recommended books by these authors
+        this.haveReadBooksByAuthor = this.recommendations.filter(book => {
+          const authors = Array.isArray(book.author) ? book.author : [book.author];
+          return authors.some((author: string) => authorsOfReadBooks.includes(author));  // Explicit 'author' type
+        });
+
+        console.log("Books by authors of 'have read' books:", this.haveReadBooksByAuthor);
+
         this.filterRecommendations();
-
-        // Filter books that match at least 3 favorite genres
         this.filterBooksByMultipleGenres();
-
-        // Check if recommendations exist and then group them by author
-        if (this.recommendations.length > 0) {
-          this.groupBooksByAuthor();
-        } else {
-          this.errorMessage = "No recommendations found.";
-        }
+        this.groupBooksByAuthor();
       },
       (error) => {
         this.errorMessage = "Please log in to view recommendations.";
-        console.error(error);  // Log any error for debugging
+        console.error(error);
       }
     );
   }
 
-  // Filter books based on favorite genres and authors
   filterRecommendations(): void {
     this.recommendations = this.recommendations.filter(book => {
       const hasFavoriteGenre = this.favoriteGenres.some(genre => book.genres.includes(genre));
@@ -70,7 +72,6 @@ export class RecommendationsComponent {
     });
   }
 
-  // Filter books that match at least 3 favorite genres
   filterBooksByMultipleGenres(): void {
     this.booksMatchingMultipleGenres = this.recommendations.filter(book => {
       const matchingGenres = book.genres.filter((genre: string) => this.favoriteGenres.includes(genre));
@@ -78,11 +79,8 @@ export class RecommendationsComponent {
     });
   }
 
-
-
-  // Group books by author but only for authors that are in the user's favorites
   groupBooksByAuthor(): void {
-    this.booksByAuthor = {}; // Reset the map before populating it
+    this.booksByAuthor = {};
     this.recommendations.forEach(book => {
       const authors = Array.isArray(book.author) ? book.author : [book.author];
       authors.forEach((author: string) => {
@@ -96,10 +94,13 @@ export class RecommendationsComponent {
     });
   }
 
-  // Helper method to check if author is an array
   isArrayOfAuthors(author: string | string[]): boolean {
     return Array.isArray(author);
   }
+
+
+
+
 
   // Get a unique list of all genres across all books that are in the favorite genres
   getGenres(): string[] {

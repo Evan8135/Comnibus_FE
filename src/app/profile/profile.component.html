@@ -5,15 +5,16 @@
         <div class="card-header profile-header">
           <h4>{{ user.username }}</h4>
           <img [src]="user.profile_pic || '/images/profile.png'" alt="Profile Picture">
-          <h3><strong> {{ user.name }}</strong></h3>
-          <h5> {{ followersCount }} Followers</h5>
-          <h5> {{ followingCount }} Following</h5>
+          <h3><strong>{{ user.name }}</strong></h3>
+          <h5>{{ followersCount }} Followers</h5>
+          <h5>{{ followingCount }} Following</h5>
           <p><strong>Favourite Genres:</strong> {{ user.favourite_genres.join(', ') }}</p>
           <p><strong>Favourite Authors:</strong> {{ user.favourite_authors.join(', ') }}</p>
           <button class="btn btn-primary" (click)="toggleEdit()">
             {{ isEditing ? 'Cancel Edit' : 'Edit Profile' }}
           </button>
         </div>
+
         <div class="card-body user-card-body">
           <h4>Feed</h4>
           <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
@@ -26,82 +27,100 @@
           </div>
         </div>
 
+        <h4>My Bookshelf</h4>
 
-        <div *ngIf="have_read_books.length > 0" class="card-body">
-          <h4>Have Read List</h4>
-          <div *ngFor="let book of have_read_books" class="card text-dark bg-light mb-3">
-            <div class="card-body">
-              <img [src]="book.coverImg" alt="Book cover" style="max-height: 100px;">
-            </div>
-            <div class="card-header">
-              <p><strong>{{ book.title }}</strong></p>
-              <p><em>by {{ book.author.join(', ') }}</em></p>
-            </div>
-            <div class="card-footer">
-              <span *ngFor="let star of getStarCount(book.stars)">
-                <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
-                <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
-              </span>
+        <!-- Currently Reading -->
+        <div *ngIf="currentlyReading.length > 0" class="book-section mb-4">
+          <h5>Current Reads</h5>
+          <div class="book-grid">
+            <div *ngFor="let book of currentlyReading" class="book-card">
+              <img [src]="book.coverImg" alt="Book cover" class="book-cover">
+              <div class="book-details">
+                <p><strong>{{ book.title }}</strong></p>
+                <p><em>by {{ book.author.join(', ') }}</em></p>
+                <p><strong>Progress:</strong> {{ book.progress }}%</p>
+              </div>
             </div>
           </div>
         </div>
-        <div *ngIf="tbrBooks.length > 0" class="card-body">
-        <h4>TBR List</h4>
-        <div *ngFor="let book of tbrBooks" class="card text-dark bg-light mb-3">
-          <div class="card-body">
-            <img [src]="book.coverImg" alt="Book cover" style="max-height: 100px;">
-          </div>
-          <div class="card-header">
-            <p><strong>{{ book.title }}</strong></p>
-            <p><em>by {{ book.author.join(', ') }}</em></p>
+
+        <!-- Have Read Books -->
+        <div *ngIf="have_read_books.length > 0" class="book-section mb-4">
+          <h5>Have Read List</h5>
+          <div class="book-grid">
+            <div *ngFor="let book of have_read_books" class="book-card">
+              <img [src]="book.coverImg" alt="Book cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]">
+              <div class="book-details">
+                <p><strong>{{ book.title }}</strong></p>
+                <p><em>by {{ book.author.join(', ') }}</em></p>
+                <div class="rating">
+                  <span *ngFor="let star of getStarCount(book.stars)">
+                    <img *ngIf="star === 0" src="images/star.png" alt="Full Star" class="star-icon">
+                    <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" class="star-icon half-star">
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- TBR Books -->
+        <div *ngIf="tbrBooks.length > 0" class="book-section mb-4">
+          <h5>TBR List</h5>
+          <div class="book-grid">
+            <div *ngFor="let book of tbrBooks" class="book-card">
+              <img [src]="book.coverImg" alt="Book cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]">
+              <div class="book-details">
+                <p><strong>{{ book.title }}</strong></p>
+                <p><em>by {{ book.author.join(', ') }}</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Profile Section -->
+        <div *ngIf="isEditing" class="card-body">
+          <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input id="name" formControlName="name" class="form-control" type="text">
+            </div>
+
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input id="username" formControlName="username" class="form-control" type="text">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" formControlName="email" class="form-control" type="email">
+            </div>
+
+            <div class="form-group">
+              <label for="favourite_genres">Favourite Genres</label>
+              <input id="favourite_genres" formControlName="favourite_genres" class="form-control" type="text">
+            </div>
+
+            <div class="form-group">
+              <label for="favourite_authors">Favourite Authors</label>
+              <input id="favourite_authors" formControlName="favourite_authors" class="form-control" type="text">
+            </div>
+
+            <div *ngIf="previewUrl">
+              <h5>Preview of selected profile picture:</h5>
+              <img [src]="previewUrl || '/images/profile.png'" alt="Profile Picture Preview" class="img-fluid" style="max-height: 200px;">
+            </div>
+            <input type="file" formControlName="profile_pic" class="form-control" (change)="onFileSelected($event)" />
+            <button type="submit" [disabled]="editProfileForm.invalid" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+
+        <!-- No Reviews -->
+        <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
+          <p>No reviews by this user.</p>
+        </div>
+
       </div>
-    </div>
-  </div>
-
-    <div *ngIf="isEditing" class="card-body">
-      <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input id="name" formControlName="name" class="form-control" type="text">
-        </div>
-
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input id="username" formControlName="username" class="form-control" type="text">
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input id="email" formControlName="email" class="form-control" type="email">
-        </div>
-
-        <div class="form-group">
-          <label for="favourite_genres">Favourite Genres</label>
-          <input id="favourite_genres" formControlName="favourite_genres" class="form-control" type="text">
-        </div>
-
-        <div class="form-group">
-          <label for="favourite_authors">Favourite Authors</label>
-          <input id="favourite_authors" formControlName="favourite_authors" class="form-control" type="text">
-        </div>
-
-        <!--<div *ngIf="editProfileForm.value.profile_pic">
-          <button class="btn btn-danger" (click)="removeProfilePic()">Remove Profile Picture</button>
-        </div>-->
-
-        <div *ngIf="previewUrl">
-          <h5>Preview of selected profile picture:</h5>
-          <img [src]="previewUrl || '/images/profile.png'" alt="Profile Picture Preview" class="img-fluid" style="max-height: 200px;">
-        </div>
-        <input type="file" formControlName="profile_pic" class="form-control" (change)="onFileSelected($event)" />
-        <button type="submit" [disabled]="editProfileForm.invalid" class="btn btn-primary">Save Changes</button>
-      </form>
-    </div>
-
-    <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
-      <p>No reviews by this user.</p>
     </div>
   </div>
 </div>

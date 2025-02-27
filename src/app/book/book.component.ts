@@ -24,6 +24,7 @@ export class BookComponent implements OnInit {
   reviews: any;
   topReviews: any[] = [];
   isAddedToTBR: boolean = false;
+  isCurrentlyReading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -75,6 +76,19 @@ export class BookComponent implements OnInit {
 
   toggleRateForm() {
     this.showRateForm = !this.showRateForm;
+  }
+
+  currentlyReading() {
+    const bookId = this.book._id;
+    this.webService.addToCurrentReads(bookId).subscribe(
+      (response: any) => {
+        alert(response.message);
+        this.isCurrentlyReading = true;  // Update the status to indicate the book is added to TBR
+      },
+      (error) => {
+        alert("Error adding book to TBR: " + error.error.error);
+      }
+    );
   }
 
   markAsRead() {

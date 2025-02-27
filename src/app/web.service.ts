@@ -83,6 +83,12 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/want-to-read', {}, { headers })
   }
 
+  addToCurrentReads(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/current-read', {}, { headers })
+  }
+
 
 
 

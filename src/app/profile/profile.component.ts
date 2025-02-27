@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
@@ -17,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProfileComponent implements OnInit {
   user: any = null;
   reviews_by_user: any[] = [];
+  currentlyReading: any[] = [];
   have_read_books: any[] =[];
   tbrBooks: any[] = [];
   loading: boolean = true;
@@ -46,8 +47,13 @@ export class ProfileComponent implements OnInit {
           this.reviews_by_user = response.reviews_by_user || [];
           this.followersCount = response.followers?.length || 0;
           this.followingCount = response.following?.length || 0;
+          this.currentlyReading = response.currently_reading || [];
           this.tbrBooks = response.want_to_read || [];
           this.have_read_books = response.have_read || [];
+
+          console.log('Have Read Books:', this.have_read_books);
+          console.log('TBR Books:', this.tbrBooks);
+          console.log('Currently Reading:', this.currentlyReading);
 
           this.editProfileForm = this.fb.group({
             name: [this.user.name, Validators.required],

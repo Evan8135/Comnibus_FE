@@ -13,6 +13,7 @@
               <span *ngIf="!isLast">, </span>
             </span>
           </p>
+          <button class="btn btn-outline-dark mt-2" *ngIf="!isCurrentlyReading" (click)="currentlyReading()">Currently Reading</button>
           <button class="btn btn-outline-dark mt-2" (click)="toggleRateForm()">Mark as Read</button>
           <div *ngIf="showRateForm">
             <form [formGroup]="rateForm" (ngSubmit)="markAsRead()">
@@ -31,8 +32,9 @@
               </select>
               <button type="submit" class="btn btn-outline-dark mt-2">Submit Rating</button>
             </form>
-          <button class="btn btn-outline-dark mt-2" *ngIf="!isAddedToTBR" (click)="addToTBR()">Add to TBR</button>
         </div>
+        <button class="btn btn-outline-dark mt-2" *ngIf="!isAddedToTBR" (click)="addToTBR()">Add to TBR</button>
+
         <div class="book-cover-container">
           <div class="book-cover-background" [style.background-image]="'url(' + (book.coverImg || '/images/no_cover.png') + ')'"></div>
           <img [src]="book.coverImg || 'images/no_cover.png'" [alt]="book.title" class="book-cover-img">
