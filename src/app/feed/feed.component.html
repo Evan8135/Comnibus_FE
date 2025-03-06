@@ -1,0 +1,31 @@
+<div class="feed-container">
+  <h3>Recent Activities</h3>
+
+  <!-- Loading state -->
+  <div *ngIf="loading">Loading feed...</div>
+
+  <!-- Feed content -->
+  <div *ngIf="!loading && feed.length > 0">
+    <div *ngFor="let activity of feed" class="feed-card">
+      <span>
+        <p><strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }}</strong></p>
+
+        <!-- Show progress or current page based on activity type -->
+        <p *ngIf="activity.activity_type === 'Reading Progress' || activity.activity_type === 'Started Reading'">
+          <strong>Progress: </strong>{{ activity.progress }} |
+          <strong>Current Page:</strong> {{ activity.current_page }}
+        </p>
+
+        <!-- Show review content if the activity is a review -->
+        <p *ngIf="activity.activity_type === 'Review'">
+          <strong>Review:</strong> {{ activity.review_content }}
+        </p>
+      </span>
+    </div>
+  </div>
+
+  <!-- No feed content available -->
+  <div *ngIf="!loading && feed.length === 0">
+    <p>No recent activities.</p>
+  </div>
+</div>

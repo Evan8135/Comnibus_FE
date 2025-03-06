@@ -12,9 +12,21 @@
               </button>
               <span *ngIf="!isLast">, </span>
             </span>
+
           </p>
+          <p>
+            <span>
+              <span *ngFor="let star of getStarCount(userBookRating)">
+                <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
+                <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
+              </span>
+            </span>
+          </p>
+
           <button class="btn btn-outline-dark mt-2" *ngIf="!isCurrentlyReading" (click)="currentlyReading()">Currently Reading</button>
-          <button class="btn btn-outline-dark mt-2" (click)="toggleRateForm()">Mark as Read</button>
+          <button class="btn btn-outline-dark mt-2" *ngIf="isCurrentlyReading" (click)="removeFromCurrentReads(book._id)">Remove from Current Reads</button>
+          <button *ngIf="!isMarkedAsRead" class="btn btn-outline-dark mt-2" (click)="toggleRateForm()">Mark as Read</button>
+          <button *ngIf="isMarkedAsRead" class="btn btn-outline-dark mt-2" (click)="removeFromMarkAsRead(book._id)">Remove From Have Read</button>
           <div *ngIf="showRateForm">
             <form [formGroup]="rateForm" (ngSubmit)="markAsRead()">
               <label for="stars">Please provide a rating (between 1 and 5)</label>
@@ -33,7 +45,10 @@
               <button type="submit" class="btn btn-outline-dark mt-2">Submit Rating</button>
             </form>
         </div>
+
         <button class="btn btn-outline-dark mt-2" *ngIf="!isAddedToTBR" (click)="addToTBR()">Add to TBR</button>
+        <button class="btn btn-outline-dark mt-2" *ngIf="isAddedToTBR" (click)="removeFromTBR(book._id)">Remove from TBR</button>
+        <button class="btn btn-outline-dark mt-2" *ngIf="!isFavouriteBook" (click)="markAsFavourite()">Add to Favourites</button>
 
         <div class="book-cover-container">
           <div class="book-cover-background" [style.background-image]="'url(' + (book.coverImg || '/images/no_cover.png') + ')'"></div>

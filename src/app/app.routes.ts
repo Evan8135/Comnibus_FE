@@ -14,6 +14,8 @@ import { AddRequestComponent } from './book requests/add requests/add-request.co
 import { RequestsComponent } from './book requests/requests/requests.component';
 import { RequestComponent } from './book requests/request/request.component';
 import { HomeComponent } from './home/home.component';
+import { CurrentReadsComponent } from './bookshelves/current reads/current-reads.component';
+import { FeedComponent } from './feed/feed.component';
 
 
 export const routes: Routes = [
@@ -60,6 +62,14 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent
+  },
+  {
+    path: 'feed',
+    component: FeedComponent
+  },
+  {
+    path: 'currently-reading',
+    component: CurrentReadsComponent
   },
   {
     path: 'recommendations',

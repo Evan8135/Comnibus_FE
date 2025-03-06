@@ -1,0 +1,49 @@
+<div class="current-reads-container" *ngIf="!loading">
+  <h2>Your Current Reads</h2>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="currentReads.length === 0" class="no-books">
+    <p>No books in your current reading list.</p>
+  </div>
+
+  <div *ngFor="let book of currentReads" class="book-item">
+    <div class="book-cover">
+      <img [src]="book.coverImg" alt="{{ book.title }} cover">
+    </div>
+    <div class="book-info">
+      <h3>{{ book.title }}</h3>
+      <p><strong>Author:</strong> {{ book.author }}</p>
+      <p><strong>Progress:</strong> {{ book.progress }}%</p>
+      <p><strong>Current Page:</strong> {{ book.current_page }} / {{ book.total_pages }}</p>
+
+      <div class="actions">
+        <!-- Displaying an input field for manual page number input -->
+        <label for="current-page-{{ book._id }}">Enter Current Page:</label>
+        <input
+          type="number"
+          id="current-page-{{ book._id }}"
+          [(ngModel)]="book.manualPage"
+          min="1"
+          max="{{ book.total_pages }}"
+          placeholder="Page number"
+        >
+        <button
+          *ngIf="book.manualPage"
+          (click)="updateReadingProgress(book._id, book.manualPage)">
+          Update Progress
+        </button>
+
+        <button (click)="removeFromCurrentReads(book._id)">
+          Remove from Current Reads
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <p>Loading...</p>
+</div>

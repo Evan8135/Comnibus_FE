@@ -83,10 +83,65 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/want-to-read', {}, { headers })
   }
 
+  removeBookFromTBR(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.delete('http://localhost:5000/api/v1.0/books/' + id + '/want-to-read', {headers});
+  }
+
   addToCurrentReads(id: any) {
     const token = localStorage.getItem('x-access-token');
     const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/current-read', {}, { headers })
+  }
+
+  getCurrentReads() {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/currently-reading', { headers });
+  }
+
+  // Get a specific book from the "currently reading" list of a user
+  getCurrentRead(bookId: string) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/currently-reading/' + bookId, { headers });
+  }
+
+  // Update reading progress for a book in the "currently reading" list
+  updateReadingProgress(bookId: string, currentPage: number) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+
+    const formData = new FormData();
+    formData.append("current_page", currentPage.toString());
+
+    return this.http.post<any>('http://localhost:5000/api/v1.0/currently-reading/' + bookId, formData, { headers });
+  }
+
+  // Remove a book from the "currently reading" list
+  removeFromCurrentReads(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+    return this.http.delete<any>('http://localhost:5000/api/v1.0/books/' + id + '/currently-reading', { headers });
+  }
+
+  addToFavourites(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/add-to-favourites', {}, { headers })
   }
 
 
@@ -220,6 +275,15 @@ export class WebService {
       headers = headers.set('x-access-token', token);
     }
     return this.http.get<any>('http://localhost:5000/api/v1.0/profile', {headers});
+  }
+
+  getFeed() {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/feed', {headers});
   }
 
   updateProfile(profileData: any) {

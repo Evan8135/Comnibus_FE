@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -16,19 +16,27 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProfileComponent implements OnInit {
   user: any = null;
+  selectedGenres: string[] = [];
   reviews_by_user: any[] = [];
+  favouriteBooks: any[] = [];
   currentlyReading: any[] = [];
-  have_read_books: any[] =[];
+  have_read_books: any[] = [];
   tbrBooks: any[] = [];
   loading: boolean = true;
   token: string | null = null;
   loggedInUserName: string = '';
   followersCount: number = 0;
   followingCount: number = 0;
-  editProfileForm: any;
+  editProfileForm!: FormGroup;
   isEditing: boolean = false;
   previewUrl: string | null = null;
   isUploading: boolean = false;
+
+  // List of genres, authors, and their filtered lists
+  genres: string[] = [];
+  filteredGenres: string[] = [];
+  authors: string[] = [];
+  filteredAuthors: string[] = [];
 
   constructor(
     private webService: WebService,
@@ -41,107 +49,190 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.token = localStorage.getItem('x-access-token');
     if (this.token) {
-      this.webService.getProfile()
-        .subscribe((response: any) => {
-          this.user = response;
-          this.reviews_by_user = response.reviews_by_user || [];
-          this.followersCount = response.followers?.length || 0;
-          this.followingCount = response.following?.length || 0;
-          this.currentlyReading = response.currently_reading || [];
-          this.tbrBooks = response.want_to_read || [];
-          this.have_read_books = response.have_read || [];
+      this.webService.getProfile().subscribe((response: any) => {
+        this.user = response;
+        this.reviews_by_user = response.reviews_by_user || [];
+        this.followersCount = response.followers?.length || 0;
+        this.followingCount = response.following?.length || 0;
+        this.favouriteBooks = response.favourite_books || 0;
+        this.currentlyReading = response.currently_reading || [];
+        this.tbrBooks = response.want_to_read || [];
+        this.have_read_books = response.have_read || [];
 
-          console.log('Have Read Books:', this.have_read_books);
-          console.log('TBR Books:', this.tbrBooks);
-          console.log('Currently Reading:', this.currentlyReading);
-
-          this.editProfileForm = this.fb.group({
-            name: [this.user.name, Validators.required],
-            username: [this.user.username, Validators.required],
-            email: [this.user.email, [Validators.required, Validators.email]],
-            favourite_genres: [this.user.favourite_genres.join(', ')],
-            favourite_authors: [this.user.favourite_authors.join(', ')],
-            profile_pic: [this.user.profile_pic],
-          });
-        });
+        // Initialize form and fetch genres/authors after data is loaded
+        this.initForm();
+        this.fetchGenres();
+        this.fetchAuthors();
+      });
     } else {
       console.error("No token found, navigating to login.");
       this.router.navigate(['/login']);
     }
   }
 
-  toggleEdit(): void {
-    this.isEditing = !this.isEditing;
-  }
+  // Initialize form with user data
+  initForm() {
+    this.editProfileForm = this.fb.group({
+      name: [this.user.name, Validators.required],
+      username: [this.user.username, Validators.required],
+      email: [this.user.email, [Validators.required, Validators.email]],
+      pronouns: [this.user.pronouns || 'prefer not to say'],
+      genreSearch: [''],  // Add genreSearch as a form control
+      authorSearch: [''],  // Add authorSearch as a form control
+      profile_pic: [this.user.profile_pic || '/images/profile.png'],
+      favourite_genres: this.fb.array([]),  // Initialize as FormArray
+      favourite_authors: this.fb.array([]),  // Initialize as FormArray
+    });
 
-  // Method to remove profile picture
-  removeProfilePic() {
-    const currentPic = this.editProfileForm.value.profile_pic;
-
-    // If there is a Blob URL, revoke it first
-    if (currentPic && currentPic.startsWith('blob:')) {
-      URL.revokeObjectURL(currentPic);  // Release the Blob URL from memory
-      console.log('Blob URL revoked');
+    // Set the selected genres/authors to the form control
+    if (this.user.favourite_genres) {
+      this.setGenres(this.user.favourite_genres);
+    }
+    if (this.user.favourite_authors) {
+      this.setAuthors(this.user.favourite_authors);
     }
 
-    // Reset the profile picture in the form control to the default image or null
-    this.editProfileForm.patchValue({ profile_pic: '/images/profile.png' });
+    this.previewUrl = this.user.profile_pic;
+  }
 
-    // You can also update the backend if you want to persist the changes
-    this.webService.removeProfilePic().subscribe(response => {
-      console.log('Profile picture removed successfully');
-    }, error => {
-      console.error('Error removing profile picture:', error);
+  // Set the genres in the FormArray
+  setGenres(genres: string[]) {
+    const genreArray = this.editProfileForm.get('favourite_genres') as FormArray;
+    genres.forEach(genre => {
+      genreArray.push(new FormControl(genre));
     });
   }
 
+  // Set the authors in the FormArray
+  setAuthors(authors: string[]) {
+    const authorArray = this.editProfileForm.get('favourite_authors') as FormArray;
+    authors.forEach(author => {
+      authorArray.push(new FormControl(author));
+    });
+  }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0]; // Get the selected file
+  // Fetch genres from the API
+  fetchGenres() {
+    this.http.get<string[]>('http://localhost:5000/api/v1.0/genres').subscribe({
+      next: (data) => {
+        this.genres = data;  // Store the full list of genres
+        this.filteredGenres = data;  // Initially show all genres in filtered list
+      },
+      error: (error) => {
+        console.error('Error fetching genres:', error);
+      }
+    });
+  }
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const base64Image = e.target.result;
-        this.editProfileForm.patchValue({ profile_pic: base64Image });
-      };
-      reader.readAsDataURL(file);
+  // Fetch authors from the API
+  fetchAuthors() {
+    this.http.get<string[]>('http://localhost:5000/api/v1.0/authors').subscribe({
+      next: (data) => {
+        this.authors = data;  // Store the full list of authors
+        this.filteredAuthors = data;  // Initially show all authors in filtered list
+      },
+      error: (error) => {
+        console.error('Error fetching authors:', error);
+      }
+    });
+  }
+
+  // Filter genres based on the search input
+  onSearchGenres() {
+    const query = this.editProfileForm.controls['genreSearch'].value.toLowerCase();
+    this.filteredGenres = this.genres.filter(genre => genre.toLowerCase().includes(query));
+  }
+
+  // Filter authors based on the search input
+  onSearchAuthors() {
+    const searchQuery = this.editProfileForm.get('authorSearch')?.value.toLowerCase() || '';
+    this.filteredAuthors = this.authors.filter(author =>
+      author.toLowerCase().includes(searchQuery)
+    );
+  }
+
+  // Toggle genre selection
+  toggleGenre(genre: string) {
+    const genreArray = this.editProfileForm.get('favourite_genres') as FormArray;
+    const index = genreArray.value.indexOf(genre);
+    if (index === -1) {
+      genreArray.push(new FormControl(genre));
     } else {
-      // If no file is selected, set profile_pic as an empty string
-      this.editProfileForm.patchValue({ profile_pic: "" });
+      genreArray.removeAt(index);
     }
   }
 
+  // Toggle author selection
+  toggleAuthor(author: string) {
+    const authorArray = this.editProfileForm.get('favourite_authors') as FormArray;
+    const index = authorArray.value.indexOf(author);
+    if (index === -1) {
+      authorArray.push(new FormControl(author));
+    } else {
+      authorArray.removeAt(index);
+    }
+  }
 
+  // Toggle edit mode for profile
+  toggleEdit(): void {
+    this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      this.initForm();
+    }
+  }
 
+  // Handle file selection for profile picture
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.previewUrl = e.target.result;
+      this.uploadProfilePic(file);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Upload new profile picture
   uploadProfilePic(image: File) {
+    this.isUploading = true;
     const formData = new FormData();
     formData.append('image', image);
 
-    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData)
-      .subscribe(response => {
+    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData).subscribe(
+      response => {
         if (response.url) {
-          // Update the profile_pic with the permanent URL received from the backend
           this.editProfileForm.patchValue({ profile_pic: response.url });
-          this.previewUrl = response.url;  // Optionally, use this for preview
-          console.log(this.previewUrl)
+          this.previewUrl = response.url;
         } else {
           console.error('Failed to upload image:', response);
         }
-      }, error => {
+        this.isUploading = false;
+      },
+      error => {
         console.error('Error uploading image:', error);
-      });
+        this.isUploading = false;
+      }
+    );
   }
 
-  getStarCount(stars: number): any[] {
-    const fullStars = Math.floor(stars);  // Get the number of full stars
-    const halfStar = stars % 1 >= 0.5 ? 1 : 0;  // Check if there's a half star
+  // Remove the profile picture
+  removeProfilePic() {
+    if (this.previewUrl?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.previewUrl);
+    }
 
-    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];  // Return full stars and half star if needed
+    this.editProfileForm.patchValue({ profile_pic: '/images/profile.png' });
+    this.previewUrl = '/images/profile.png';
+
+    this.webService.removeProfilePic().subscribe(
+      () => console.log('Profile picture removed successfully'),
+      error => console.error('Error removing profile picture:', error)
+    );
   }
 
-
-
+  // Submit updated profile data
   onSubmit(): void {
     if (this.isUploading) {
       console.log("Please wait for the image to finish uploading...");
@@ -151,23 +242,18 @@ export class ProfileComponent implements OnInit {
     if (this.editProfileForm.valid) {
       const updatedProfile = this.editProfileForm.value;
 
-      // Show a confirmation popup before proceeding
       const confirmChange = confirm("Are you sure you want to update your profile?");
-      if (!confirmChange) {
-        return; // Stop submission if user cancels
-      }
+      if (!confirmChange) return;
 
-      updatedProfile.favourite_genres = updatedProfile.favourite_genres.split(',').map((item: string) => item.trim());
-      updatedProfile.favourite_authors = updatedProfile.favourite_authors.split(',').map((item: string) => item.trim());
-
-      console.log("Submitting profile:", updatedProfile); // Debugging
+      updatedProfile.favourite_genres = updatedProfile.favourite_genres.map((item: string) => item.trim());
+      updatedProfile.favourite_authors = updatedProfile.favourite_authors.map((item: string) => item.trim());
 
       this.webService.updateProfile(updatedProfile).subscribe(
         (response: any) => {
           console.log('Profile updated successfully', response);
           this.user = response;
           this.isEditing = false;
-          window.location.reload();
+          this.previewUrl = response.profile_pic;
         },
         (error: any) => {
           console.error('Error updating profile', error);
@@ -176,5 +262,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-
+  // Helper method to calculate star ratings
+  getStarCount(stars: number): any[] {
+    const fullStars = Math.floor(stars);
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
+  }
 }

@@ -16,6 +16,7 @@ export class NavComponent implements OnInit {
   hasUnreadMessages: boolean = false;
   profilePicUrl: string = '/images/profile.png';
 
+
   constructor(private webService: WebService) {
     this.updateAuthStatus();
   }
@@ -52,6 +53,14 @@ export class NavComponent implements OnInit {
         error: (err) => {
           console.error('Error fetching user profile:', err);
         }
+      });
+    }
+  }
+
+  fetchUserFeed() {
+    if (this.isLoggedIn) {
+      this.webService.getFeed().subscribe({
+
       });
     }
   }

@@ -1,0 +1,11 @@
+.feed-container {
+  margin-top: 86px;
+}
+
+.feed-card {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}

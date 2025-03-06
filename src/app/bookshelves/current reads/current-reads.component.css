@@ -1,0 +1,73 @@
+.current-reads-container {
+  padding: 20px;
+  margin-top: 56px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+.no-books {
+  text-align: center;
+  font-style: italic;
+}
+
+.book-item {
+  display: flex;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.book-cover img {
+  max-width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.book-info {
+  flex-grow: 1;
+}
+
+.book-info h3 {
+  margin: 0;
+}
+
+.actions button {
+  margin-right: 10px;
+  padding: 12px 25px;
+  cursor: pointer;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(145deg, #6a7dff, #4a5bdb);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.actions button:hover {
+  background-color: #0056b3;
+  background: linear-gradient(145deg, #0056b3, #003d7a);
+  color: #ffffff;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+}
+
+.actions button:focus {
+  outline: none;
+}
+
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  font-style: italic;
+}

@@ -35,13 +35,16 @@ export class ReviewComponent implements OnInit {
 
   ngOnInit() {
     this.bookId = this.route.snapshot.paramMap.get('id');
-    this.reviewId = this.route.snapshot.paramMap.get('reviewId');
+    console.log("BOOK ID:", this.bookId)
+    this.review = this.route.snapshot.paramMap.get('review');
+    console.log("REVIEW ID: ", this.reviewId)
 
     if (this.bookId && this.reviewId) {
       this.webService.getReview(this.bookId, this.reviewId)
         .subscribe({
           next: (response: any) => {
             this.review = response;
+            console.log(this.review)
             this.loading = false;
           },
           error: (error: any) => {
@@ -49,6 +52,8 @@ export class ReviewComponent implements OnInit {
             this.loading = false;  // Even if an error occurs, stop loading
           }
         });
+    } else {
+      this.loading = false;
     }
   }
 
