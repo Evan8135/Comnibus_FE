@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterOutlet, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { WebService } from '../../web.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'request',
   standalone: true,
   imports: [RouterOutlet, CommonModule, ReactiveFormsModule],
-  providers: [WebService],
+  providers: [WebService, AuthService],
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.css']
 })
@@ -27,12 +29,16 @@ export class RequestComponent implements OnInit {
   genreSearch: string = '';
   previewUrl: string | null = null;
   isApproving: boolean = false;
+  isUploading: boolean = false;
+
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private webService: WebService
+    private webService: WebService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -66,41 +72,46 @@ export class RequestComponent implements OnInit {
       publisher: [''],
       firstPublishDate: [''],
       awards: [''],
-      coverImg: [''],  // Ensure this is included in the form
+      coverImg: ['/images/no_cover.jpg'],  // Ensure this is included in the form
       price: [0.0]
     });
     this.fetchGenres();
+
+    //this.previewUrl =
   }
 
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      // Preview the image temporarily as a Blob URL
-      this.previewUrl = URL.createObjectURL(file);
-      this.approveForm.patchValue({ coverImg: file });
+    const file = event.target.files[0];
+    if (!file) return;
 
-      // Upload the image to the backend
-      this.uploadCoverImg(file);  // Upload the image when a file is selected
-      console.log("Image Url: ", this.previewUrl)
-    }
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.previewUrl = e.target.result;
+      this.uploadCoverImg(file);
+    };
+    reader.readAsDataURL(file);
   }
 
   uploadCoverImg(image: File) {
+    this.isUploading = true;
     const formData = new FormData();
     formData.append('image', image);
 
-    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData)
-      .subscribe(response => {
+    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData).subscribe(
+      response => {
         if (response.url) {
-          // Update the coverImg with the permanent URL received from the backend
           this.approveForm.patchValue({ coverImg: response.url });
-          this.previewUrl = response.url;  // Use this URL for preview
+          this.previewUrl = response.url;
         } else {
           console.error('Failed to upload image:', response);
         }
-      }, error => {
+        this.isUploading = false;
+      },
+      error => {
         console.error('Error uploading image:', error);
-      });
+        this.isUploading = false;
+      }
+    );
   }
 
   fetchGenres() {
@@ -138,27 +149,77 @@ export class RequestComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.isApproving) {
+    if (this.isUploading) {
       console.log("Please wait for the image to finish uploading...");
       return;
     }
+
     if (this.approveForm.valid) {
       const approvedBook = this.approveForm.value;
+      const formData = new FormData();
+
+      formData.append("title", approvedBook.title);
+      formData.append("author", approvedBook.author);
+      formData.append("genres", this.selectedGenres.join(", "));
+      formData.append("language", approvedBook.language);
+      formData.append("series", approvedBook.series || "");
+      formData.append("publishDate", approvedBook.publishDate || "");
+      formData.append("isbn", approvedBook.isbn || "");
+      formData.append("description", approvedBook.description || "");
+
+      // Ensure characters, triggers, and awards are arrays before joining
+      formData.append("characters", Array.isArray(approvedBook.characters) ? approvedBook.characters.join(", ") : "");
+      formData.append("triggers", Array.isArray(approvedBook.triggers) ? approvedBook.triggers.join(", ") : "");
+      formData.append("awards", Array.isArray(approvedBook.awards) ? approvedBook.awards.join(", ") : "");
+
+      formData.append("bookFormat", approvedBook.bookFormat || "");
+      formData.append("edition", approvedBook.edition || "");
+      formData.append("pages", approvedBook.pages?.toString() || "0");
+      formData.append("publisher", approvedBook.publisher || "");
+      formData.append("firstPublishDate", approvedBook.firstPublishDate || "");
+      formData.append("price", approvedBook.price?.toString() || "0.0");
+
+      // Append image file if available
+      if (this.approveForm.get('coverImg')?.value) {
+        formData.append("coverImg", this.approveForm.get('coverImg')?.value);
+      }
 
       const confirmApproval = confirm("Are you sure you want to approve this request?");
       if (!confirmApproval) {
-        return; // Stop submission if user cancels
+        return;
       }
-      console.log("Submitting request:", approvedBook);
-      this.webService.approveRequest(this.selectedRequest._id, this.approveForm.value).subscribe(
-        (response) => {
+
+      console.log("Submitting approval request:", approvedBook);
+
+      this.webService.approveRequest(this.selectedRequest._id, formData).subscribe(
+        (response: any) => {
           alert('Request approved successfully!');
+          this.previewUrl = response.coverImg;
           this.showApproveForm = false;
         },
         (error) => {
           alert('Error approving request');
         }
       );
+    }
+  }
+
+
+
+
+  rejectRequest(request: any) {
+    if (confirm('Are you sure you want to reject this?')) {
+      this.webService.rejectRequest(request._id).subscribe({
+        next: () => {
+          console.log("Request deleted successfully.");
+          window.location.reload();
+        },
+        error: (err) => {
+          console.error("Error deleting request:", err);
+        }
+      });
+    } else {
+      console.error("No token found, cannot delete request.");
     }
   }
 }

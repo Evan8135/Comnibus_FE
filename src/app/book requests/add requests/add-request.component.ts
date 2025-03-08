@@ -76,20 +76,25 @@ export class AddRequestComponent implements OnInit {
   // Toggle genre selection with FormArray synchronization
   toggleGenre(genre: string) {
     const genresArray = this.RequestForm.get('genres') as FormArray;
-    const genresToAdd = genre.split(', ').map(g => g.trim());
+    const trimmedGenre = genre.trim();
 
-    genresToAdd.forEach(g => {
-      const index = this.selectedGenres.indexOf(genre);
+    const index = this.selectedGenres.indexOf(trimmedGenre);
 
-      if (index === -1) {
-        this.selectedGenres.push(genre);
-        genresArray.push(this.fb.control(genre)); // Add to FormArray
-      } else {
-        this.selectedGenres.splice(index, 1);
-        genresArray.removeAt(index); // Remove from FormArray
+    if (index === -1) {
+      this.selectedGenres.push(trimmedGenre);
+      genresArray.push(this.fb.control(trimmedGenre)); // Add to FormArray
+    } else {
+      this.selectedGenres.splice(index, 1);
+
+      // Find the correct index in FormArray and remove it
+      const formIndex = genresArray.controls.findIndex(control => control.value === trimmedGenre);
+      if (formIndex !== -1) {
+        genresArray.removeAt(formIndex);
       }
-    });
+    }
   }
+
+
 
 
 
