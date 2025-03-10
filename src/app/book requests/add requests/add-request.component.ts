@@ -38,7 +38,7 @@ export class AddRequestComponent implements OnInit {
   ngOnInit(): void {
     this.RequestForm = this.fb.group({
       title: ['', Validators.required],
-      author: ['', Validators.required],
+      author: ['', Validators.required], // Single string for author
       genreSearch: [''],
       genres: this.fb.array([]),
       language: ['', Validators.required],
@@ -94,14 +94,7 @@ export class AddRequestComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
-
-
+  // Convert the authors from comma-separated string to an array
   onSubmit(): void {
     if (this.RequestForm.invalid) {
       this.submissionMessage = 'Please fill all required fields!';
@@ -109,7 +102,23 @@ export class AddRequestComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const request = { ...this.RequestForm.value, genres: this.selectedGenres };
+
+    // Convert authors from comma-separated string to array
+    const authorsString = this.RequestForm.value.author;
+    if (!authorsString || authorsString.trim() === '') {
+      this.submissionMessage = 'At least one author is required.';
+      return;
+    }
+
+    const authorsArray = authorsString
+      .split(',')  // Split by comma
+      .map((author: string) => author.trim());  // Remove extra spaces
+
+    const request = {
+      ...this.RequestForm.value,
+      author: authorsArray, // Now the authors are an array
+      genres: this.selectedGenres, // Genres already handled as an array
+    };
 
     this.webService.postBookRequest(request).subscribe(
       (response) => {
@@ -122,5 +131,4 @@ export class AddRequestComponent implements OnInit {
       }
     );
   }
-
 }

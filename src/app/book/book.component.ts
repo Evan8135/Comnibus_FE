@@ -21,6 +21,7 @@ export class BookComponent implements OnInit {
   rateForm: any; // Form for rating a book
   showRateForm: boolean = false; // Whether to show the rating form
   Same_Author_Books: any[] = []; // Array for same author books
+  triggers: any;
   reviews: any; // All reviews for the current book
   topReviews: any[] = []; // Top reviews based on likes
   isMarkedAsRead: boolean = false; // Whether the book is marked as read

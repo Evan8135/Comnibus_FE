@@ -13,7 +13,7 @@
     <!-- Author Input -->
     <div class="form-group">
       <label for="author">Author</label>
-      <input id="author" formControlName="author" class="form-control" />
+      <input id="author" formControlName="author" class="form-control" placeholder="Enter authors, separated by commas" />
       <div *ngIf="RequestForm.get('author')?.invalid && RequestForm.get('author')?.touched" class="text-danger">
         Author is required.
       </div>

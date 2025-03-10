@@ -58,7 +58,12 @@
           <!-- Content Details -->
           <div class="row">
             <h4>Content Warning!</h4>
-            <p>{{ book.triggers }}</p>
+            <div *ngIf="book.triggers?.length > 0">
+              <h3>Trigger Warnings:</h3>
+              <ul>
+                <li *ngFor="let trigger of triggers">{{ trigger }}</li>
+              </ul>
+            </div>
             <button class="btn btn-outline-dark ms-auto" type="button">Add Content/Trigger Warnings</button>
             <p><strong>Description:</strong></p>
             <div class="col-md-8">

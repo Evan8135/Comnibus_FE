@@ -159,7 +159,7 @@ export class RequestComponent implements OnInit {
       const formData = new FormData();
 
       formData.append("title", approvedBook.title);
-      formData.append("author", approvedBook.author);
+      formData.append("author", approvedBook.author.join(", "));
       formData.append("genres", this.selectedGenres.join(", "));
       formData.append("language", approvedBook.language);
       formData.append("series", approvedBook.series || "");
@@ -168,16 +168,34 @@ export class RequestComponent implements OnInit {
       formData.append("description", approvedBook.description || "");
 
       // Ensure characters, triggers, and awards are arrays before joining
-      formData.append("characters", Array.isArray(approvedBook.characters) ? approvedBook.characters.join(", ") : "");
-      formData.append("triggers", Array.isArray(approvedBook.triggers) ? approvedBook.triggers.join(", ") : "");
-      formData.append("awards", Array.isArray(approvedBook.awards) ? approvedBook.awards.join(", ") : "");
+      formData.append(
+        "characters",
+        approvedBook.characters
+          ? approvedBook.characters.split(",").map((s: string) => s.trim()).join(", ")
+          : ""
+      );
+
+      formData.append(
+        "triggers",
+        approvedBook.triggers
+          ? approvedBook.triggers.split(",").map((s: string) => s.trim()).join(", ")
+          : ""
+      );
+
+      formData.append(
+        "awards",
+        approvedBook.awards
+          ? approvedBook.awards.split(",").map((s: string) => s.trim()).join(", ")
+          : ""
+      );
+
 
       formData.append("bookFormat", approvedBook.bookFormat || "");
       formData.append("edition", approvedBook.edition || "");
-      formData.append("pages", approvedBook.pages?.toString() || "0");
+      formData.append("pages", approvedBook.pages?.toString() || 0);
       formData.append("publisher", approvedBook.publisher || "");
       formData.append("firstPublishDate", approvedBook.firstPublishDate || "");
-      formData.append("price", approvedBook.price?.toString() || "0.0");
+      formData.append("price", approvedBook.price?.toString() || 0.0);
 
       // Append image file if available
       if (this.approveForm.get('coverImg')?.value) {
