@@ -35,28 +35,28 @@ export class BookComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private webService: WebService,
-    private authService: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit() {
     // Fetch the current book ID from the route
     const bookId = this.route.snapshot.paramMap.get('id');
 
-    // Fetch user information from AuthService
-    this.webService.getProfile().subscribe(user => {
-      this.user = user;
+    // Check if the user is logged in
+    if (this.authService.isLoggedIn()) {
+      this.webService.getProfile().subscribe(user => {
+        this.user = user;
 
-      // If user data and have_read are available, continue to process
-      if (!this.user || !this.user.have_read) {
-        console.log('User or have_read not available');
-        return;
-      }
+        // If user data and have_read are available, continue to process
+        if (!this.user || !this.user.have_read) {
+          console.log('User or have_read not available');
+          return;
+        }
 
-      console.log('User Have Read Books:', this.user.have_read);
+        console.log('User Have Read Books:', this.user.have_read);
 
-      // Fetch the current book details
-      this.webService.getBook(bookId)
-        .subscribe((response: any) => {
+        // Fetch the current book details
+        this.webService.getBook(bookId).subscribe((response: any) => {
           this.book = response.book;
 
           // Check if the book is in the 'have_read' array
@@ -66,7 +66,7 @@ export class BookComponent implements OnInit {
           if (userReadBook) {
             this.userBookRating = userReadBook.stars;
             this.isMarkedAsRead = true;
-            console.log('User Rating:', this.userBookRating)
+            console.log('User Rating:', this.userBookRating);
           } else {
             this.userBookRating = null;  // If the user hasn't rated this book
           }
@@ -76,14 +76,13 @@ export class BookComponent implements OnInit {
           this.Same_Author_Books = response.same_author_books.filter((book: any) => book.author && book.author[0] === authorName);
         });
 
-      // Initialize the form for rating
-      this.rateForm = this.formBuilder.group({
-        stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]]
-      });
+        // Initialize the form for rating
+        this.rateForm = this.formBuilder.group({
+          stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]]
+        });
 
-      // Fetch reviews and top reviews
-      this.webService.getReviews(bookId)
-        .subscribe((response) => {
+        // Fetch reviews and top reviews
+        this.webService.getReviews(bookId).subscribe((response) => {
           this.reviews = response;
 
           // Sort reviews based on likes and take the top 3
@@ -91,8 +90,36 @@ export class BookComponent implements OnInit {
             .sort((a, b) => b.likes - a.likes)
             .slice(0, 3);
         });
-    });
+
+      });
+    } else {
+      // If not logged in, skip profile-related logic, and only fetch book details
+      this.webService.getBook(bookId).subscribe((response: any) => {
+        this.book = response.book;
+
+        // Handle the logic for same author books
+        const authorName = this.book.author[0];
+        this.Same_Author_Books = response.same_author_books.filter((book: any) => book.author && book.author[0] === authorName);
+      });
+
+      // Initialize the form for rating (disabled for non-users)
+      this.rateForm = this.formBuilder.group({
+        stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]]
+      });
+
+      // Fetch reviews and top reviews (non-users can also view reviews)
+      this.webService.getReviews(bookId).subscribe((response) => {
+        this.reviews = response;
+
+        // Sort reviews based on likes and take the top 3
+        this.topReviews = [...this.reviews]
+          .sort((a, b) => b.likes - a.likes)
+          .slice(0, 3);
+      });
+    }
   }
+
+
 
   // Track books by their ID for rendering optimizations
   trackBook(index: number, book: any): string {
@@ -100,12 +127,18 @@ export class BookComponent implements OnInit {
   }
 
   // Method to get the star count for ratings
-  getStarCount(stars: number): any[] {
+  getStarCount(stars: number): any[] | null {
+
+
+    // If the user is logged in, return the normal full and half stars for interaction
     const fullStars = Math.floor(stars);  // Get the number of full stars
     const halfStar = stars % 1 >= 0.5 ? 1 : 0;  // Check if there's a half star
 
     return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];  // Return full stars and half star if needed
   }
+
+
+
 
 
   // Toggle the visibility of the rate form

@@ -23,6 +23,7 @@ export class ReviewsComponent {
   reviewForm: any;
   showReviewForm: boolean = false
   loggedInUserName: string = '';
+  errorMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -68,16 +69,20 @@ export class ReviewsComponent {
   onSubmit() {
     this.webService.postReview(
       this.route.snapshot.paramMap.get('id'),
-      this.reviewForm.value)
-      .subscribe((response) => {
+      this.reviewForm.value
+    ).subscribe(
+      (response) => {
+        console.log(response.message); // Log success message if needed
         this.reviewForm.reset();
-        this.fetchReviews();
-      });
-      this.webService.getReviews(this.route.snapshot.paramMap.get('id'))
-      .subscribe((response: any) => {
-        this.reviews = response;
-      });
+        this.fetchReviews(); // Fetch reviews after successfully posting
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.errorMessage = error.error?.message || 'An unexpected error occurred.';
+      }
+    );
   }
+
 
   getStarCount(stars: number): any[] {
     const fullStars = Math.floor(stars);  // Get the number of full stars

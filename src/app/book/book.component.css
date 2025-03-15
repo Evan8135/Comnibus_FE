@@ -75,6 +75,47 @@
   color: #666;
 }
 
+/* Style for Trigger Warnings Section */
+.trigger-warnings-container {
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Border color to match background */
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow to match card design */
+}
+
+.trigger-warnings-title {
+  color: #721c24; /* Dark red for the title */
+  font-weight: bold;
+  font-size: 18px; /* Slightly larger to draw attention */
+}
+
+.trigger-warnings-list {
+  list-style-type: none; /* Remove default list styling */
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.trigger-warnings-list li {
+  color: #721c24; /* Dark red text */
+  font-size: 16px; /* Increase font size for better readability */
+  margin: 5px 0;
+}
+
+/* Additional Styling for the Button */
+button.btn-outline-dark.ms-auto {
+  margin-top: 10px; /* Spacing for the "Add Content/Trigger Warnings" button */
+  border-color: #721c24; /* Border color matches the warning theme */
+  color: #721c24;
+}
+
+button.btn-outline-dark.ms-auto:hover {
+  background-color: #721c24;
+  color: #fff;
+}
+
+
 .same-author-books {
   margin-top: 40px;
 }
