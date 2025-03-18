@@ -386,5 +386,49 @@ export class WebService {
   }
 
 
+//------------------------------------------------------------------------------------------------------------------
+// 6. USER THOUGHT CALLS
+  postThought(thought: any, page: number) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    let postData = new FormData();
+    postData.append('username', thought.username);
+    postData.append('comment', thought.comment);
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts', postData, {headers})
+  }
+  getThoughts() {
+    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts');
+  }
+  getThought(id: any) {
+    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts/' + id);
+  }
+  deleteThought(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.delete<any>('http://localhost:5000/api/v1.0/thoughts' + id, {headers});
+  }
 
+  likeThought(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/like', {}, {headers});
+  }
+
+  dislikeThought(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/dislike', {}, {headers});
+  }
 }

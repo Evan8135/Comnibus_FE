@@ -1,0 +1,77 @@
+<div class="container" style="margin-top: 80px;">
+  <div class="container" style="margin-top: 50px;">
+    <div class="row">
+      <button (click)="handleWritethoughtClick()" class="btn btn-secondary">
+        Write a thought
+      </button>
+
+      <div *ngIf="showThoughtForm">
+        <h2>Thoughts</h2>
+        <form [formGroup]="thoughtForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="username">Name</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              class="form-control"
+              formControlName="username"
+              [value]="loggedInUserName"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="comment">Please leave your thought below</label>
+            <textarea
+              name="comment"
+              id="comment"
+              class="form-control"
+              formControlName="comment"
+              [ngClass]="{'error': isInvalid('comment')}">
+            </textarea>
+          </div>
+          <span *ngIf="isIncomplete()">
+            You must complete all fields
+          </span>
+          <button *ngIf="!isIncomplete()" class="btn btn-primary"
+            type="submit"
+            style="margin-top: 20px">Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- Loading spinner -->
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner-border text-dark" role="status">
+    </div>
+    <span class="loading-text">Loading...</span>
+  </div>
+
+
+<div class="thoughts-container">
+  <h1>All Thoughts</h1>
+  <div *ngIf="thoughts.length > 0; else nothoughts">
+    <div *ngFor="let thought of thoughts; trackBy: trackThought" class="thought-card">
+      <p><strong>Posted By:</strong> {{ thought.username }}</p>
+      <p style="cursor: pointer">
+        {{ thought.showFullComment ? thought.comment : (thought.comment | slice:0:200) + '...' }}
+        <a (click)="thought.showFullComment = !thought.showFullComment" class="show-more">
+          {{ thought.showFullComment ? 'Show less' : 'Show more' }}
+        </a>
+      </p>
+      <div>Likes: {{ thought.likes }} <button (click)="like(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+      <div style="display: right;">Dislikes: {{ thought.dislikes }} <button (click)="dislike(thought)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+      <div *ngIf="thought.username === loggedInUserName || authService.isAdmin()">
+        <button (click)="deleteThought(thought)" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+
+
+  </div>
+  <ng-template #nothoughts>
+    <p>No thoughts available</p>
+  </ng-template>
+</div>
+</div>

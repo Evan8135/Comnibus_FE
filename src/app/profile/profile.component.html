@@ -64,16 +64,34 @@
               </select>
             </div>
 
-            <!-- Favourite Genres -->
+            <!-- Genre Search -->
             <div class="form-group">
-              <label for="favourite_genres">Favourite Genres</label>
-              <input id="favourite_genres" formControlName="favourite_genres" class="form-control" type="text">
+              <label for="favourite_genres">Genres</label>
+              <input type="text" name="favourite_genres" id="favourite_genres" class="form-control" formControlName="favourite_genres" readonly />
+              <input id="genresSearch" type="text" formControlName="genreSearch" (keyup)="onSearchGenres()" class="form-control" placeholder="Search genres..." />
+              <div *ngIf="filteredGenres.length > 0" class="genre-results">
+                <ul>
+                  <li *ngFor="let genre of filteredGenres" (click)="toggleGenre(genre)" [class.selected]="selectedGenres.includes(genre)">
+                    {{ genre }}
+                  </li>
+                </ul>
+              </div>
             </div>
 
+            <!-- Author Search -->
             <div class="form-group">
-              <label for="favourite_authors">Favourite Authors</label>
-              <input id="favourite_authors" formControlName="favourite_authors" class="form-control" type="text">
+              <label for="favourite_authors">Authors</label>
+              <input type="text" name="favourite_authors" id="favourite_authors" class="form-control" formControlName="favourite_authors" readonly />
+              <input id="authorsSearch" type="text" formControlName="authorSearch" (keyup)="onSearchAuthors()" class="form-control" placeholder="Search authors..." />
+              <div *ngIf="filteredAuthors.length > 0" class="author-results">
+                <ul>
+                  <li *ngFor="let author of filteredAuthors" (click)="toggleAuthor(author)" [class.selected]="selectedAuthors.includes(author)">
+                    {{ author }}
+                  </li>
+                </ul>
+              </div>
             </div>
+
 
             <!-- Profile Picture Preview -->
             <div *ngIf="previewUrl">

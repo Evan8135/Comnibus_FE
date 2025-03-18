@@ -123,6 +123,10 @@ export class AuthService {
     return this.getLoggedInName() === reviewUsername;
   }
 
+  isThoughtOwner(thoughtUsername: string): boolean {
+    return this.getLoggedInName() === thoughtUsername;
+  }
+
   getUserHaveRead(userId: any): Observable<any> {
     const token = this.getToken();
     let headers = new HttpHeaders();

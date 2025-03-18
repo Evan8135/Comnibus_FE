@@ -17,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProfileComponent implements OnInit {
   user: any = null;
   selectedGenres: string[] = [];
+  selectedAuthors: string[] = [];
   reviews_by_user: any[] = [];
   favouriteBooks: any[] = [];
   currentlyReading: any[] = [];

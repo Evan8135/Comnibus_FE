@@ -16,6 +16,7 @@ import { RequestComponent } from './book requests/request/request.component';
 import { HomeComponent } from './home/home.component';
 import { CurrentReadsComponent } from './bookshelves/current reads/current-reads.component';
 import { FeedComponent } from './feed/feed.component';
+import { ThoughtsComponent } from './thoughts/thoughts.component';
 
 
 export const routes: Routes = [
@@ -86,5 +87,9 @@ export const routes: Routes = [
   {
     path: 'requests/:id',
     component: RequestComponent
+  },
+  {
+    path: 'thoughts',
+    component: ThoughtsComponent
   }
 ];
