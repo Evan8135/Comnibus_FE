@@ -45,6 +45,49 @@ export class WebService {
     return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id);
   }
 
+  postBook(bookData: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+
+    const formData = new FormData();
+    formData.append("title", bookData.title);
+    formData.append("series", bookData.series || "");
+    formData.append("author", bookData.author);
+    formData.append("description", bookData.description);
+    formData.append("language", bookData.language);
+    formData.append("isbn", bookData.isbn);
+    formData.append("bookFormat", bookData.bookFormat);
+    formData.append("edition", bookData.edition || "");
+    formData.append("pages", bookData.pages.toString());
+    formData.append("publisher", bookData.publisher || "");
+    formData.append("publishDate", bookData.publishDate);
+    formData.append("firstPublishDate", bookData.firstPublishDate);
+    formData.append("coverImg", bookData.coverImg);
+    formData.append("price", bookData.price.toString());
+
+    if (bookData.genres) {
+      bookData.genres.forEach((genre: string) => formData.append("genres", genre));
+    }
+    if (bookData.characters) {
+      bookData.characters.forEach((character: string) => formData.append("characters", character));
+    }
+    if (bookData.triggers) {
+      bookData.triggers.forEach((trigger: string) => formData.append("triggers", trigger));
+    }
+    if (bookData.awards) {
+      bookData.awards.forEach((award: string) => formData.append("awards", award));
+    }
+
+    return this.http.post<any>('http://localhost:5000/api/v1.0/add-book', formData, { headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Error adding book:', error);
+          return throwError(() => new Error('Failed to add book.'));
+        })
+      );
+  }
+
+
   getRecommendations(page: number, pageSize: number) {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -391,6 +434,7 @@ export class WebService {
   postThought(thought: any, page: number) {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
+
     if (token) {
       headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
     }
@@ -400,10 +444,21 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts', postData, {headers})
   }
   getThoughts() {
-    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts');
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts', {headers});
   }
   getThought(id: any) {
-    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts/' + id);
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts/' + id, { headers });
   }
   deleteThought(id: any) {
     const token = localStorage.getItem('x-access-token');
@@ -430,5 +485,49 @@ export class WebService {
       headers = headers.set('x-access-token', token);
     }
     return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/dislike', {}, {headers});
+  }
+
+//------------------------------------------------------------------------------------------------------------------
+// 7. USER THOUGHT REPLY CALLS
+  postReply(id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    let postData = new FormData();
+    postData.append('username', reply.username);
+    postData.append('content', reply.content);
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies', postData, {headers})
+  }
+  fetchReplies(id: any) {
+    return this.http.get<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies');
+  }
+
+  deleteReply(id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.delete<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies/' + reply._id, {headers});
+  }
+
+  likeReply(id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies/' + reply._id + '/like', {}, {headers});
+  }
+
+  dislikeReply(id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies/' + reply._id + '/dislike', {}, {headers});
   }
 }

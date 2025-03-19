@@ -1,0 +1,156 @@
+/* General container for the thought */
+.thought-container {
+  max-width: 800px;
+  margin: 20px auto;
+  margin-top: 80px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.thought-details {
+  margin-bottom: 20px;
+}
+
+.thought-details h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.thought-details p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.thought-details small {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Reply section */
+.reply-box {
+  margin-top: 20px;
+}
+
+.reply-box .form-group {
+  margin-bottom: 15px;
+}
+
+.reply-box textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.reply-box textarea.error {
+  border-color: #dc3545;
+}
+
+.reply-box span {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.reply-box .btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.reply-box .btn:hover {
+  background-color: #0056b3;
+}
+
+.reply-box button {
+  margin-top: 10px;
+}
+
+/* Styling for the "Reply" button */
+.reply-box button[ng-click] {
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-size: 16px;
+}
+
+.reply-box button[ng-click]:hover {
+  background-color: #218838;
+}
+
+/* Replies container */
+.replies-container {
+  margin-top: 30px;
+}
+
+.replies-container h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.reply {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.reply p {
+  font-size: 16px;
+  color: #555;
+}
+
+.reply small {
+  font-size: 14px;
+  color: #777;
+}
+
+.like-dislike-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.like-dislike-buttons button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.like-dislike-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* Error message styling */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  font-size: 16px;
+  border: 1px solid #f5c6cb;
+}

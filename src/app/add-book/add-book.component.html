@@ -1,0 +1,152 @@
+<div class="container" style="margin-top: 80px;">
+  <h2>Add a Book</h2>
+  <p>This section is for Admins only in case they want to submit a book that wasn't requested.</p>
+  <p>Please fill in all the details correctly.</p>
+  <form [formGroup]="BookForm" (ngSubmit)="onSubmit()">
+    <!-- Title Input -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" formControlName="title" class="form-control" />
+      <div *ngIf="BookForm.get('title')?.invalid && BookForm.get('title')?.touched" class="text-danger">
+        Title is required.
+      </div>
+    </div>
+
+    <!-- Author Input -->
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input id="author" formControlName="author" class="form-control" placeholder="Enter authors, separated by commas" />
+      <div *ngIf="BookForm.get('author')?.invalid && BookForm.get('author')?.touched" class="text-danger">
+        Author is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="form-control" formControlName="description"></textarea>
+    </div>
+
+    <!-- Genre Search and Selection -->
+    <div class="form-group">
+      <label for="genres">Genres</label>
+      <!-- Use formControlName for genre search -->
+      <input
+        id="genres"
+        type="text"
+        formControlName="genreSearch"
+        (keyup)="onSearchGenres()"
+        class="form-control"
+        placeholder="Search genres..."
+      />
+
+      <!-- Filtered genre results -->
+      <div *ngIf="filteredGenres.length > 0" class="genre-results">
+        <ul>
+          <li *ngFor="let genre of filteredGenres"
+              (click)="toggleGenre(genre)"
+              [class.selected]="selectedGenres.includes(genre)">
+            {{ genre }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Error message if genres are required -->
+      <div *ngIf="BookForm.get('genres')?.invalid && BookForm.get('genres')?.touched" class="text-danger">
+        Genres are required.
+      </div>
+    </div>
+
+    <!-- Language Input -->
+    <div class="form-group">
+      <label for="language">Language</label>
+      <input id="language" formControlName="language" class="form-control" />
+      <div *ngIf="BookForm.get('language')?.invalid && BookForm.get('language')?.touched" class="text-danger">
+        Language is required.
+      </div>
+    </div>
+
+    <!-- Series Input (Optional) -->
+    <div class="form-group">
+      <label for="series">Series</label>
+      <input id="series" formControlName="series" class="form-control" />
+    </div>
+
+    <!-- Publish Date Input (Optional) -->
+    <div class="form-group">
+      <label for="publishDate">Publish Date</label>
+      <input id="publishDate" type="date" formControlName="publishDate" class="form-control" />
+    </div>
+
+
+
+    <div class="form-group">
+      <label>ISBN</label>
+      <input class="form-control" formControlName="isbn">
+    </div>
+
+
+    <div class="form-group">
+      <label>Characters</label>
+      <input class="form-control" formControlName="characters">
+    </div>
+    <div class="form-group">
+      <label>Triggers</label>
+      <input class="form-control" formControlName="triggers">
+    </div>
+    <div class="form-group">
+      <label>Book Format</label>
+      <input class="form-control" formControlName="bookFormat">
+    </div>
+
+    <div class="form-group">
+      <label>Edition</label>
+      <input class="form-control" formControlName="edition">
+    </div>
+
+    <div class="form-group">
+      <label>Pages</label>
+      <input class="form-control" formControlName="pages" type="number">
+    </div>
+
+    <div class="form-group">
+      <label>Publisher</label>
+      <input class="form-control" formControlName="publisher">
+    </div>
+
+    <div class="form-group">
+      <label>First Publish Date</label>
+      <input class="form-control" formControlName="firstPublishDate" type="date">
+    </div>
+
+    <div class="form-group">
+      <label>Awards</label>
+      <input class="form-control" formControlName="awards">
+    </div>
+
+    <div *ngIf="previewUrl">
+      <h5>Preview of selected cover picture:</h5>
+      <img [src]="previewUrl" alt="Cover Preview" class="img-fluid" style="max-height: 200px;">
+    </div>
+    <input type="file" formControlName="coverImg" class="form-control" (change)="onFileSelected($event)" />
+
+    <div class="form-group">
+      <label>Price</label>
+      <input class="form-control" formControlName="price" type="number" step="0.01">
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" [disabled]="BookForm.invalid || isLoading">
+      Submit book
+    </button>
+  </form>
+
+  <!-- Submission Message -->
+  <div *ngIf="submissionMessage" class="alert mt-3" [ngClass]="{ 'alert-success': !isLoading, 'alert-danger': isLoading }">
+    {{ submissionMessage }}
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="spinner-border text-primary mt-3" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>

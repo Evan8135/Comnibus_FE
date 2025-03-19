@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WebService } from '../web.service';
-import { AuthService } from '../auth/auth.service';
+import { WebService } from '../../web.service';
+import { AuthService } from '../../auth/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -40,7 +40,7 @@ export class ThoughtsComponent implements OnInit {
     console.log("Logged in username: ", this.loggedInUserName);
     this.thoughtForm = this.formBuilder.group({
       username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
-      comment: ['', [Validators.required, Validators.minLength(10)]], // Adjusted length
+      comment: ['', [Validators.required]], // Adjusted length
     });
 
     if (sessionStorage['page']) {

@@ -1,0 +1,82 @@
+<div class="container thought-container" style="margin-top: 80px;">
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- Loop through all thoughts -->
+      <div *ngFor="let thought of thoughts; trackBy: trackThought" class="card text-dark bg-light mb-3 thought-card">
+        <div class="card-body thought-card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <!-- Display thought content -->
+              <p><strong>Posted by: </strong>{{ thought?.username }}</p>
+              <p><strong>Content: </strong>{{ thought?.comment }}</p>
+              <div>Likes: {{ thought.likes }} <button (click)="like(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div style="display: right;">Dislikes: {{ thought.dislikes }} <button (click)="dislike(thought)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User-specific functionality: reply box -->
+        <div *ngIf="authService.isLoggedIn()">
+          <div *ngIf="showReplyForm; else replyForm">
+            <div class="form-group">
+              <label for="username">Name</label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="form-control"
+                formControlName="username"
+                [value]="loggedInUserName"
+                readonly
+              />
+            </div>
+            <div class="form-group">
+              <label for="content">Please leave your reply below</label>
+              <textarea
+                name="content"
+                id="content"
+                class="form-control"
+                [(ngModel)]="newReplyContent"
+                [ngClass]="{'error': isInvalid('content')}">
+              </textarea>
+            </div>
+            <span *ngIf="isIncomplete()">
+              You must complete the reply content
+            </span>
+            <button *ngIf="!isIncomplete()" (click)="submitReply(thought._id)" class="btn btn-primary" style="margin-top: 20px">Submit</button>
+          </div>
+          <ng-template #replyForm>
+            <button (click)="toggleReplyForm()">Reply</button>
+          </ng-template>
+        </div>
+
+        <!-- Display Replies -->
+        <div *ngIf="thought.replies?.length > 0">
+          <h3>Replies</h3>
+          <div *ngFor="let reply of thought.replies">
+            <div class="reply">
+              <p>{{ reply.content }}</p>
+              <small>Posted by: {{ reply.username }} | {{ reply.createdAt | date }}</small>
+
+              <!-- Like/Dislike buttons -->
+              <div class="like-dislike-buttons">
+                <button (click)="like(reply)">Like ({{ reply.likes }})</button>
+                <button (click)="dislike(reply)">Dislike ({{ reply.dislikes }})</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display a message when there are no replies -->
+        <div *ngIf="thought.replies?.length === 0">
+          <p>No replies yet. Be the first to reply!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error handling -->
+<div *ngIf="errorMessage" class="error-message">
+  <p>{{ errorMessage }}</p>
+</div>

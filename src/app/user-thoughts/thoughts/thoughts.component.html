@@ -56,10 +56,11 @@
     <div *ngFor="let thought of thoughts; trackBy: trackThought" class="thought-card">
       <p><strong>Posted By:</strong> {{ thought.username }}</p>
       <p style="cursor: pointer">
+        <!-- Display a truncated comment with a link to show more -->
         {{ thought.showFullComment ? thought.comment : (thought.comment | slice:0:200) + '...' }}
-        <a (click)="thought.showFullComment = !thought.showFullComment" class="show-more">
-          {{ thought.showFullComment ? 'Show less' : 'Show more' }}
-        </a>
+
+        <!-- Link to the Thought's Detail Page -->
+        <a [routerLink]="['/thoughts', thought._id]" class="show-more">Show More</a>
       </p>
       <div>Likes: {{ thought.likes }} <button (click)="like(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
       <div style="display: right;">Dislikes: {{ thought.dislikes }} <button (click)="dislike(thought)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>

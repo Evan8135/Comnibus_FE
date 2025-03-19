@@ -64,6 +64,12 @@ export class BooksComponent {
       });
   }
 
+  isNSFW(book: any): boolean {
+    const nsfwGenres = ['erotic', 'erotica'];
+    return book.genres.some((genre: string) => nsfwGenres.includes(genre.toLowerCase()));
+  }
+
+
 
   /**
    * Apply both author and genre filters
