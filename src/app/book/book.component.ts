@@ -264,6 +264,10 @@ export class BookComponent implements OnInit {
     this.router.navigate(['/books'], { queryParams: { author: author } });
   }
 
+  filterByCharacter(character: string): void {
+    this.router.navigate(['/books'], { queryParams: { character: character } });
+  }
+
   // Like a review
   like(review: any) {
     if (this.book._id) {

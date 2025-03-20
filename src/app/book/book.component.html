@@ -73,7 +73,9 @@
             <div class="col-md-8">
               <h4>Characters</h4>
               <ul>
-                <li *ngFor="let character of book.characters">{{ character }}</li>
+                <li *ngFor="let character of book.characters">
+                  <button (click)="filterByCharacter(character)" class="btn btn-link">{{ character }}</button>
+                </li>
               </ul>
             </div>
             <h4 style="text-align: center;">Additional Details</h4>

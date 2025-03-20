@@ -130,4 +130,9 @@ export class RecommendationsComponent {
       this.fetchRecommendations();
     }
   }
+
+  isNSFW(book: any): boolean {
+    const nsfwGenres = ['erotic', 'erotica'];
+    return book.genres.some((genre: string) => nsfwGenres.includes(genre.toLowerCase()));
+  }
 }

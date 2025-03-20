@@ -8,7 +8,11 @@
   <div *ngIf="!loading && feed.length > 0">
     <div *ngFor="let activity of feed" class="feed-card">
       <span>
-        <p><strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }}</strong></p>
+        <p class="activity-header" style="display: flex; align-items: center; gap: 5px;">
+          <strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }}</strong>
+          <span style="margin-left: auto; font-size: 0.9em;">{{ activity.timestamp | date: 'short' }}</span>
+        </p>
+
 
         <!-- Show progress or current page based on activity type -->
         <p *ngIf="activity.activity_type === 'Reading Progress' || activity.activity_type === 'Started Reading'">
@@ -17,9 +21,11 @@
         </p>
 
         <!-- Show review content if the activity is a review -->
-        <p *ngIf="activity.activity_type === 'Review'">
+        <p *ngIf="activity.activity_type === 'Reviewed'">
+
           <strong>Review:</strong> {{ activity.review_content }}
         </p>
+
       </span>
     </div>
   </div>

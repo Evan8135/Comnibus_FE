@@ -2,6 +2,15 @@
   margin-top: 86px;
 }
 
+
+.timestamp {
+  margin-left: auto;  /* Push timestamp to the right */
+  font-size: 0.85em;  /* Optional: Adjust font size for the timestamp */
+  color: gray;  /* Optional: Change the color of the timestamp */
+  white-space: nowrap; /* Prevent line breaks in the timestamp */
+}
+
+
 .feed-card {
   background: #f8f9fa;
   border: 1px solid #ddd;

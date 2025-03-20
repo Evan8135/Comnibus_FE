@@ -7,7 +7,7 @@
 
   <div *ngIf="review">
     <h3>{{ review.title }}</h3>
-    <p><strong>By:</strong> {{ review.username }}</p>
+    <p><strong>By:</strong> {{ review.username }} {{ review.created_at }}</p>
     <p>{{ review.comment }}</p>
     <p><strong>Rating:</strong> {{ review.stars }} stars</p>
     <button (click)="deleteReview()" class="btn btn-danger">Delete</button>

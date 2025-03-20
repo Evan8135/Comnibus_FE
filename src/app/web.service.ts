@@ -16,7 +16,8 @@ export class WebService {
     page: number,
     titleFilter: string = '',
     authorFilter: string = '',
-    genreFilter: string = ''
+    genreFilter: string = '',
+    characterFilter: string = ''
   ) {
     let params = new HttpParams()
       .set('pn', page.toString()) // Page number
@@ -30,6 +31,9 @@ export class WebService {
       }
       if (genreFilter) {
         params = params.set('genres', genreFilter);
+      }
+      if (characterFilter) {
+        params = params.set('characters', characterFilter);
       }
 
     return this.http
@@ -97,6 +101,40 @@ export class WebService {
     const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
 
     return this.http.get<{ recommended_books: any[] }>('http://localhost:5000/api/v1.0/recommendations', { params, headers });
+  }
+
+  getTopBooks(
+    page: number,
+    titleFilter: string = '',
+    authorFilter: string = '',
+    genreFilter: string = '',
+    characterFilter: string = ''
+  ) {
+    let params = new HttpParams()
+      .set('pn', page.toString()) // Page number
+      .set('ps', this.pageSize.toString()); // Page size
+
+      if (titleFilter) {
+        params = params.set('title', titleFilter);
+      }
+      if (authorFilter) {
+        params = params.set('author', authorFilter);
+      }
+      if (genreFilter) {
+        params = params.set('genres', genreFilter);
+      }
+      if (characterFilter) {
+        params = params.set('characters', characterFilter);
+      }
+
+    return this.http
+      .get<any>('http://localhost:5000/api/v1.0/top-books', { params })
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching books:', error);
+          return throwError(() => new Error('Failed to fetch books.'));
+        })
+      );
   }
 
   markBookAsRead(id: string, rating: number) {

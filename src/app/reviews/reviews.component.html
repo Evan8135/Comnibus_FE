@@ -11,6 +11,8 @@
           <p>This will affect the user score so please be as detailed and constructive as you can.</p>
           <p>Only one review per user. If you want to make a new reveiw, you will have to delete your old one.</p>
           <p>Any malicious or spam reviews will be deleted.</p>
+
+
         <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="username">Name</label>
@@ -69,6 +71,9 @@
           <span *ngIf="isIncomplete()">
             You must complete all fields
           </span>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
           <button *ngIf="!isIncomplete()" class="btn btn-primary"
             type="submit"
             style="margin-top: 20px">Submit
@@ -98,6 +103,7 @@
       </div>
       <h3>{{ review.title }}</h3>
       <p><strong>Written By:</strong> {{ review.username }}</p>
+      <p><strong>Uploaded:</strong> {{ review.created_at }}</p>
       <p style="cursor: pointer">
         {{ review.showFullComment ? review.comment : (review.comment | slice:0:200) + '...' }}
         <a (click)="review.showFullComment = !review.showFullComment" class="show-more">
@@ -108,6 +114,9 @@
       <div style="display: right;">Dislikes: {{ review.dislikes }} <button (click)="dislike(review)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
       <div *ngIf="review.username === loggedInUserName || authService.isAdmin()">
         <button (click)="deleteReview(review)" class="btn btn-danger">Delete</button>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
       </div>
     </div>
 

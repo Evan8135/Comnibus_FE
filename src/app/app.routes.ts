@@ -17,8 +17,9 @@ import { HomeComponent } from './home/home.component';
 import { CurrentReadsComponent } from './bookshelves/current reads/current-reads.component';
 import { FeedComponent } from './feed/feed.component';
 import { ThoughtsComponent } from './user-thoughts/thoughts/thoughts.component';
-import { AddBookComponent } from './add-book/add-book.component';
+import { AddBookComponent } from './add book/add-book.component';
 import { ThoughtComponent } from './user-thoughts/thought/thought.component';
+import { TopBooksComponent } from './top books/top-books.component';
 
 
 export const routes: Routes = [
@@ -81,6 +82,10 @@ export const routes: Routes = [
   {
     path: 'recommendations',
     component: RecommendationsComponent
+  },
+  {
+    path: 'top-books',
+    component: TopBooksComponent
   },
   {
     path: 'add-requests',

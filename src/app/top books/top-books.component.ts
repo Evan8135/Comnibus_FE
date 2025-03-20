@@ -5,14 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'books',
+  selector: 'top-books',
   standalone: true,
   imports: [RouterOutlet, RouterModule, FormsModule, CommonModule],
   providers: [WebService],
-  templateUrl: './books.component.html',
-  styleUrls: ['./books.component.css']
+  templateUrl: './top-books.component.html',
+  styleUrls: ['./top-books.component.css']
 })
-export class BooksComponent {
+export class TopBooksComponent {
   book_list: any;
   page: number = 1;
   titleFilter: string = '';
@@ -55,7 +55,7 @@ export class BooksComponent {
   }
 
   /**
-   * Fetch books from the web service
+   * Fetch top-books from the web service
    */
   fetchBooks() {
     // Convert filters to lowercase for case-insensitive comparison
@@ -65,7 +65,7 @@ export class BooksComponent {
     const characterFilterLower = this.characterFilter.toLowerCase();
 
     this.webService
-      .getBooks(this.page, titleFilterLower, authorFilterLower, genreFilterLower, characterFilterLower)
+      .getTopBooks(this.page, titleFilterLower, authorFilterLower, genreFilterLower, characterFilterLower)
       .subscribe((response) => {
         this.book_list = response;
       });
@@ -83,7 +83,7 @@ export class BooksComponent {
    */
   applyFilters() {
     this.page = 1;
-    this.router.navigate(['/books'], { queryParams: { title: this.titleFilter, genre: this.genreFilter, author: this.authorFilter, character: this.characterFilter } });
+    this.router.navigate(['/top-books'], { queryParams: { title: this.titleFilter, genre: this.genreFilter, author: this.authorFilter, character: this.characterFilter } });
     this.fetchBooks();
   }
 

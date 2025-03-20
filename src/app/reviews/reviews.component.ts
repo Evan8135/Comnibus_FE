@@ -67,6 +67,15 @@ export class ReviewsComponent {
 
 
   onSubmit() {
+    const currentTime = new Date().toISOString();  // ISO format timestamp
+
+    // Add the timestamp to the review data
+    const reviewData = {
+      ...this.reviewForm.value,
+      created_at: currentTime,  // Include the timestamp when the review is created
+      updated_at: currentTime   // Include the timestamp for when it's updated
+    };
+
     this.webService.postReview(
       this.route.snapshot.paramMap.get('id'),
       this.reviewForm.value
@@ -78,7 +87,12 @@ export class ReviewsComponent {
       },
       (error) => {
         console.error('Error:', error);
-        this.errorMessage = error.error?.message || 'An unexpected error occurred.';
+        // Handle error: check for specific error messages from backend
+        if (error.error && error.error.error) {
+          this.errorMessage = error.error.error;  // Assign the error message from backend
+        } else {
+          this.errorMessage = 'An unexpected error occurred.';
+        }
       }
     );
   }
@@ -124,6 +138,15 @@ export class ReviewsComponent {
             // Optionally update review data after liking
             review.likes = response.likes;  // Adjust according to your API's response
             this.fetchReviews();
+          },
+          (error) => {
+            console.error('Error:', error);
+            // Handle error: check for specific error messages from backend
+            if (error.error && error.error.error) {
+              this.errorMessage = error.error.error;  // Assign the error message from backend
+            } else {
+              this.errorMessage = 'An unexpected error occurred.';
+            }
           });
       } else {
         this.router.navigate(['/login']);
