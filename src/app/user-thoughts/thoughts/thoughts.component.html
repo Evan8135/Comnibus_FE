@@ -55,6 +55,7 @@
   <div *ngIf="thoughts.length > 0; else nothoughts">
     <div *ngFor="let thought of thoughts; trackBy: trackThought" class="thought-card">
       <p><strong>Posted By:</strong> {{ thought.username }}</p>
+      <p><strong>Uploaded: </strong> {{ thought.created_at }}</p>
       <p style="cursor: pointer">
         <!-- Display a truncated comment with a link to show more -->
         {{ thought.showFullComment ? thought.comment : (thought.comment | slice:0:200) + '...' }}

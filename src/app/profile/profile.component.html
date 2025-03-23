@@ -106,18 +106,7 @@
           </form>
         </div>
 
-        <!-- User Reviews -->
-        <div class="card-body user-card-body">
-          <h4>My Reviews</h4>
-          <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
-            <div class="card-header">
-              <p><strong>{{ review.title }}</strong></p>
-            </div>
-            <div class="card-body">
-              <p>{{ review.comment }}</p>
-            </div>
-          </div>
-        </div>
+
 
         <!-- Bookshelf Section -->
         <h4>My Bookshelf</h4>
@@ -169,6 +158,21 @@
               <div class="book-details">
                 <p><strong>{{ book.title }}</strong></p>
                 <p><em>by {{ book.author.join(', ') }}</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Reviews -->
+        <div class="card-body user-card-body">
+          <h4>My Reviews</h4>
+          <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
+            <div class="card-header">
+              <p><strong>{{ review.title }}</strong></p>
+            </div>
+            <div class="card-body">
+              <p>{{ review.comment }}</p>
+              <div class="card-footer">
               </div>
             </div>
           </div>

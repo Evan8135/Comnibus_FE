@@ -9,9 +9,11 @@
     <div *ngFor="let activity of feed" class="feed-card">
       <span>
         <p class="activity-header" style="display: flex; align-items: center; gap: 5px;">
-          <strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }}</strong>
+          <strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }} {{ activity.thought_user }}</strong>
           <span style="margin-left: auto; font-size: 0.9em;">{{ activity.timestamp | date: 'short' }}</span>
         </p>
+
+
 
 
         <!-- Show progress or current page based on activity type -->
@@ -24,6 +26,16 @@
         <p *ngIf="activity.activity_type === 'Reviewed'">
 
           <strong>Review:</strong> {{ activity.review_content }}
+        </p>
+
+        <!-- Show thought content if the activity is a thought -->
+        <p *ngIf="activity.activity_type === 'Posted a Thought'">
+          {{ activity.thought_content }}
+        </p>
+
+        <!-- Show reply content if the activity is a reply -->
+        <p *ngIf="activity.activity_type === 'Replied to'">
+          <strong>{{ activity.thought_user }}</strong> {{ activity.reply_content }}
         </p>
 
       </span>

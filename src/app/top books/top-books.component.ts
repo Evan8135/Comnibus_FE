@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'top-books',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   providers: [WebService],
   templateUrl: './top-books.component.html',
   styleUrls: ['./top-books.component.css']
@@ -54,11 +54,8 @@ export class TopBooksComponent {
     this.fetchBooks();
   }
 
-  /**
-   * Fetch top-books from the web service
-   */
+
   fetchBooks() {
-    // Convert filters to lowercase for case-insensitive comparison
     const titleFilterLower = this.titleFilter.toLowerCase();
     const authorFilterLower = this.authorFilter.toLowerCase();
     const genreFilterLower = this.genreFilter.toLowerCase();
@@ -78,9 +75,7 @@ export class TopBooksComponent {
 
 
 
-  /**
-   * Apply both author and genre filters
-   */
+
   applyFilters() {
     this.page = 1;
     this.router.navigate(['/top-books'], { queryParams: { title: this.titleFilter, genre: this.genreFilter, author: this.authorFilter, character: this.characterFilter } });
@@ -89,9 +84,7 @@ export class TopBooksComponent {
 
 
 
-  /**
-   * Clear genre filter
-   */
+
   clearGenreFilter(): void {
     this.genreFilter = '';
     this.selectedGenre = '';

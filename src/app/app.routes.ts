@@ -7,7 +7,6 @@ import { InboxComponent } from './inbox/inbox.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { ProfileComponent } from './profile/profile.component';
-import { ReviewComponent } from './review/review.component';
 import { RecommendationsComponent } from './recommendations/recommendations.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { AddRequestComponent } from './book requests/add requests/add-request.component';
@@ -50,10 +49,6 @@ export const routes: Routes = [
   {
     path: 'books/:id/reviews',
     component: ReviewsComponent
-  },
-  {
-    path: 'books/:id/reviews/:id',
-    component:ReviewComponent
   },
   {
     path: 'inbox',

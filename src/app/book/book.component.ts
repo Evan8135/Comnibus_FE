@@ -78,7 +78,8 @@ export class BookComponent implements OnInit {
 
         // Initialize the form for rating
         this.rateForm = this.formBuilder.group({
-          stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]]
+          stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]],
+          date_read: ["", Validators.required]
         });
 
         // Fetch reviews and top reviews
@@ -104,7 +105,8 @@ export class BookComponent implements OnInit {
 
       // Initialize the form for rating (disabled for non-users)
       this.rateForm = this.formBuilder.group({
-        stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]]
+        stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]],
+        date_read: ['', [Validators.required]]
       });
 
       // Fetch reviews and top reviews (non-users can also view reviews)
@@ -173,14 +175,19 @@ export class BookComponent implements OnInit {
   // Method to mark a book as read and submit rating
   markAsRead() {
     const ratingControl = this.rateForm.get('stars');
+    const dateControl = this.rateForm.get('date_read');
 
     // Mark the control as touched to trigger validation
     ratingControl?.markAsTouched();
+    dateControl?.markAsTouched();
     ratingControl?.updateValueAndValidity();
+    dateControl?.updateValueAndValidity();
 
     const rating = ratingControl?.value;
+    const dateRead = dateControl?.value;
 
     console.log("Rating value before submission: ", rating);
+    console.log("Date read: ", dateRead);
 
     // Validate the rating value
     if (rating === null || rating < 0 || rating > 5) {
@@ -196,10 +203,9 @@ export class BookComponent implements OnInit {
     }
 
     // Make the API call to mark the book as read
-    this.webService.markBookAsRead(this.book._id, rating).subscribe(
+    this.webService.markBookAsRead(this.book._id, rating, dateRead).subscribe(
       (response: any) => {
         alert(response.message);
-        this.book.user_score = response.user_score; // Update UI with new score if available
         this.isMarkedAsRead = true;
       },
       (error) => {

@@ -135,8 +135,7 @@ export class ReviewsComponent {
       if (this.authService.isLoggedIn()) {
         this.webService.likeReview(this.bookId, review)
           .subscribe((response) => {
-            // Optionally update review data after liking
-            review.likes = response.likes;  // Adjust according to your API's response
+            review.likes = response.likes;
             this.fetchReviews();
           },
           (error) => {
@@ -160,7 +159,6 @@ export class ReviewsComponent {
       if (this.authService.isLoggedIn()) {
         this.webService.dislikeReview(this.bookId, review)
           .subscribe((response) => {
-            // Optionally update review data after disliking
             review.dislikes = response.dislikes;
             this.fetchReviews();
           });

@@ -8,7 +8,7 @@
             <div class="col-md-8">
               <!-- Display thought content -->
               <p><strong>Posted by: </strong>{{ thought?.username }}</p>
-              <p><strong>Content: </strong>{{ thought?.comment }}</p>
+              <p>{{ thought?.comment }}</p>
               <div>Likes: {{ thought.likes }} <button (click)="like(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
               <div style="display: right;">Dislikes: {{ thought.dislikes }} <button (click)="dislike(thought)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
             </div>
@@ -56,13 +56,11 @@
           <div *ngFor="let reply of thought.replies">
             <div class="reply">
               <p>{{ reply.content }}</p>
-              <small>Posted by: {{ reply.username }} | {{ reply.createdAt | date }}</small>
+              <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>
 
               <!-- Like/Dislike buttons -->
-              <div class="like-dislike-buttons">
-                <button (click)="like(reply)">Like ({{ reply.likes }})</button>
-                <button (click)="dislike(reply)">Dislike ({{ reply.dislikes }})</button>
-              </div>
+              <div>Likes: {{ reply.likes }} <button (click)="like(reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislike(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
             </div>
           </div>
         </div>

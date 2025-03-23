@@ -40,7 +40,7 @@ export class ThoughtsComponent implements OnInit {
     console.log("Logged in username: ", this.loggedInUserName);
     this.thoughtForm = this.formBuilder.group({
       username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
-      comment: ['', [Validators.required]], // Adjusted length
+      comment: ['', [Validators.required]],
     });
 
     if (sessionStorage['page']) {
@@ -63,6 +63,8 @@ export class ThoughtsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const currentTime = new Date().toISOString();
+
     if (this.thoughtForm.invalid) {
       this.submissionMessage = 'Please fill all required fields!';
       return;
@@ -73,12 +75,17 @@ export class ThoughtsComponent implements OnInit {
     // Assuming the authors or other required fields might be there
     const thought = {
       ...this.thoughtForm.value,
+      created_at: currentTime
     };
 
-    this.webService.postThought(this.page, thought).subscribe(
+    console.log("Thought being submitted:", thought);
+
+    this.webService.postThought(thought, this.page).subscribe(
       (response) => {
         this.isLoading = false;
         this.submissionMessage = response.message;
+        this.thoughtForm.reset();
+        this.fetchThoughts();
         // Optionally clear the form or update thoughts
       },
       (error) => {
