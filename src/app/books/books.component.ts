@@ -70,7 +70,7 @@ export class BooksComponent {
   }
 
   isNSFW(book: any): boolean {
-    const nsfwGenres = ['erotic', 'erotica'];
+    const nsfwGenres = ['erotic', 'erotica', 'erotic romance', 'erotic horror', 'abuse'];
     return book.genres.some((genre: string) => nsfwGenres.includes(genre.toLowerCase()));
   }
 

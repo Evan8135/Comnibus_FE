@@ -19,7 +19,8 @@ import { ThoughtsComponent } from './user-thoughts/thoughts/thoughts.component';
 import { AddBookComponent } from './add book/add-book.component';
 import { ThoughtComponent } from './user-thoughts/thought/thought.component';
 import { TopBooksComponent } from './top books/top-books.component';
-
+import { ReadBooksComponent } from './bookshelves/have read/read-books.component';
+import { ReviewComponent } from './review/review.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,10 @@ export const routes: Routes = [
     component: ReviewsComponent
   },
   {
+    path: 'review/:id',
+    component: ReviewComponent
+  },
+  {
     path: 'inbox',
     component: InboxComponent
   },
@@ -73,6 +78,10 @@ export const routes: Routes = [
   {
     path: 'currently-reading',
     component: CurrentReadsComponent
+  },
+  {
+    path: 'have-read',
+    component: ReadBooksComponent
   },
   {
     path: 'recommendations',

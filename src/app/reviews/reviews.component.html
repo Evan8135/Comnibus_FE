@@ -106,9 +106,7 @@
       <p><strong>Uploaded:</strong> {{ review.created_at }}</p>
       <p style="cursor: pointer">
         {{ review.showFullComment ? review.comment : (review.comment | slice:0:200) + '...' }}
-        <a (click)="review.showFullComment = !review.showFullComment" class="show-more">
-          {{ review.showFullComment ? 'Show less' : 'Show more' }}
-        </a>
+        <a [routerLink]="['/review', review._id]" class="show-more">Show More</a>
       </p>
       <div>Likes: {{ review.likes }} <button (click)="like(review)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
       <div style="display: right;">Dislikes: {{ review.dislikes }} <button (click)="dislike(review)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>

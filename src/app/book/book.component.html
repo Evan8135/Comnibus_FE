@@ -66,7 +66,43 @@
                 <li *ngFor="let trigger of book.triggers">{{ trigger }}</li>
               </ul>
             </div>
-            <button class="btn btn-outline-dark ms-auto" type="button">Add Content/Trigger Warnings</button>
+
+            <!-- Button to toggle the visibility of the trigger form -->
+            <button class="btn btn-outline-dark ms-auto" (click)="showTriggerForm = !showTriggerForm" type="button">
+              Add Content/Trigger Warnings
+            </button>
+
+            <!-- The form is shown/hidden based on the showTriggerForm variable -->
+            <div *ngIf="showTriggerForm">
+              <form [formGroup]="triggerForm" (ngSubmit)="addTriggers()">
+                <!-- Label for the trigger input field -->
+                <label for="triggers">Enter Trigger Warnings (separate with commas):</label>
+
+                <!-- Input field for trigger warnings -->
+                <input
+                  type="text"
+                  id="triggers"
+                  class="form-control"
+                  formControlName="triggers"
+                  placeholder="e.g., Violence, Abuse, Suicide"
+                />
+
+                <!-- Validation message if the trigger field is invalid -->
+                <div *ngIf="triggerForm.get('triggers')?.invalid && triggerForm.get('triggers')?.touched" class="text-danger">
+                  Please enter at least one trigger warning.
+                </div>
+
+                <!-- Submit button for the form, disabled if the form is invalid -->
+                <button
+                  type="submit"
+                  class="btn btn-outline-dark mt-2"
+                  [disabled]="triggerForm.invalid"
+                >
+                  Submit Triggers
+                </button>
+              </form>
+            </div>
+
             <p><strong>Description:</strong></p>
             <div class="col-md-8">
               <p>{{ book.description }}</p>
@@ -106,7 +142,7 @@
                 <div *ngIf="reviews.length > 0; else noReviews">
                 <div *ngFor="let review of topReviews">
                   <div class="row" style="margin-top: 70px">
-                    <div class="card bg-light mb-3">
+                    <div class="card bg-light mb-3" style="cursor: pointer" [routerLink]="['/review', review._id]">
                       <div class="card-header"><p>{{ review.name }}</p></div>
                       <div class="card-header"><strong>{{ review.title }}</strong></div>
                       <div class="card-footer">

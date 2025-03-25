@@ -85,6 +85,18 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow to match card design */
 }
 
+.trigger-warnings-list {
+  display: grid; /* Enable CSS Grid */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Auto columns based on container width */
+  gap: 10px; /* Space between items */
+}
+
+.trigger-warnings-list li {
+  list-style: none;
+  /* You can adjust padding and margin here to make the list look cleaner */
+}
+
+
 .trigger-warnings-title {
   color: #721c24; /* Dark red for the title */
   font-weight: bold;

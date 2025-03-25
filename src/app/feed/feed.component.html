@@ -25,7 +25,9 @@
         <!-- Show review content if the activity is a review -->
         <p *ngIf="activity.activity_type === 'Reviewed'">
 
-          <strong>Review:</strong> {{ activity.review_content }}
+          {{ activity.showFullReview ? activity.review_content : (activity.review_content | slice:0:200) + '...' }}
+
+          <a [routerLink]="['/review', activity.review_id]" class="show-more">Show More</a>
         </p>
 
         <!-- Show thought content if the activity is a thought -->
@@ -35,7 +37,7 @@
 
         <!-- Show reply content if the activity is a reply -->
         <p *ngIf="activity.activity_type === 'Replied to'">
-          <strong>{{ activity.thought_user }}</strong> {{ activity.reply_content }}
+          {{ activity.reply_content }}
         </p>
 
       </span>

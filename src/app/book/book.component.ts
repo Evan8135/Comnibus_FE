@@ -5,6 +5,7 @@ import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -21,7 +22,8 @@ export class BookComponent implements OnInit {
   rateForm: any; // Form for rating a book
   showRateForm: boolean = false; // Whether to show the rating form
   Same_Author_Books: any[] = []; // Array for same author books
-  triggers: any;
+  triggerForm: any;
+  showTriggerForm: boolean = false;
   reviews: any; // All reviews for the current book
   topReviews: any[] = []; // Top reviews based on likes
   isMarkedAsRead: boolean = false; // Whether the book is marked as read
@@ -29,13 +31,15 @@ export class BookComponent implements OnInit {
   isAddedToTBR: boolean = false; // Whether the book is added to "Want to Read"
   isCurrentlyReading: boolean = false; // Whether the book is in the "Currently Reading" list
   isFavouriteBook: boolean = false; // Whether the book is in the "Favourite Books" list
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
     private webService: WebService,
-    public authService: AuthService
+    public authService: AuthService,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -82,6 +86,12 @@ export class BookComponent implements OnInit {
           date_read: ["", Validators.required]
         });
 
+        // Initialize the form for triggers
+        this.triggerForm = this.formBuilder.group({
+          triggers: ['', Validators.required]
+        });
+
+
         // Fetch reviews and top reviews
         this.webService.getReviews(bookId).subscribe((response) => {
           this.reviews = response;
@@ -120,6 +130,7 @@ export class BookComponent implements OnInit {
       });
     }
   }
+
 
 
 
@@ -260,6 +271,9 @@ export class BookComponent implements OnInit {
     );
   }
 
+
+
+
   // Filter books by genre
   filterByGenre(genre: string): void {
     this.router.navigate(['/books'], { queryParams: { genre: genre } });
@@ -273,6 +287,39 @@ export class BookComponent implements OnInit {
   filterByCharacter(character: string): void {
     this.router.navigate(['/books'], { queryParams: { character: character } });
   }
+
+  addTriggers(): void {
+    if (this.triggerForm.invalid) {
+      // If the form is invalid, stop the submission and possibly show a message
+      return;
+    }
+
+    const newTriggers = this.triggerForm.value.triggers.split(',').map((trigger: string) => trigger.trim());
+
+    // Get the current triggers from the book's existing trigger list (if any)
+    const existingTriggers = this.book.triggers || [];
+
+    // Combine the existing triggers with the new ones (if not already present)
+    const updatedTriggers = [...new Set([...existingTriggers, ...newTriggers])]; // Using Set to avoid duplicates
+
+    // Assuming you have a service method to update the book's triggers
+    this.webService.UpdateTriggers(this.book._id, updatedTriggers).subscribe(
+      (response) => {
+        // If the request is successful, update the book's triggers on the UI
+        this.book.triggers = updatedTriggers;
+        this.showTriggerForm = false; // Close the form
+        this.triggerForm.reset(); // Reset the form
+        alert('Trigger warnings added successfully!');
+      },
+      (error) => {
+        // If there's an error, show an error message
+        console.error('Error adding trigger warnings:', error);
+        alert('Failed to add trigger warnings.');
+      }
+    );
+  }
+
+
 
   // Like a review
   like(review: any) {

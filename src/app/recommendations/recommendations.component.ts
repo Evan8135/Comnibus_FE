@@ -14,6 +14,7 @@ import { WebService } from '../web.service';  // Import WebService
 export class RecommendationsComponent {
   recommendations: any[] = [];
   booksByAuthor: { [author: string]: any[] } = {};
+  highRatedAuthorsBooks: any[] = [];
   booksMatchingMultipleGenres: any[] = [];
   haveReadBooksByAuthor: any[] = [];
   additionalBooksByGenres: any[] = [];
@@ -49,6 +50,20 @@ export class RecommendationsComponent {
         });
 
         console.log("Books by authors of 'have read' books:", this.haveReadBooksByAuthor);
+
+        const highlyRatedAuthors: string[] = this.haveReadBooks
+          .filter((book: any) => book.stars >= 3.5)
+          .flatMap((book: any) => book.author);
+
+        console.log("Highly Rated Authors:", highlyRatedAuthors);
+
+        // Filter recommended books by these authors
+        this.highRatedAuthorsBooks = this.recommendations.filter((book: any) => {
+          const authors: string[] = Array.isArray(book.author) ? book.author : [book.author];
+          return authors.some((author: string) => highlyRatedAuthors.includes(author));
+        });
+
+        console.log("Books from Highly Rated Authors:", this.highRatedAuthorsBooks);
 
         this.filterRecommendations();
         this.filterBooksByMultipleGenres();

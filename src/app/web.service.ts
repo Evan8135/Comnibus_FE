@@ -49,6 +49,8 @@ export class WebService {
     return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id);
   }
 
+
+
   postBook(bookData: any) {
     const token = localStorage.getItem('x-access-token');
     const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
@@ -57,9 +59,12 @@ export class WebService {
     formData.append("title", bookData.title);
     formData.append("series", bookData.series || "");
     formData.append("author", bookData.author);
+    formData.append("genres", bookData.genres);
     formData.append("description", bookData.description);
     formData.append("language", bookData.language);
+    formData.append("triggers", bookData.triggers);
     formData.append("isbn", bookData.isbn);
+    formData.append("characters", bookData.characters);
     formData.append("bookFormat", bookData.bookFormat);
     formData.append("edition", bookData.edition || "");
     formData.append("pages", bookData.pages.toString());
@@ -89,6 +94,16 @@ export class WebService {
           return throwError(() => new Error('Failed to add book.'));
         })
       );
+  }
+
+  UpdateTriggers(bookId: string, triggers: string[]) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+
+    const formData = new FormData();
+    triggers.forEach((trigger: string) => formData.append('triggers', trigger));
+
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + bookId + '/add-trigger', formData, { headers })
   }
 
 
@@ -148,7 +163,14 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/have-read', formData, { headers });
   }
 
-
+  updateReadBook(bookId: string, updateData: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.put<any>('http://localhost:5000/api/v1.0/have-read/' + bookId, updateData, {headers});
+  }
 
   removeBookFromRead(id: any) {
     const token = localStorage.getItem('x-access-token');
@@ -157,6 +179,25 @@ export class WebService {
       headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
     }
     return this.http.delete('http://localhost:5000/api/v1.0/books/' + id + '/have-read', {headers});
+  }
+
+  getReadBooks() {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/have-read', { headers });
+  }
+
+  // Get a specific book from the "currently reading" list of a user
+  getReadBook(bookId: string) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/have-read/' + bookId, { headers });
   }
 
   addToWantToRead(id: any) {
@@ -247,8 +288,8 @@ export class WebService {
   getReviews(id: any) {
     return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id + '/reviews');
   }
-  getReview(id: any, review: any) {
-    return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + id + '/reviews/' + review._id);
+  getReview(id: any) {
+    return this.http.get<any>('http://localhost:5000/api/v1.0/review/' + id);
   }
   deleteReview(id: any, review: any) {
     const token = localStorage.getItem('x-access-token');

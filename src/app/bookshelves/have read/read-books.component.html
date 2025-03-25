@@ -1,0 +1,67 @@
+<div class="read-books-container" *ngIf="!loading">
+  <h2>Your Finished Reads</h2>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="readBooks.length === 0" class="no-books">
+    <p>No books in your have read list.</p>
+  </div>
+
+  <div *ngFor="let book of readBooks" class="book-item">
+    <div class="book-cover">
+      <img [src]="book.coverImg" alt="{{ book.title }} cover">
+    </div>
+
+    <div class="book-info">
+      <h3>{{ book.title }}</h3>
+      <p><strong>Author:</strong> {{ book.author }}</p>
+      <p><strong>Rating:</strong>
+        <span *ngFor="let star of getStarCount(book.stars)">
+          <img *ngIf="star === 0" src="images/star.png" alt="Full Star" class="star-icon">
+          <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" class="star-icon half-star">
+        </span>
+      </p>
+      <p><strong>Date Finished:</strong> {{ book.date_read }}</p>
+
+      <button (click)="toggleEditForm(book)">Edit</button>
+      <button (click)="removeReadBook(book._id)">Remove from Have Read</button>
+
+      <!-- Edit Form -->
+      <div *ngIf="book.showEditForm" class="edit-form">
+        <form [formGroup]="editForms[book._id]" (ngSubmit)="submitEditForm(book._id)">
+
+          <!-- Rating Selection -->
+          <label for="stars">Rating (0-5):</label>
+          <select formControlName="stars">
+            <option [value]="0.5">★½</option>
+            <option [value]="1">★</option>
+            <option [value]="1.5">★½</option>
+            <option [value]="2">★★</option>
+            <option [value]="2.5">★★½</option>
+            <option [value]="3">★★★</option>
+            <option [value]="3.5">★★★½</option>
+            <option [value]="4">★★★★</option>
+            <option [value]="4.5">★★★★½</option>
+            <option [value]="5">★★★★★</option>
+          </select>
+
+          <!-- Date Read -->
+          <label for="date_read">Date Finished:</label>
+          <input type="date" formControlName="date_read">
+
+          <!-- Action Buttons -->
+          <div class="button-group">
+            <button type="submit">Save</button>
+            <button type="button" (click)="toggleEditForm(book)">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <p>Loading...</p>
+</div>

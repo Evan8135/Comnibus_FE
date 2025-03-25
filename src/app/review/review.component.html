@@ -1,0 +1,88 @@
+<div class="container review-container" style="margin-top: 80px;">
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- Loop through all reviews -->
+      <div *ngFor="let review of reviews; trackBy: trackReview" class="card text-dark bg-light mb-3 review-card">
+        <div class="card-body review-card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <!-- Display review content -->
+              <h2><strong><i>{{ review.title }}</i></strong></h2>
+              <span *ngFor="let star of getStarCount(review.stars)">
+                <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
+                <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
+              </span>
+              <p><strong>Posted by: </strong>{{ review?.username }}</p>
+              <p>{{ review?.comment }}</p>
+              <div>Likes: {{ review.likes }} <button (click)="like(review)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div style="display: right;">Dislikes: {{ review.dislikes }} <button (click)="dislike(review)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+            </div>
+            <div *ngIf="review.username === loggedInUserName || authService.isAdmin()">
+              <button (click)="deleteReview(review)" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User-specific functionality: reply box -->
+        <!--<div *ngIf="authService.isLoggedIn()">
+          <div *ngIf="showReplyForm; else replyForm">
+            <div class="form-group">
+              <label for="username">Name</label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="form-control"
+                formControlName="username"
+                [value]="loggedInUserName"
+                readonly
+              />
+            </div>
+            <div class="form-group">
+              <label for="content">Please leave your reply below</label>
+              <textarea
+                name="content"
+                id="content"
+                class="form-control"
+                [(ngModel)]="newReplyContent"
+                [ngClass]="{'error': isInvalid('content')}">
+              </textarea>
+            </div>
+            <span *ngIf="isIncomplete()">
+              You must complete the reply content
+            </span>
+            <button *ngIf="!isIncomplete()" (click)="submitReply(review._id)" class="btn btn-primary" style="margin-top: 20px">Submit</button>
+          </div>
+          <ng-template #replyForm>
+            <button (click)="toggleReplyForm()">Reply</button>
+          </ng-template>
+        </div>-->
+
+        <!-- Display Replies -->
+        <!--<div *ngIf="review.replies?.length > 0">
+          <h3>Replies</h3>
+          <div *ngFor="let reply of review.replies">
+            <div class="reply">
+              <p>{{ reply.content }}</p>
+              <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>-->
+
+              <!-- Like/Dislike buttons -->
+              <!--<div>Likes: {{ reply.likes }} <button (click)="like(reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislike(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+            </div>
+          </div>
+        </div>-->
+
+        <!-- Display a message when there are no replies -->
+        <!--<div *ngIf="review.replies?.length === 0">
+          <p>No replies yet. Be the first to reply!</p>
+        </div>-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error handling -->
+<div *ngIf="errorMessage" class="error-message">
+  <p>{{ errorMessage }}</p>
+</div>
