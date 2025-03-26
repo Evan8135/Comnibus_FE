@@ -76,12 +76,12 @@ export class AddBookComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  uploadCoverImg(image: File): void {
+  uploadCoverImg(image: File) {
     this.isUploading = true;
     const formData = new FormData();
     formData.append('image', image);
 
-    this.http.post<{ url: string }>('http://localhost:5000/api/v1.0/upload-image', formData).subscribe(
+    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData).subscribe(
       response => {
         if (response.url) {
           this.BookForm.patchValue({ coverImg: response.url });
@@ -141,49 +141,46 @@ export class AddBookComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Helper function to format string to an array (handle commas and spaces)
-    const formatStringToArray = (input: string) =>
-      input ? input.split(',').map(item => item.trim()).filter(item => item !== '') : [];
+     // Convert authors from comma-separated string to an array
+     const authorsString = this.BookForm.value.author;
+     const authorsArray = authorsString
+       ? authorsString.split(',').map((author: string) => author.trim())
+       : [];
 
+     // Awards
+     const awardsString = this.BookForm.value.awards;
+     const awardsArray = awardsString
+       ? awardsString.split(',').map((award: string) => award.trim()).join(", ")
+       : "";
 
-    // Handle genres, awards, triggers, and characters properly
-    const formatAndFlatten = (input: any) => {
-      if (Array.isArray(input)) {
-        // Flatten if it's already an array, and split any strings that may be comma-separated
-        return input.flatMap(item => formatStringToArray(item));
-      } else if (typeof input === 'string') {
-        // If it's a string, split it properly
-        return formatStringToArray(input);
-      } else {
-        return [];
-      }
-    };
+     // Characters
+     const charactersString = this.BookForm.value.characters;
+     const charactersArray = charactersString
+       ? charactersString.split(',').map((character: string) => character.trim()).join(", ")
+      : "";
 
-    // Flatten and remove duplicates for all fields
-    const genres = [...new Set(formatAndFlatten(this.BookForm.value.genres))];
-    const characters = [...new Set(formatAndFlatten(this.BookForm.value.characters))];
-    const awards = [...new Set(formatAndFlatten(this.BookForm.value.awards))];
-    const triggers = [...new Set(formatAndFlatten(this.BookForm.value.triggers))];
+     // Triggers
+     const triggersString = this.BookForm.value.triggers;
+     const triggersArray = triggersString
+       ? triggersString.split(',').map((trigger: string) => trigger.trim()).join(", ")
+       : "";
 
-    // Now handle other fields similarly:
     const book = {
       ...this.BookForm.value,
-      author: formatStringToArray(this.BookForm.value.author),
-      genres: genres,          // Final genres array
-      characters: characters,  // Final characters array
-      awards: awards,          // Final awards array
-      triggers: triggers,      // Final triggers array
+      author: authorsArray, // Now the authors are an array
+      genres: this.selectedGenres, // Genres already handled as an array
+      characters: charactersArray,
+      awards: awardsArray,
+      triggers: triggersArray
     };
 
-    console.log('Final Book Data:', book);
-
     this.webService.postBook(book).subscribe(
-      response => {
+      (response) => {
         this.isLoading = false;
         this.previewUrl = response.coverImg;
         this.submissionMessage = response.message;
       },
-      error => {
+      (error) => {
         this.isLoading = false;
         this.submissionMessage = 'Something went wrong, please try again later.';
       }

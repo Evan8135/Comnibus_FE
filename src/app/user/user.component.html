@@ -5,27 +5,42 @@
       <div class="card text-dark bg-light mb-3 user-card">
         <div class="card-header user-header">
           <h4>{{ user.username }}</h4>
-          <img [src]="user.profile_pic || '/images/profile.png'">
-          <h3><strong> {{ user.name }}</strong></h3>
-          <h5> {{ followersCount }} Followers</h5>
-          <h5> {{ followingCount }} Following</h5>
+          <img [src]="user.profile_pic || '/images/profile.png'" alt="Profile picture">
+          <h3><strong>{{ user.name }}</strong></h3>
+          <h5>{{ followersCount }} Followers</h5>
+          <h5>{{ followingCount }} Following</h5>
           <button *ngIf="!isFollowing" (click)="followUser()" class="follow-btn">
             Follow
           </button>
-
           <button *ngIf="isFollowing" (click)="unfollowUser()" class="unfollow-btn">
             Unfollow
           </button>
         </div>
         <div class="card-body user-card-body">
           <h4>Feed</h4>
+
+          <!-- Reviews by the user -->
           <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
             <div class="card-header">
               <p><strong>{{ review.title }}</strong></p>
             </div>
-            <div class="card-body" >
+            <div class="card-body">
               <p>{{ review.comment }}</p>
               <div class="card-footer">
+                <!-- You can add review footer information if necessary -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Books written by the author -->
+          <div *ngIf="books_by_author.length > 0">
+            <h4>Books Written</h4>
+            <div *ngFor="let book of books_by_author" class="card text-dark bg-light mb-3 book-card">
+              <img [src]="book.coverImg" alt="Book cover" class="book-cover">
+              <div class="book-details" style="cursor: pointer" [routerLink]="['/books', book._id]">
+                <p><strong>{{ book.title }}</strong></p>
+                <p><em>by {{ book.author.join(', ') }}</em></p>
+                <p><strong>Genres:</strong> {{ book.genres }}%</p>
               </div>
             </div>
           </div>
@@ -37,5 +52,11 @@
     <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
       <p>No reviews by this user.</p>
     </div>
+
+    <!-- If no books by author, show a message -->
+    <div *ngIf="books_by_author.length === 0 && user.user_type === 'author'" class="col-sm-12">
+      <p>This author has not written any books yet.</p>
+    </div>
+
   </div>
 </div>

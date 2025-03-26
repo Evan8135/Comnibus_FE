@@ -71,21 +71,9 @@ export class WebService {
     formData.append("publisher", bookData.publisher || "");
     formData.append("publishDate", bookData.publishDate);
     formData.append("firstPublishDate", bookData.firstPublishDate);
+    formData.append("awards", bookData.awards);
     formData.append("coverImg", bookData.coverImg);
     formData.append("price", bookData.price.toString());
-
-    if (bookData.genres) {
-      bookData.genres.forEach((genre: string) => formData.append("genres", genre));
-    }
-    if (bookData.characters) {
-      bookData.characters.forEach((character: string) => formData.append("characters", character));
-    }
-    if (bookData.triggers) {
-      bookData.triggers.forEach((trigger: string) => formData.append("triggers", trigger));
-    }
-    if (bookData.awards) {
-      bookData.awards.forEach((award: string) => formData.append("awards", award));
-    }
 
     return this.http.post<any>('http://localhost:5000/api/v1.0/add-book', formData, { headers })
       .pipe(
@@ -94,6 +82,17 @@ export class WebService {
           return throwError(() => new Error('Failed to add book.'));
         })
       );
+  }
+
+
+
+  deleteBook(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.delete<any>('http://localhost:5000/api/v1.0/books/' + id, {headers});
   }
 
   UpdateTriggers(bookId: string, triggers: string[]) {

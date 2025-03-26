@@ -342,4 +342,30 @@ export class BookComponent implements OnInit {
         });
     }
   }
+
+  deleteBook(book: any) {
+    if (this.authService.isLoggedIn()) {
+      if (this.authService.isAdmin()) {
+        const confirmDeletion = confirm("Are you sure you want to delete this book?");
+        if (confirmDeletion) {
+          this.webService.deleteBook(book._id).subscribe(
+            response => {
+              // Handle successful deletion
+              alert('Book deleted successfully!');
+              this.router.navigate(['/books']);  // Redirect to the books list or another page
+            },
+            error => {
+              console.error("Error deleting book: ", error);
+              alert("Failed to delete the book.");
+            }
+          );
+        }
+      } else {
+        alert("You are not authorized to delete this book.");
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
 }

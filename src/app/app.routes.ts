@@ -24,6 +24,11 @@ import { ReviewComponent } from './review/review.component';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: '/home',  // Redirect to /home when accessing localhost:4200
+    pathMatch: 'full'
+  },
+  {
     path: 'home',
     component: HomeComponent
   },

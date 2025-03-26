@@ -3,7 +3,11 @@
     <!-- Display the main book details -->
     <div class="col-sm-12">
       <div class="card text-dark bg-light mb-3 book-card">
+
         <div class="card-header book-header">
+          <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+            <button (click)="deleteBook(book)" class="btn btn-danger">Delete Book</button>
+          </div>
           <h4>{{ book.title }}</h4>
           <p><strong>Author:</strong>
             <span *ngFor="let author of book.author?.length ? book.author : [] ; let isLast = last">
@@ -185,7 +189,7 @@
                 <img src="{{ book.coverImg }}" alt="{{ book.title }}" class="img-fluid">
             </div>
           </div>
-          <div class="card-header" style="cursor: pointer" [routerLink]="['/books', book._id]">
+          <div class="card-header">
             <h5>{{ book.title }}</h5>
             <p><strong>Author:</strong> {{ book.author[0] }}</p>
           </div>
