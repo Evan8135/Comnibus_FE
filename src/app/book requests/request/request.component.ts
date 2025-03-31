@@ -61,7 +61,7 @@ export class RequestComponent implements OnInit {
       genreSearch: [''],
       language: [request.language, Validators.required],
       series: [request.series || ''],
-      publishDate: [request.publishDate || ''],
+      publishDate: [''],
       isbn: [request.isbn || ''],
       description: [''],
       characters: [''],

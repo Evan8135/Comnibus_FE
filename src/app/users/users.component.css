@@ -48,6 +48,15 @@ th {
   background-color: #f4f4f4;
 }
 
+.suspend-btn {
+  background-color: darkgoldenrod;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
 .ban-btn {
   background-color: red;
   color: white;

@@ -19,6 +19,9 @@
           <a [routerLink]="['/users', user._id]" class="username-link">{{ user.username }}</a>
         </td>
         <td>
+          <button *ngIf="authService.isAdmin()" (click)="suspendUser(user)" class="suspend-btn">
+            Suspend User
+          </button>
           <!-- Ban button for admins -->
           <button *ngIf="authService.isAdmin()" (click)="banUser(user)" class="ban-btn">
             Ban User

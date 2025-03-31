@@ -84,7 +84,38 @@ export class WebService {
       );
   }
 
+  updateBook(bookId: string, bookData: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
 
+    const formData = new FormData();
+    formData.append("title", bookData.title);
+    formData.append("series", bookData.series || "");
+    formData.append("author", bookData.author);
+    formData.append("genres", bookData.genres);
+    formData.append("description", bookData.description);
+    formData.append("language", bookData.language);
+    formData.append("triggers", bookData.triggers);
+    formData.append("isbn", bookData.isbn);
+    formData.append("characters", bookData.characters);
+    formData.append("bookFormat", bookData.bookFormat);
+    formData.append("edition", bookData.edition || "");
+    formData.append("pages", bookData.pages.toString());
+    formData.append("publisher", bookData.publisher || "");
+    formData.append("publishDate", bookData.publishDate);
+    formData.append("firstPublishDate", bookData.firstPublishDate);
+    formData.append("awards", bookData.awards);
+    formData.append("coverImg", bookData.coverImg);
+    formData.append("price", bookData.price.toString());
+
+    return this.http.put<any>(`http://localhost:5000/api/v1.0/books/${bookId}`, formData, { headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Error updating book:', error);
+          return throwError(() => new Error('Failed to update book.'));
+        })
+      );
+  }
 
   deleteBook(id: any) {
     const token = localStorage.getItem('x-access-token');
@@ -143,6 +174,40 @@ export class WebService {
 
     return this.http
       .get<any>('http://localhost:5000/api/v1.0/top-books', { params })
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching books:', error);
+          return throwError(() => new Error('Failed to fetch books.'));
+        })
+      );
+  }
+
+  getNewBooks(
+    page: number,
+    titleFilter: string = '',
+    authorFilter: string = '',
+    genreFilter: string = '',
+    characterFilter: string = ''
+  ) {
+    let params = new HttpParams()
+      .set('pn', page.toString()) // Page number
+      .set('ps', this.pageSize.toString()); // Page size
+
+      if (titleFilter) {
+        params = params.set('title', titleFilter);
+      }
+      if (authorFilter) {
+        params = params.set('author', authorFilter);
+      }
+      if (genreFilter) {
+        params = params.set('genres', genreFilter);
+      }
+      if (characterFilter) {
+        params = params.set('characters', characterFilter);
+      }
+
+    return this.http
+      .get<any>('http://localhost:5000/api/v1.0/new-releases', { params })
       .pipe(
         catchError((error) => {
           console.error('Error fetching books:', error);
@@ -317,6 +382,55 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/reviews/' + review._id + '/dislike', {}, {headers});
   }
 
+  postReviewReply(book_id: any, review_id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    let replyData = new FormData();
+    replyData.append('username', reply.username);
+    replyData.append('content', reply.content);
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + book_id + '/reviews/' + review_id + '/replies', replyData, {headers})
+  }
+
+  fetchReviewReplies(book_id: any, review_id: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/books/' + book_id + '/reviews/' + review_id + '/replies', { headers });
+  }
+
+  deleteReviewReply(book_id: any, review_id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.delete<any>('http://localhost:5000/api/v1.0/books/' + book_id + '/reviews/' + review_id + '/replies/' + reply._id, {headers});
+  }
+
+  likeReviewReply(book_id: any, review_id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + book_id + '/reviews/' + review_id + '/replies/' + reply._id + '/like', {}, {headers});
+  }
+
+  dislikeReviewReply(id: any, reply: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies/' + reply._id + '/dislike', {}, {headers});
+  }
+
+
 //------------------------------------------------------------------------------------------------------------------
 // 3. INBOX CALLS
   getMessages() {
@@ -479,9 +593,6 @@ export class WebService {
     if (request.series) {
       postData.append('series', request.series);
     }
-    if (request.publishDate) {
-      postData.append('publishDate', request.publishDate);
-    }
     if (request.isbn) {
       postData.append('isbn', request.isbn);
     }
@@ -504,7 +615,7 @@ export class WebService {
     if (token) {
       headers = headers.set('x-access-token', token);
     }
-    return this.http.post<any>('http://localhost:5000/api/v1.0/requests/'+ id, '/reject', { headers });
+    return this.http.post<any>('http://localhost:5000/api/v1.0/requests/'+ id + '/reject', {}, { headers });
   }
 
 

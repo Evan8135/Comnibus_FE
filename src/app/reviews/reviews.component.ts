@@ -49,7 +49,7 @@ export class ReviewsComponent {
     console.log("Logged in username: ", this.loggedInUserName);
     this.reviewForm = this.formBuilder.group({
           username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
-          title: ['', Validators.required],
+          title: [''],
           comment: ['', [Validators.required, Validators.minLength(1000)]],
           stars: 5
     });
@@ -119,13 +119,11 @@ export class ReviewsComponent {
   }
 
   isUntouched() {
-    return this.reviewForm.controls.title.pristine ||
-    this.reviewForm.controls.comment.pristine;
+    return this.reviewForm.controls.comment.pristine;
   }
 
   isIncomplete() {
     return this.isInvalid('username') ||
-    this.isInvalid('title') ||
     this.isInvalid('comment') ||
     this.isUntouched();
   }

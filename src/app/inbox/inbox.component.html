@@ -5,7 +5,7 @@
   <div *ngIf="messages.length > 0; else noMessages">
     <div *ngFor="let message of messages; trackBy: trackMessage" class="message-card">
       <p>{{ message.content }}</p>
-      <p><strong>Sent at:</strong> {{ message.timestamp }} <button (click)="showMessage(message._id)">Show</button>
+      <p><strong>Sent at:</strong> {{ message.timestamp }}
         <button (click)="deleteMessage(message._id)">Delete</button></p>
 
     </div>

@@ -46,6 +46,7 @@ export class InboxComponent implements OnInit {
           this.messages = response.messages;
           const hasUnreadMessages = response.hasUnreadMessages || false;
           this.messageService.setUnreadMessages(hasUnreadMessages); // Update shared service
+          this.messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         } else {
           this.messages = [];
           this.messageService.setUnreadMessages(false); // Update shared service

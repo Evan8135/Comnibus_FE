@@ -44,7 +44,8 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    //@Inject('Window') private window: Window
   ) { }
 
   ngOnInit(): void {
@@ -233,6 +234,21 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  removeGenre(genre: string) {
+    const index = this.selectedGenres.indexOf(genre);
+    if (index !== -1) {
+      this.selectedGenres.splice(index, 1);
+    }
+  }
+
+  // Remove author from selected list
+  removeAuthor(author: string) {
+    const index = this.selectedAuthors.indexOf(author);
+    if (index !== -1) {
+      this.selectedAuthors.splice(index, 1);
+    }
+  }
+
   // Submit updated profile data
   onSubmit(): void {
     if (this.isUploading) {
@@ -249,18 +265,41 @@ export class ProfileComponent implements OnInit {
       updatedProfile.favourite_genres = updatedProfile.favourite_genres.map((item: string) => item.trim());
       updatedProfile.favourite_authors = updatedProfile.favourite_authors.map((item: string) => item.trim());
 
+      console.log('Submitting updated profile data:', updatedProfile);
+
       this.webService.updateProfile(updatedProfile).subscribe(
         (response: any) => {
           console.log('Profile updated successfully', response);
           this.user = response;
           this.isEditing = false;
           this.previewUrl = response.profile_pic;
+          this.fetchProfile();
         },
         (error: any) => {
           console.error('Error updating profile', error);
         }
       );
     }
+  }
+
+  fetchProfile() {
+    this.token = localStorage.getItem('x-access-token');
+    if (this.token) {
+      this.webService.getProfile().subscribe((response: any) => {
+        this.user = response;
+        this.reviews_by_user = response.reviews_by_user || [];
+        this.followersCount = response.followers?.length || 0;
+        this.followingCount = response.following?.length || 0;
+        this.favouriteBooks = response.favourite_books || 0;
+        this.currentlyReading = response.currently_reading || [];
+        this.tbrBooks = response.want_to_read || [];
+        this.have_read_books = response.have_read || [];
+
+        // Initialize form and fetch genres/authors after data is loaded
+        this.initForm();
+        this.fetchGenres();
+        this.fetchAuthors();
+      });}
   }
 
   // Helper method to calculate star ratings

@@ -17,10 +17,12 @@ import { CommonModule } from '@angular/common';
 export class ReviewComponent implements OnInit {
   reviews: any[] = []; // Array to store multiple reviews
   user: any; // The current user
-  //newReplyContent: string = ''; // Store the content of the reply
-  //showReplyForm: boolean = false; // Whether to show the reply form
+  newReplyContent: string = ''; // Store the content of the reply
+  showReplyForm: boolean = false; // Whether to show the reply form
   loggedInUserName: string = '';
   errorMessage: string = '';
+  replies: any; // All replies for the current thought
+  topReplies: any[] = [];
 
 
 
@@ -51,41 +53,41 @@ export class ReviewComponent implements OnInit {
   }
 
 
-  // submitReply(reviewId: string) {
-  //   if (this.newReplyContent.trim()) {
-  //     const replyData = {
-  //       username: this.loggedInUserName,
-  //       content: this.newReplyContent
-  //     };
+   submitReply(review: any) {
+     if (this.newReplyContent.trim()) {
+       const replyData = {
+         username: this.loggedInUserName,
+         content: this.newReplyContent
+       };
 
-  //     this.webService.postReply(reviewId, replyData).subscribe(
-  //       (response) => {
-  //         console.log(response.message); // Log success message
-  //         this.newReplyContent = ''; // Clear the reply box
-  //         this.fetchReplies(reviewId); // Fetch the updated list of replies for this review
-  //       },
-  //       (error) => {
-  //         console.error('Error:', error);
-  //         this.errorMessage = error.error?.message || 'An unexpected error occurred.';
-  //       }
-  //     );
-  //   } else {
-  //     this.errorMessage = 'Reply content cannot be empty!';
-  //   }
-  // }
+       this.webService.postReviewReply(review.book_id, review._id, replyData).subscribe(
+         (response) => {
+           console.log(response.message); // Log success message
+           this.newReplyContent = ''; // Clear the reply box
+           this.fetchReplies(review.book_id, review._id); // Fetch the updated list of replies for this review
+         },
+         (error) => {
+           console.error('Error:', error);
+           this.errorMessage = error.error?.message || 'An unexpected error occurred.';
+         }
+       );
+     } else {
+       this.errorMessage = 'Reply content cannot be empty!';
+     }
+   }
 
-  // fetchReplies(reviewId: string) {
-  //   this.webService.fetchReplies(reviewId).subscribe((response: any) => {
-  //     this.replies = response;
-  //     this.topReplies = [...this.replies]
-  //       .sort((a, b) => b.likes - a.likes)
-  //       .slice(0, 3);
-  //   });
-  // }
+   fetchReplies(bookId:string , reviewId: string) {
+     this.webService.fetchReviewReplies(bookId, reviewId).subscribe((response: any) => {
+       this.replies = response;
+       this.topReplies = [...this.replies]
+         .sort((a, b) => b.likes - a.likes)
+         .slice(0, 3);
+     });
+   }
 
-  // toggleReplyForm() {
-  //   this.showReplyForm = !this.showReplyForm;
-  // }
+   toggleReplyForm() {
+     this.showReplyForm = !this.showReplyForm;
+   }
 
   getStarCount(stars: number): any[] {
     const fullStars = Math.floor(stars);  // Get the number of full stars
@@ -106,9 +108,21 @@ export class ReviewComponent implements OnInit {
     });
   }
 
-  // isInvalid(control: any) {
-  //   return this.newReplyContent.trim() === '';
-  // }
+  likeReply(reply: any) {
+    this.webService.likeReviewReply(reply.book_id, reply.review_id, reply._id).subscribe((response) => {
+      reply.likes = response.likes; // Update likes count
+    });
+  }
+
+  dislikeReply(review: any) {
+    this.webService.dislikeReview(review.book_id, review).subscribe((response) => {
+      review.dislikes = response.dislikes; // Update dislikes count
+    });
+  }
+
+   isInvalid(control: any) {
+     return this.newReplyContent.trim() === '';
+   }
 
   trackReview(index: number, review: any): any {
     return review._id;  // Assuming each review has a unique _id
@@ -136,7 +150,7 @@ export class ReviewComponent implements OnInit {
   }
 
 
-  // isIncomplete() {
-  //   return this.isInvalid('content');
-  // }
+   isIncomplete() {
+     return this.isInvalid('content');
+   }
 }

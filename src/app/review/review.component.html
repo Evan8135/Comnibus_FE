@@ -24,7 +24,7 @@
         </div>
 
         <!-- User-specific functionality: reply box -->
-        <!--<div *ngIf="authService.isLoggedIn()">
+        <div *ngIf="authService.isLoggedIn()">
           <div *ngIf="showReplyForm; else replyForm">
             <div class="form-group">
               <label for="username">Name</label>
@@ -51,32 +51,32 @@
             <span *ngIf="isIncomplete()">
               You must complete the reply content
             </span>
-            <button *ngIf="!isIncomplete()" (click)="submitReply(review._id)" class="btn btn-primary" style="margin-top: 20px">Submit</button>
+            <button *ngIf="!isIncomplete()" (click)="submitReply(review)" class="btn btn-primary" style="margin-top: 20px">Submit</button>
           </div>
           <ng-template #replyForm>
             <button (click)="toggleReplyForm()">Reply</button>
           </ng-template>
-        </div>-->
+        </div>
 
         <!-- Display Replies -->
-        <!--<div *ngIf="review.replies?.length > 0">
+        <div *ngIf="review.replies?.length > 0">
           <h3>Replies</h3>
           <div *ngFor="let reply of review.replies">
             <div class="reply">
               <p>{{ reply.content }}</p>
-              <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>-->
+              <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>
 
               <!-- Like/Dislike buttons -->
-              <!--<div>Likes: {{ reply.likes }} <button (click)="like(reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
-              <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislike(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div>Likes: {{ reply.likes }} <button (click)="likeReply(reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislikeReply(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
             </div>
           </div>
-        </div>-->
+        </div>
 
         <!-- Display a message when there are no replies -->
-        <!--<div *ngIf="review.replies?.length === 0">
+        <div *ngIf="review.replies?.length === 0">
           <p>No replies yet. Be the first to reply!</p>
-        </div>-->
+        </div>
       </div>
     </div>
   </div>

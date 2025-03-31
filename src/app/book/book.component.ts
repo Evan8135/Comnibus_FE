@@ -345,7 +345,7 @@ export class BookComponent implements OnInit {
 
   deleteBook(book: any) {
     if (this.authService.isLoggedIn()) {
-      if (this.authService.isAdmin()) {
+      if (this.authService.isAdmin() || book.author == this.user.name) {
         const confirmDeletion = confirm("Are you sure you want to delete this book?");
         if (confirmDeletion) {
           this.webService.deleteBook(book._id).subscribe(

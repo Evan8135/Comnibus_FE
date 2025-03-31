@@ -22,14 +22,12 @@
       (input)="applyFilters()"
     />
     <!-- Character filter input -->
-    <!--<input
+    <input
       type="text"
       placeholder="Filter by Character in book"
       [(ngModel)]="characterFilter"
       (input)="applyFilters()"
-    />-->
-    <button class="btn btn-outline-dark" [routerLink]="['/top-books']">Highest Rated Books</button>
-    <button class="btn btn-outline-dark" [routerLink]="['/new-books']">New Releases</button>
+    />
   </div>
 
   <div *ngIf="selectedGenre" class="genre-heading">
@@ -48,6 +46,7 @@
   </div>
 
   <div class="book-list">
+    <h1>Newly Released Books</h1>
     <div *ngFor="let book of book_list" class="book-card">
       <div class="book-cover-container" [class.nsfw]="isNSFW(book)">
         <img [src]="book.coverImg || 'images/no_cover.png'" alt="Book Cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]"/>
@@ -56,6 +55,7 @@
       <div class="book-details" style="cursor: pointer" [routerLink]="['/books', book._id]">
         <h2>{{ book.title }}</h2>
         <p>by {{ book.author.join(', ') }}</p>
+        <p>User Score: {{ book.user_score }}</p>
         <p><strong>Genres:</strong> {{ book.genres.join(', ') }}</p>
       </div>
     </div>

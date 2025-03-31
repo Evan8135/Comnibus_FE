@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -18,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
  */
 export class LoginComponent {
   loginForm!: FormGroup;
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -63,8 +65,14 @@ export class LoginComponent {
           this.router.navigate(['']);
         },
         error: (error: any) => {
-          alert('Login failed. Please check your credentials.');
-        }
+          console.error('Error:', error);
+        // Handle error: check for specific error messages from backend
+          if (error.error && error.error.message) {
+            this.errorMessage = error.error.message;  // Assign the error message from backend
+          } else {
+            this.errorMessage = 'An unexpected error occurred.';
+          }
+          }
       });
 
     }

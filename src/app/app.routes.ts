@@ -21,6 +21,7 @@ import { ThoughtComponent } from './user-thoughts/thought/thought.component';
 import { TopBooksComponent } from './top books/top-books.component';
 import { ReadBooksComponent } from './bookshelves/have read/read-books.component';
 import { ReviewComponent } from './review/review.component';
+import { newBooksComponent } from './new books/new-books.component';
 
 export const routes: Routes = [
   {
@@ -95,6 +96,10 @@ export const routes: Routes = [
   {
     path: 'top-books',
     component: TopBooksComponent
+  },
+  {
+    path: 'new-books',
+    component: newBooksComponent
   },
   {
     path: 'add-requests',

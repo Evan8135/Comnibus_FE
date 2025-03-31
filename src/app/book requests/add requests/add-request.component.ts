@@ -43,7 +43,6 @@ export class AddRequestComponent implements OnInit {
       genres: this.fb.array([]),
       language: ['', Validators.required],
       series: [''],
-      publishDate: [''],
       isbn: [''],
       username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
     });

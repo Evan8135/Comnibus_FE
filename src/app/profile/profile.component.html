@@ -1,4 +1,4 @@
-<div class="container profile-container" style="margin-top: 80px;">
+<div class="container profile-container" style="margin-top: 80px;" *ngIf="user">
   <div class="row">
     <div class="col-sm-12">
       <div class="card text-dark bg-light mb-3 user-card">
@@ -64,10 +64,10 @@
               </select>
             </div>
 
-            <!-- Genre Search -->
+            <!-- Favourite Genres -->
             <div class="form-group">
-              <label for="favourite_genres">Genres</label>
-              <input type="text" name="favourite_genres" id="favourite_genres" class="form-control" formControlName="favourite_genres" readonly />
+              <label for="favourite_genres">Favourite Genres</label>
+              <input type="text" name="favourite_genres" id="favourite_genres" class="form-control" formControlName="favourite_genres" />
               <input id="genresSearch" type="text" formControlName="genreSearch" (keyup)="onSearchGenres()" class="form-control" placeholder="Search genres..." />
               <div *ngIf="filteredGenres.length > 0" class="genre-results">
                 <ul>
@@ -78,19 +78,44 @@
               </div>
             </div>
 
-            <!-- Author Search -->
+            <!-- Favourite Authors -->
             <div class="form-group">
-              <label for="favourite_authors">Authors</label>
-              <input type="text" name="favourite_authors" id="favourite_authors" class="form-control" formControlName="favourite_authors" readonly />
+              <label for="favourite_authors">Favourite Authors</label>
+              <input type="text" name="favourite_authors" id="favourite_authors" class="form-control" formControlName="favourite_authors" />
               <input id="authorsSearch" type="text" formControlName="authorSearch" (keyup)="onSearchAuthors()" class="form-control" placeholder="Search authors..." />
               <div *ngIf="filteredAuthors.length > 0" class="author-results">
                 <ul>
                   <li *ngFor="let author of filteredAuthors" (click)="toggleAuthor(author)" [class.selected]="selectedAuthors.includes(author)">
                     {{ author }}
                   </li>
+
                 </ul>
               </div>
             </div>
+
+            <!-- Display Selected Genres -->
+            <div *ngIf="selectedGenres.length > 0">
+              <p><strong>Selected Genres:</strong>
+                <span *ngFor="let genre of selectedGenres; let i = index">
+                  <span>{{ genre }}</span>
+                  <button (click)="removeGenre(genre)" class="btn btn-link">Remove</button>
+                  <span *ngIf="i < selectedGenres.length - 1">, </span>
+                </span>
+              </p>
+            </div>
+
+            <!-- Display Selected Authors -->
+            <div *ngIf="selectedAuthors.length > 0">
+              <p><strong>Selected Authors:</strong>
+                <span *ngFor="let author of selectedAuthors; let i = index">
+                  <span>{{ author }}</span>
+                  <button (click)="removeAuthor(author)" class="btn btn-link" style="padding: 0; font-size: 14px; color: #007bff; text-decoration: none;">Remove</button>
+                  <span *ngIf="i < selectedAuthors.length - 1">, </span>
+                </span>
+              </p>
+            </div>
+
+
 
 
             <!-- Profile Picture Preview -->

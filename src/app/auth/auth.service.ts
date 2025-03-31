@@ -76,6 +76,15 @@ export class AuthService {
     return this.http.get('http://localhost:5000/api/v1.0/users/' + userId);
   }
 
+  suspendUser(userId: string): Observable<any> {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+    return this.http.post('http://localhost:5000/api/v1.0/users/' + userId + '/suspend', {}, {headers});
+  }
+
   banUser(userId: string): Observable<any> {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();

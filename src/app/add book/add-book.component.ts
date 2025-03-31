@@ -165,14 +165,21 @@ export class AddBookComponent implements OnInit {
        ? triggersString.split(',').map((trigger: string) => trigger.trim()).join(", ")
        : "";
 
+
+    const publishYear = this.extractYear(this.BookForm.value.publishDate);
+    const firstPublishYear = this.extractYear(this.BookForm.value.firstPublishDate);
+
     const book = {
       ...this.BookForm.value,
       author: authorsArray, // Now the authors are an array
       genres: this.selectedGenres, // Genres already handled as an array
       characters: charactersArray,
       awards: awardsArray,
-      triggers: triggersArray
+      triggers: triggersArray,
+      publishDate: publishYear, // Only year
+      firstPublishDate: firstPublishYear // Only year
     };
+
 
     this.webService.postBook(book).subscribe(
       (response) => {
@@ -185,6 +192,12 @@ export class AddBookComponent implements OnInit {
         this.submissionMessage = 'Something went wrong, please try again later.';
       }
     );
+  }
+
+  extractYear(date: string): number | null {
+    if (!date) return null;
+    const dateObj = new Date(date);
+    return dateObj.getFullYear() || null;
   }
 
 }

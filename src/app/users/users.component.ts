@@ -35,6 +35,22 @@ export class UsersComponent implements OnInit {
     );
   }
 
+  suspendUser(user: any) {
+    if (confirm(`Are you sure you want to ban ${user.username}?`)) {
+      this.authService.suspendUser(user._id).subscribe(
+        () => {
+          this.users = this.users.filter(u => u._id !== user._id);
+          this.filteredUsers = this.filteredUsers.filter(u => u._id !== user._id);
+          alert(`${user.username} has been banned.`);
+        },
+        error => {
+          console.error('Error banning user:', error);
+          alert('Failed to ban user.');
+        }
+      );
+    }
+  }
+
   banUser(user: any) {
     if (confirm(`Are you sure you want to ban ${user.username}?`)) {
       this.authService.banUser(user._id).subscribe(
