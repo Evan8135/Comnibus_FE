@@ -9,7 +9,7 @@
               <!-- Display thought content -->
               <p><strong>Posted by: </strong>{{ thought?.username }}</p>
               <p>{{ thought?.comment }}</p>
-              <div>Likes: {{ thought.likes }} <button (click)="like(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div>Likes: {{ thought.likes }} <button (click)="likeThought(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
               <div style="display: right;">Dislikes: {{ thought.dislikes }} <button (click)="dislike(thought)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
             </div>
           </div>
@@ -59,7 +59,7 @@
               <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>
 
               <!-- Like/Dislike buttons -->
-              <div>Likes: {{ reply.likes }} <button (click)="like(reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div>Likes: {{ reply.likes }} <button (click)="likeReply(thought, reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
               <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislike(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
             </div>
           </div>

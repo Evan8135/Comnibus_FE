@@ -84,37 +84,13 @@ export class WebService {
       );
   }
 
-  updateBook(bookId: string, bookData: any) {
+  updateBook(id: string, bookData: any) {
     const token = localStorage.getItem('x-access-token');
-    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
-
-    const formData = new FormData();
-    formData.append("title", bookData.title);
-    formData.append("series", bookData.series || "");
-    formData.append("author", bookData.author);
-    formData.append("genres", bookData.genres);
-    formData.append("description", bookData.description);
-    formData.append("language", bookData.language);
-    formData.append("triggers", bookData.triggers);
-    formData.append("isbn", bookData.isbn);
-    formData.append("characters", bookData.characters);
-    formData.append("bookFormat", bookData.bookFormat);
-    formData.append("edition", bookData.edition || "");
-    formData.append("pages", bookData.pages.toString());
-    formData.append("publisher", bookData.publisher || "");
-    formData.append("publishDate", bookData.publishDate);
-    formData.append("firstPublishDate", bookData.firstPublishDate);
-    formData.append("awards", bookData.awards);
-    formData.append("coverImg", bookData.coverImg);
-    formData.append("price", bookData.price.toString());
-
-    return this.http.put<any>(`http://localhost:5000/api/v1.0/books/${bookId}`, formData, { headers })
-      .pipe(
-        catchError((error) => {
-          console.error('Error updating book:', error);
-          return throwError(() => new Error('Failed to update book.'));
-        })
-      );
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.put<any>('http://localhost:5000/api/v1.0/books/' + id, bookData, {headers});
   }
 
   deleteBook(id: any) {
@@ -412,13 +388,13 @@ export class WebService {
     return this.http.delete<any>('http://localhost:5000/api/v1.0/books/' + book_id + '/reviews/' + review_id + '/replies/' + reply._id, {headers});
   }
 
-  likeReviewReply(book_id: any, review_id: any, reply: any) {
+  likeReviewReply(review_id: any, reply: any) {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
     if (token) {
       headers = headers.set('x-access-token', token);
     }
-    return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + book_id + '/reviews/' + review_id + '/replies/' + reply._id + '/like', {}, {headers});
+    return this.http.post<any>('http://localhost:5000/api/v1.0/review/' + review_id + '/replies/' + reply._id + '/like', {}, {headers});
   }
 
   dislikeReviewReply(id: any, reply: any) {

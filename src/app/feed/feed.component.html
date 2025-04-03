@@ -9,7 +9,7 @@
     <div *ngFor="let activity of feed" class="feed-card">
       <span>
         <p class="activity-header" style="display: flex; align-items: center; gap: 5px;">
-          <strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }} {{ activity.thought_user }}</strong>
+          <strong>{{ activity.username }}</strong> {{ activity.activity_type }} <strong>{{ activity.book_title }} {{ activity.thought_user }} {{ activity.review_user }}</strong>
           <span style="margin-left: auto; font-size: 0.9em;">{{ activity.timestamp | date: 'short' }}</span>
         </p>
 
@@ -23,7 +23,7 @@
         </p>
 
         <!-- Show review content if the activity is a review -->
-        <p *ngIf="activity.activity_type === 'Reviewed'">
+        <p *ngIf="activity.activity_type === 'reviewed'">
 
           {{ activity.showFullReview ? activity.review_content : (activity.review_content | slice:0:200) + '...' }}
 
@@ -31,13 +31,17 @@
         </p>
 
         <!-- Show thought content if the activity is a thought -->
-        <p *ngIf="activity.activity_type === 'Posted a Thought'">
+        <p *ngIf="activity.activity_type === 'posted a thought'" style="cursor: pointer;" [routerLink]="['/thoughts', activity.thought_id]">
           {{ activity.thought_content }}
         </p>
 
         <!-- Show reply content if the activity is a reply -->
-        <p *ngIf="activity.activity_type === 'Replied to'">
+        <p *ngIf="activity.activity_type === 'replied to a thought by'" style="cursor: pointer;" [routerLink]="['/thoughts', activity.thought_id]">
           {{ activity.reply_content }}
+        </p>
+
+        <p *ngIf="activity.activity_type === 'replied to a review by'" style="cursor: pointer;" [routerLink]="['/review', activity.review_id]">
+          {{ activity.review_reply_content }}
         </p>
 
       </span>

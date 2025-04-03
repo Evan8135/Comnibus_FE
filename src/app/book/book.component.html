@@ -1,4 +1,4 @@
-<div class="container book-container" style="margin-top: 80px;">
+<div class="container book-container" style="margin-top: 80px;" *ngIf="book">
   <div class="row">
     <!-- Display the main book details -->
     <div class="col-sm-12">
@@ -8,7 +8,19 @@
           <div *ngIf="authService.isAdmin() || authService.isAuthor()">
             <button (click)="deleteBook(book)" class="btn btn-danger">Delete Book</button>
           </div>
-          <h4>{{ book.title }}</h4>
+
+          <div *ngIf="!isEditingTitle">
+            <h3>{{ book.title }}</h3>
+            <div *ngIf="authService.isAdmin() || authService.isAuthor()"><button (click)="toggleEditTitle()">Edit Title</button></div>
+          </div>
+
+          <div *ngIf="isEditingTitle">
+            <form [formGroup]="editBookFormTitle" (ngSubmit)="onSaveTitle()">
+              <input formControlName="title" placeholder="Enter new title" />
+              <button type="submit">Save</button>
+              <button type="button" (click)="toggleEditTitle()">Cancel</button>
+            </form>
+          </div>
           <p><strong>Author:</strong>
             <span *ngFor="let author of book.author?.length ? book.author : [] ; let isLast = last">
               <button (click)="filterByAuthor(author)" class="btn btn-link">
@@ -60,6 +72,18 @@
           <div class="book-cover-background" [style.background-image]="'url(' + (book.coverImg || '/images/no_cover.png') + ')'"></div>
           <img [src]="book.coverImg || 'images/no_cover.png'" [alt]="book.title" class="book-cover-img">
         </div>
+
+        <div *ngIf="authService.isAdmin() || authService.isAuthor()"><button (click)="toggleEditCoverImg()">Edit Cover</button></div>
+
+        <div *ngIf="isEditingCoverImg">
+          <form [formGroup]="editBookFormCoverImg" (ngSubmit)="onSaveCoverImg()">
+            <div>{{ previewUrl }}</div>
+            <input type="file" class="form-control" (change)="onFileSelected($event)" />
+            <img [src]="previewUrl || '/images/no_cover.jpg'" alt="Cover Preview" class="img-fluid" style="max-height: 200px;">
+            <button type="submit" >Save</button>
+            <button type="button" (click)="toggleEditCoverImg()">Cancel</button>
+          </form>
+        </div>
         <div class="card-body book-card-body">
           <!-- Content Details -->
           <div class="row">
@@ -107,9 +131,20 @@
               </form>
             </div>
 
-            <p><strong>Description:</strong></p>
-            <div class="col-md-8">
+            <h4><strong>Description:</strong></h4>
+            <div *ngIf="!isEditingDescription">
               <p>{{ book.description }}</p>
+              <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+                <button (click)="toggleEditDescription()">Edit Description</button>
+              </div>
+            </div>
+
+            <div *ngIf="isEditingDescription">
+              <form [formGroup]="editBookFormDescription" (ngSubmit)="onSaveDescription()">
+                <textarea formControlName="description" placeholder="Enter new description"></textarea>
+                <button type="submit">Save</button>
+                <button type="button" (click)="toggleEditDescription()">Cancel</button>
+              </form>
             </div>
 
             <div class="col-md-8">
@@ -123,16 +158,47 @@
             <h4 style="text-align: center;">Additional Details</h4>
             <div class="col-md-8">
               <p><strong>Publisher:</strong> {{ book.publisher }}</p>
-              <p><strong>Published:</strong> {{ book.publishDate || 'Unknown' }}</p>
+              <div *ngIf="!isEditingPublishDate">
+                <p><strong>Published:</strong> {{ book.publishDate || 'Unknown' }}
+                   <i>First Published in {{ book.firstPublishDate }}</i>
+                </p>
+                <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+                  <button (click)="toggleEditPublishDate()">Edit</button>
+                </div>
+              </div>
+              <div *ngIf="isEditingPublishDate">
+                <form [formGroup]="editBookFormPublishDate" (ngSubmit)="onSavePublishDate()">
+                  <input formControlName="publishDate" placeholder="Enter new year of publication" />
+                  <button type="submit">Save</button>
+                  <button type="button" (click)="toggleEditPublishDate()">Cancel</button>
+                </form>
+              </div>
+
               <p><strong>Language:</strong> {{ book.language }}</p>
               <p><strong>Format:</strong> {{ book.bookFormat }}</p>
               <p><strong>Pages:</strong> {{ book.pages }}</p>
               <p><strong>ISBN:</strong> {{ book.isbn }}</p>
               <p><strong>Price:</strong> ${{ book.price }}</p>
               <p><strong>Genres:</strong></p>
-              <li *ngFor="let genre of book.genres">
-                <button (click)="filterByGenre(genre)" class="btn btn-link">{{ genre }}</button>
-              </li>
+
+              <div *ngIf="!isEditingGenres">
+                <li *ngFor="let genre of book.genres">
+                  <button (click)="filterByGenre(genre)" class="btn btn-link">{{ genre }}</button>
+
+                </li>
+                <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+                  <button (click)="toggleEditGenres()">Edit Genres</button>
+                </div>
+
+              </div>
+
+              <!--<div *ngIf="isEditingGenres">
+                <form [formGroup]="editBookFormGenres" (ngSubmit)="onSaveGenres()">
+                  <input formControlName="genres" placeholder="Enter genres" />
+                  <button type="submit">Save</button>
+                  <button type="button" (click)="toggleEditGenres()">Cancel</button>
+                </form>
+              </div>-->
               <p><strong>Awards:</strong></p>
               <ul>
                 <li *ngFor="let award of book.awards">{{ award }}</li>
@@ -197,4 +263,14 @@
       </div>
     </div>
   </div>
+
+  <!-- Title Section -->
+
+
+  <!-- Description Section -->
+
+
+  <!-- Genres Section -->
+
+
 </div>

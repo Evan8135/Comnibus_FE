@@ -24,7 +24,7 @@ export class BookComponent implements OnInit {
   Same_Author_Books: any[] = []; // Array for same author books
   triggerForm: any;
   showTriggerForm: boolean = false;
-  reviews: any; // All reviews for the current book
+  reviews: any[] = []; // All reviews for the current book
   topReviews: any[] = []; // Top reviews based on likes
   isMarkedAsRead: boolean = false; // Whether the book is marked as read
   userBookRating: any; // The rating given by the user
@@ -32,6 +32,22 @@ export class BookComponent implements OnInit {
   isCurrentlyReading: boolean = false; // Whether the book is in the "Currently Reading" list
   isFavouriteBook: boolean = false; // Whether the book is in the "Favourite Books" list
   errorMessage: string | null = null;
+  previewUrl: string | null = null;
+  isUploading: boolean = false;
+
+  // Form groups for editing title, description, and genres
+  editBookFormTitle: any;
+  editBookFormDescription: any;
+  editBookFormGenres: any;
+  editBookFormPublishDate: any;
+  editBookFormCoverImg: any;
+
+  // Flags to toggle edit modes
+  isEditingTitle: boolean = false;
+  isEditingDescription: boolean = false;
+  isEditingGenres: boolean = false;
+  isEditingPublishDate: boolean = false;
+  isEditingCoverImg: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,95 +59,223 @@ export class BookComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Fetch the current book ID from the route
     const bookId = this.route.snapshot.paramMap.get('id');
+    this.reviews = [];
 
-    // Check if the user is logged in
+    // Initialize forms for title, description, and genres
+    this.editBookFormTitle = this.formBuilder.group({
+      title: [this.book?.title || '', Validators.required]
+    });
+
+    this.editBookFormDescription = this.formBuilder.group({
+      description: [this.book?.description || '', Validators.required]
+    });
+
+    this.editBookFormGenres = this.formBuilder.group({
+      genres: [this.book?.genres || [], Validators.required]
+    });
+
+    this.editBookFormCoverImg = this.formBuilder.group({
+      coverImg: [this.book?.coverImg || '', Validators.required]
+    });
+
+    // Fetch data from WebService
     if (this.authService.isLoggedIn()) {
       this.webService.getProfile().subscribe(user => {
         this.user = user;
-
-        // If user data and have_read are available, continue to process
         if (!this.user || !this.user.have_read) {
           console.log('User or have_read not available');
           return;
         }
 
-        console.log('User Have Read Books:', this.user.have_read);
-
-        // Fetch the current book details
         this.webService.getBook(bookId).subscribe((response: any) => {
           this.book = response.book;
-
-          // Check if the book is in the 'have_read' array
-          const userReadBook = this.user.have_read?.find((book: { _id: string; stars: number }) => book._id === this.book._id);
-
-          // If the book is found in 'have_read', set the user rating
-          if (userReadBook) {
-            this.userBookRating = userReadBook.stars;
-            this.isMarkedAsRead = true;
-            console.log('User Rating:', this.userBookRating);
-          } else {
-            this.userBookRating = null;  // If the user hasn't rated this book
-          }
-
-          // Handle the logic for same author books
+          console.log(this.book)
           const authorName = this.book.author[0];
           this.Same_Author_Books = response.same_author_books.filter((book: any) => book.author && book.author[0] === authorName);
         });
 
-        // Initialize the form for rating
         this.rateForm = this.formBuilder.group({
           stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]],
           date_read: ["", Validators.required]
         });
 
-        // Initialize the form for triggers
-        this.triggerForm = this.formBuilder.group({
-          triggers: ['', Validators.required]
-        });
-
-
-        // Fetch reviews and top reviews
-        this.webService.getReviews(bookId).subscribe((response) => {
-          this.reviews = response;
-
-          // Sort reviews based on likes and take the top 3
-          this.topReviews = [...this.reviews]
-            .sort((a, b) => b.likes - a.likes)
-            .slice(0, 3);
-        });
 
       });
+      if (this.book.user_reviews > 1){
+        this.webService.getReviews(bookId).subscribe(
+          (response) => {
+            if (response) {
+              this.reviews = response;
+              this.topReviews = [...this.reviews].sort((a, b) => b.likes - a.likes).slice(0, 3);
+            }
+          }
+        );
+      }
+
     } else {
-      // If not logged in, skip profile-related logic, and only fetch book details
       this.webService.getBook(bookId).subscribe((response: any) => {
         this.book = response.book;
-
-        // Handle the logic for same author books
         const authorName = this.book.author[0];
         this.Same_Author_Books = response.same_author_books.filter((book: any) => book.author && book.author[0] === authorName);
       });
 
-      // Initialize the form for rating (disabled for non-users)
       this.rateForm = this.formBuilder.group({
-        stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]],
+        stars: [5, [Validators.required, Validators.min(0), Validators.max(5)]],
         date_read: ['', [Validators.required]]
       });
+      if (this.book.user_reviews > 1){
+        this.webService.getReviews(bookId).subscribe(
+          (response) => {
+            if (response) {
+              this.reviews = response;
+              this.topReviews = [...this.reviews].sort((a, b) => b.likes - a.likes).slice(0, 3);
+            }
+          }
+        );
+      }
 
-      // Fetch reviews and top reviews (non-users can also view reviews)
-      this.webService.getReviews(bookId).subscribe((response) => {
-        this.reviews = response;
-
-        // Sort reviews based on likes and take the top 3
-        this.topReviews = [...this.reviews]
-          .sort((a, b) => b.likes - a.likes)
-          .slice(0, 3);
-      });
     }
   }
 
+  // Methods to toggle edit forms
+  toggleEditTitle() {
+    this.isEditingTitle = !this.isEditingTitle;
+  }
 
+  toggleEditDescription() {
+    this.isEditingDescription = !this.isEditingDescription;
+  }
+
+  toggleEditGenres() {
+    this.isEditingGenres = !this.isEditingGenres;
+  }
+
+  toggleEditPublishDate() {
+    this.isEditingPublishDate = !this.isEditingPublishDate;
+  }
+
+  toggleEditCoverImg() {
+    this.isEditingCoverImg = !this.isEditingCoverImg;
+  }
+
+  // Save the updated title
+  onSaveTitle() {
+    if (this.editBookFormTitle.invalid) return;
+
+    const newTitle = this.editBookFormTitle.value.title;
+
+    this.webService.updateBook(this.book._id, { title: newTitle }).subscribe(
+      (response) => {
+        alert('Title updated successfully!');
+        this.book.title = newTitle;
+      },
+      (error) => {
+        alert('Failed to update title.');
+        console.error(error);
+      }
+    );
+
+    this.isEditingTitle = false;
+  }
+
+
+  // Save the updated description
+  onSaveDescription() {
+    if (this.editBookFormDescription.invalid) return;
+
+    const newDescription = this.editBookFormDescription.value.description;
+
+    this.webService.updateBook(this.book._id, { description: newDescription }).subscribe(
+      (response) => {
+        alert('Description updated successfully!');
+        this.book.description = newDescription;
+      },
+      (error) => {
+        alert('Failed to update description.');
+        console.error(error);
+      }
+    );
+
+    this.isEditingDescription = false;
+  }
+
+  // Save the updated genres
+  // onSaveGenres() {
+  //   if (this.editBookFormGenres.invalid) return;
+  //   this.book.genres = this.editBookFormGenres.value.genres;
+  //   this.isEditingGenres = false;
+  // }
+
+  onSavePublishDate() {
+    if (this.editBookFormPublishDate.invalid) return;
+
+    const newPublishDate = this.editBookFormPublishDate.value.publishDate;
+
+    this.webService.updateBook(this.book._id, { publishDate: newPublishDate }).subscribe(
+      (response) => {
+        alert('Date Published updated successfully!');
+        this.book.publishDate = newPublishDate;
+      },
+      (error) => {
+        alert('Failed to update publish date.');
+        console.error(error);
+      }
+    );
+
+    this.isEditingPublishDate = false;
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.previewUrl = e.target.result;
+      this.uploadCoverImg(file);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadCoverImg(image: File) {
+    this.isUploading = true;
+    const formData = new FormData();
+    formData.append('image', image);
+
+    this.http.post<any>('http://localhost:5000/api/v1.0/upload-image', formData).subscribe(
+      response => {
+        if (response.url) {
+          this.editBookFormCoverImg.patchValue({ coverImg: response.url });
+          this.previewUrl = response.url;
+        } else {
+          console.error('Failed to upload image:', response);
+        }
+        this.isUploading = false;
+      },
+      error => {
+        console.error('Error uploading image:', error);
+        this.isUploading = false;
+      }
+    );
+  }
+
+  onSaveCoverImg() {
+    if (this.editBookFormCoverImg.invalid) return;
+    const newCoverImg = this.editBookFormCoverImg.value.coverImg;
+
+    this.webService.updateBook(this.book._id, { coverImg: newCoverImg }).subscribe(
+      (response) => {
+        alert('Cover image updated successfully!');
+        this.book.coverImg = newCoverImg; // Update the local book data
+      },
+      (error) => {
+        alert('Failed to update cover image.');
+        console.error(error);
+      }
+    );
+    this.isEditingCoverImg = false;
+  }
 
 
   // Track books by their ID for rendering optimizations
@@ -140,15 +284,29 @@ export class BookComponent implements OnInit {
   }
 
   // Method to get the star count for ratings
-  getStarCount(stars: number): any[] | null {
+  getStarCount(rating: number): number[] {
+    if (rating === undefined || rating === null || isNaN(rating) || rating < 0 || rating > 5) {
+      return []; // Return an empty array if the rating is invalid
+    }
 
+    const fullStars = Math.floor(rating);
+    const halfStar = (rating - fullStars) >= 0.5 ? 0.5 : 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
-    // If the user is logged in, return the normal full and half stars for interaction
-    const fullStars = Math.floor(stars);  // Get the number of full stars
-    const halfStar = stars % 1 >= 0.5 ? 1 : 0;  // Check if there's a half star
+    const starsArray = [];
+    for (let i = 0; i < fullStars; i++) {
+      starsArray.push(1); // Full star
+    }
+    if (halfStar) {
+      starsArray.push(0.5); // Half star
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      starsArray.push(0); // Empty star
+    }
 
-    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];  // Return full stars and half star if needed
+    return starsArray;
   }
+
 
 
 

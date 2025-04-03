@@ -37,6 +37,8 @@ export class ThoughtComponent implements OnInit {
       .subscribe((response: any) => {
         this.thoughts = [response];
       });
+
+
   }
 
   submitReply(thoughtId: string) {
@@ -62,8 +64,8 @@ export class ThoughtComponent implements OnInit {
     }
   }
 
-  fetchReplies(thoughtId: string) {
-    this.webService.fetchReplies(thoughtId).subscribe((response: any) => {
+  fetchReplies(thought: any) {
+    this.webService.fetchReplies(thought._id).subscribe((response: any) => {
       this.replies = response;
       this.topReplies = [...this.replies]
         .sort((a, b) => b.likes - a.likes)
@@ -75,10 +77,36 @@ export class ThoughtComponent implements OnInit {
     this.showReplyForm = !this.showReplyForm;
   }
 
-  like(reply: any) {
-    this.webService.likeReply(reply.thoughtId, reply).subscribe((response) => {
+  likeReply(thought: any, reply: any) {
+    this.webService.likeReply(thought._id, reply).subscribe((response) => {
       reply.likes = response.likes; // Update likes count
-    });
+      this.fetchReplies(thought);
+    },
+    (error) => {
+      console.error('Error:', error);
+    // Handle error: check for specific error messages from backend
+      if (error.error && error.error.message) {
+        this.errorMessage = error.error.message;  // Assign the error message from backend
+      } else {
+        this.errorMessage = 'An unexpected error occurred.';
+      }
+      });
+  }
+
+  likeThought(thought: any) {
+
+    this.webService.likeThought(thought).subscribe((response) => {
+      thought.likes = response.likes; // Update likes count
+    },
+    (error) => {
+      console.error('Error:', error);
+    // Handle error: check for specific error messages from backend
+      if (error.error && error.error.message) {
+        this.errorMessage = error.error.message;  // Assign the error message from backend
+      } else {
+        this.errorMessage = 'An unexpected error occurred.';
+      }
+      });
   }
 
   dislike(reply: any) {

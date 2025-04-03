@@ -99,7 +99,16 @@ export class ReviewComponent implements OnInit {
   like(review: any) {
     this.webService.likeReview(review.book_id, review).subscribe((response) => {
       review.likes = response.likes; // Update likes count
-    });
+    },
+    (error) => {
+      console.error('Error:', error);
+    // Handle error: check for specific error messages from backend
+      if (error.error && error.error.message) {
+        this.errorMessage = error.error.message;  // Assign the error message from backend
+      } else {
+        this.errorMessage = 'An unexpected error occurred.';
+      }
+      });
   }
 
   dislike(review: any) {
@@ -108,10 +117,23 @@ export class ReviewComponent implements OnInit {
     });
   }
 
-  likeReply(reply: any) {
-    this.webService.likeReviewReply(reply.book_id, reply.review_id, reply._id).subscribe((response) => {
-      reply.likes = response.likes; // Update likes count
-    });
+  likeReply(review: any, reply: any) {
+    this.webService.likeReviewReply(review._id, reply).subscribe(
+      (response) => {
+        // Successfully liked the reply, update the UI with the new like count
+        reply.likes += 1;  // Increase the likes count directly
+        console.log('Reply liked successfully:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      // Handle error: check for specific error messages from backend
+        if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;  // Assign the error message from backend
+        } else {
+          this.errorMessage = 'An unexpected error occurred.';
+        }
+        }
+    );
   }
 
   dislikeReply(review: any) {

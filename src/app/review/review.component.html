@@ -67,8 +67,9 @@
               <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>
 
               <!-- Like/Dislike buttons -->
-              <div>Likes: {{ reply.likes }} <button (click)="likeReply(reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+              <div>Likes: {{ reply.likes }} <button (click)="likeReply(review, reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
               <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislikeReply(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+
             </div>
           </div>
         </div>
@@ -80,9 +81,10 @@
       </div>
     </div>
   </div>
+  <!-- Error handling -->
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
 </div>
 
-<!-- Error handling -->
-<div *ngIf="errorMessage" class="error-message">
-  <p>{{ errorMessage }}</p>
-</div>
+

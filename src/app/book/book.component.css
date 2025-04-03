@@ -215,3 +215,91 @@ button.btn-outline-dark.ms-auto:hover {
   font-size: 16px;
   color: #777;
 }
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Input fields for genre and author search */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+.form-control.error {
+  border-color: red;
+}
+
+/* Styling for the genre and author search result lists */
+.genre-results, .author-results {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.genre-results ul, .author-results ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.genre-results li, .author-results li {
+  padding: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.genre-results li:hover, .author-results li:hover {
+  background-color: #f0f0f0;
+}
+
+.genre-results li.selected, .author-results li.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Error message styling when fewer than 3 genres are selected */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Genre search result list styling */
+.genre-results {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.genre-results ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.genre-results li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.genre-results li:hover {
+  background-color: #f0f0f0;
+}
+
+
+/* Selected genre styling */
+.selected {
+  background-color: #007bff;
+  color: white;
+}
