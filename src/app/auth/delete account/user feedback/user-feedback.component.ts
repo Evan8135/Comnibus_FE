@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { WebService } from '../../../web.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'user-feedback',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterModule],
+  imports: [CommonModule, RouterModule],
   providers: [WebService],
   templateUrl: './user-feedback.component.html',
   styleUrls: ['./user-feedback.component.css']
