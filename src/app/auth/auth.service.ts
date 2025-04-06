@@ -11,6 +11,7 @@ export class AuthService {
   signup(
     name: string,
     username: string,
+    pronouns: string,
     password: string,
     email: string,
     user_type: string,
@@ -21,6 +22,7 @@ export class AuthService {
     const body = new FormData();
     body.append('name', name);
     body.append('username', username);
+    body.append('pronouns', pronouns);
     body.append('password', password);
     body.append('email', email);
     body.append('user_type', user_type);
@@ -67,7 +69,7 @@ export class AuthService {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
     if (token) {
-      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+      headers = headers.set('x-access-token', token);
     }
     return this.http.get('http://localhost:5000/api/v1.0/users', { headers });
   }
@@ -80,7 +82,7 @@ export class AuthService {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
     if (token) {
-      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+      headers = headers.set('x-access-token', token);
     }
     return this.http.post('http://localhost:5000/api/v1.0/users/' + userId + '/suspend', {}, {headers});
   }
@@ -89,7 +91,7 @@ export class AuthService {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
     if (token) {
-      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+      headers = headers.set('x-access-token', token);
     }
     return this.http.post('http://localhost:5000/api/v1.0/users/' + userId + '/ban', {}, {headers});
   }
@@ -174,6 +176,21 @@ export class AuthService {
       headers = headers.set('x-access-token', token);
     }
     return this.http.get('http://localhost:5000/api/v1.0/profile' + userId + '/currently-reading', { headers });
+  }
+
+  deleteAccount(reason?: string): Observable<any> {
+    const token = this.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token); // Pass the token in x-access-token header
+    }
+
+    const body = new FormData();
+    if (reason) {
+      body.append('reason', reason);
+    }
+
+    return this.http.delete('http://localhost:5000/api/v1.0/delete-account', { headers, body });
   }
 
 }

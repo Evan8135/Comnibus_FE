@@ -20,7 +20,6 @@
       <p><strong>Current Page:</strong> {{ book.current_page }} / {{ book.total_pages }}</p>
 
       <div class="actions">
-        <!-- Displaying an input field for manual page number input -->
         <label for="current-page-{{ book._id }}">Enter Current Page:</label>
         <input
           type="number"
@@ -48,7 +47,6 @@
       I've finished this book
     </button>
 
-    <!-- Rating form visibility controlled per book -->
     <div *ngIf="book.showRateForm">
       <form [formGroup]="rateForm" (ngSubmit)="markAsRead(book._id)">
         <label for="stars">Please provide a rating (between 1 and 5)</label>

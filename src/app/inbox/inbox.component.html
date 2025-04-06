@@ -1,7 +1,6 @@
 <div class="messages-container" style="margin-top: 80px;">
   <h1>All Messages</h1>
 
-  <!-- Displaying messages -->
   <div *ngIf="messages.length > 0; else noMessages">
     <div *ngFor="let message of messages; trackBy: trackMessage" class="message-card">
       <p>{{ message.content }}</p>

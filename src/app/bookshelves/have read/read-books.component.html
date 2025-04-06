@@ -28,11 +28,8 @@
       <button (click)="toggleEditForm(book)">Edit</button>
       <button (click)="removeReadBook(book._id)">Remove from Have Read</button>
 
-      <!-- Edit Form -->
       <div *ngIf="book.showEditForm" class="edit-form">
         <form [formGroup]="editForms[book._id]" (ngSubmit)="submitEditForm(book._id)">
-
-          <!-- Rating Selection -->
           <label for="stars">Rating (0-5):</label>
           <select formControlName="stars">
             <option [value]="0.5">★½</option>
@@ -47,11 +44,9 @@
             <option [value]="5">★★★★★</option>
           </select>
 
-          <!-- Date Read -->
           <label for="date_read">Date Finished:</label>
           <input type="date" formControlName="date_read">
 
-          <!-- Action Buttons -->
           <div class="button-group">
             <button type="submit">Save</button>
             <button type="button" (click)="toggleEditForm(book)">Cancel</button>

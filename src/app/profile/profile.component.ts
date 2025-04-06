@@ -33,7 +33,6 @@ export class ProfileComponent implements OnInit {
   previewUrl: string | null = null;
   isUploading: boolean = false;
 
-  // List of genres, authors, and their filtered lists
   genres: string[] = [];
   filteredGenres: string[] = [];
   authors: string[] = [];
@@ -45,7 +44,6 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private http: HttpClient,
-    //@Inject('Window') private window: Window
   ) { }
 
   ngOnInit(): void {
@@ -61,7 +59,6 @@ export class ProfileComponent implements OnInit {
         this.tbrBooks = response.want_to_read || [];
         this.have_read_books = response.have_read || [];
 
-        // Initialize form and fetch genres/authors after data is loaded
         this.initForm();
         this.fetchGenres();
         this.fetchAuthors();
@@ -72,21 +69,19 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Initialize form with user data
   initForm() {
     this.editProfileForm = this.fb.group({
       name: [this.user.name, Validators.required],
       username: [this.user.username, Validators.required],
       email: [this.user.email, [Validators.required, Validators.email]],
       pronouns: [this.user.pronouns || 'prefer not to say'],
-      genreSearch: [''],  // Add genreSearch as a form control
-      authorSearch: [''],  // Add authorSearch as a form control
+      genreSearch: [''],
+      authorSearch: [''],
       profile_pic: [this.user.profile_pic || '/images/profile.png'],
-      favourite_genres: this.fb.array([]),  // Initialize as FormArray
-      favourite_authors: this.fb.array([]),  // Initialize as FormArray
+      favourite_genres: this.fb.array([]),
+      favourite_authors: this.fb.array([]),
     });
 
-    // Set the selected genres/authors to the form control
     if (this.user.favourite_genres) {
       this.setGenres(this.user.favourite_genres);
     }
@@ -97,7 +92,6 @@ export class ProfileComponent implements OnInit {
     this.previewUrl = this.user.profile_pic;
   }
 
-  // Set the genres in the FormArray
   setGenres(genres: string[]) {
     const genreArray = this.editProfileForm.get('favourite_genres') as FormArray;
     genres.forEach(genre => {
@@ -105,7 +99,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Set the authors in the FormArray
   setAuthors(authors: string[]) {
     const authorArray = this.editProfileForm.get('favourite_authors') as FormArray;
     authors.forEach(author => {
@@ -113,12 +106,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Fetch genres from the API
   fetchGenres() {
     this.http.get<string[]>('http://localhost:5000/api/v1.0/genres').subscribe({
       next: (data) => {
-        this.genres = data;  // Store the full list of genres
-        this.filteredGenres = data;  // Initially show all genres in filtered list
+        this.genres = data;
+        this.filteredGenres = data;
       },
       error: (error) => {
         console.error('Error fetching genres:', error);
@@ -126,12 +118,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Fetch authors from the API
   fetchAuthors() {
     this.http.get<string[]>('http://localhost:5000/api/v1.0/authors').subscribe({
       next: (data) => {
-        this.authors = data;  // Store the full list of authors
-        this.filteredAuthors = data;  // Initially show all authors in filtered list
+        this.authors = data;
+        this.filteredAuthors = data;
       },
       error: (error) => {
         console.error('Error fetching authors:', error);
@@ -139,13 +130,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Filter genres based on the search input
   onSearchGenres() {
     const query = this.editProfileForm.controls['genreSearch'].value.toLowerCase();
     this.filteredGenres = this.genres.filter(genre => genre.toLowerCase().includes(query));
   }
 
-  // Filter authors based on the search input
   onSearchAuthors() {
     const searchQuery = this.editProfileForm.get('authorSearch')?.value.toLowerCase() || '';
     this.filteredAuthors = this.authors.filter(author =>
@@ -153,7 +142,6 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  // Toggle genre selection
   toggleGenre(genre: string) {
     const genreArray = this.editProfileForm.get('favourite_genres') as FormArray;
     const index = genreArray.value.indexOf(genre);
@@ -164,7 +152,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Toggle author selection
   toggleAuthor(author: string) {
     const authorArray = this.editProfileForm.get('favourite_authors') as FormArray;
     const index = authorArray.value.indexOf(author);
@@ -175,7 +162,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Toggle edit mode for profile
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
     if (this.isEditing) {
@@ -183,7 +169,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Handle file selection for profile picture
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
@@ -196,7 +181,6 @@ export class ProfileComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  // Upload new profile picture
   uploadProfilePic(image: File) {
     this.isUploading = true;
     const formData = new FormData();
@@ -219,7 +203,6 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  // Remove the profile picture
   removeProfilePic() {
     if (this.previewUrl?.startsWith('blob:')) {
       URL.revokeObjectURL(this.previewUrl);
@@ -241,7 +224,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Remove author from selected list
   removeAuthor(author: string) {
     const index = this.selectedAuthors.indexOf(author);
     if (index !== -1) {
@@ -249,7 +231,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Submit updated profile data
   onSubmit(): void {
     if (this.isUploading) {
       console.log("Please wait for the image to finish uploading...");
@@ -295,14 +276,12 @@ export class ProfileComponent implements OnInit {
         this.tbrBooks = response.want_to_read || [];
         this.have_read_books = response.have_read || [];
 
-        // Initialize form and fetch genres/authors after data is loaded
         this.initForm();
         this.fetchGenres();
         this.fetchAuthors();
       });}
   }
 
-  // Helper method to calculate star ratings
   getStarCount(stars: number): any[] {
     const fullStars = Math.floor(stars);
     const halfStar = stars % 1 >= 0.5 ? 1 : 0;

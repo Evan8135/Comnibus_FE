@@ -1,6 +1,5 @@
 <div class="container book-container" style="margin-top: 80px;" *ngIf="book">
   <div class="row">
-    <!-- Display the main book details -->
     <div class="col-sm-12">
       <div class="card text-dark bg-light mb-3 book-card">
 
@@ -32,7 +31,7 @@
           </p>
           <p>
             <span *ngIf="authService.isLoggedIn()">
-              <span *ngFor="let star of getStarCount(userBookRating)">
+              <span *ngFor="let star of getStarCountRating(userBookRating)">
                 <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
                 <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
               </span>
@@ -85,9 +84,8 @@
           </form>
         </div>
         <div class="card-body book-card-body">
-          <!-- Content Details -->
           <div class="row">
-            <h4>Content Warning!</h4>
+            <h4 *ngIf="book.triggers?.length > 0">Content Warning!</h4>
             <div *ngIf="book.triggers?.length > 0" class="trigger-warnings-container">
               <h3 class="trigger-warnings-title">Trigger Warnings:</h3>
               <ul class="trigger-warnings-list">
@@ -95,18 +93,14 @@
               </ul>
             </div>
 
-            <!-- Button to toggle the visibility of the trigger form -->
             <button class="btn btn-outline-dark ms-auto" (click)="showTriggerForm = !showTriggerForm" type="button">
               Add Content/Trigger Warnings
             </button>
 
-            <!-- The form is shown/hidden based on the showTriggerForm variable -->
             <div *ngIf="showTriggerForm">
               <form [formGroup]="triggerForm" (ngSubmit)="addTriggers()">
-                <!-- Label for the trigger input field -->
                 <label for="triggers">Enter Trigger Warnings (separate with commas):</label>
 
-                <!-- Input field for trigger warnings -->
                 <input
                   type="text"
                   id="triggers"
@@ -115,12 +109,10 @@
                   placeholder="e.g., Violence, Abuse, Suicide"
                 />
 
-                <!-- Validation message if the trigger field is invalid -->
                 <div *ngIf="triggerForm.get('triggers')?.invalid && triggerForm.get('triggers')?.touched" class="text-danger">
                   Please enter at least one trigger warning.
                 </div>
 
-                <!-- Submit button for the form, disabled if the form is invalid -->
                 <button
                   type="submit"
                   class="btn btn-outline-dark mt-2"
@@ -130,6 +122,7 @@
                 </button>
               </form>
             </div>
+
 
             <h4><strong>Description:</strong></h4>
             <div *ngIf="!isEditingDescription">
@@ -192,13 +185,6 @@
 
               </div>
 
-              <!--<div *ngIf="isEditingGenres">
-                <form [formGroup]="editBookFormGenres" (ngSubmit)="onSaveGenres()">
-                  <input formControlName="genres" placeholder="Enter genres" />
-                  <button type="submit">Save</button>
-                  <button type="button" (click)="toggleEditGenres()">Cancel</button>
-                </form>
-              </div>-->
               <p><strong>Awards:</strong></p>
               <ul>
                 <li *ngFor="let award of book.awards">{{ award }}</li>
@@ -213,11 +199,11 @@
                 <div *ngFor="let review of topReviews">
                   <div class="row" style="margin-top: 70px">
                     <div class="card bg-light mb-3" style="cursor: pointer" [routerLink]="['/review', review._id]">
-                      <div class="card-header"><p>{{ review.name }}</p></div>
+                      <div class="card-header"><p>{{ review.username }}</p></div>
                       <div class="card-header"><strong>{{ review.title }}</strong></div>
                       <div class="card-footer">
                         Rating:
-                        <span *ngFor="let star of getStarCount(review.stars)">
+                        <span *ngFor="let star of getStarCountReviews(review.stars)">
                           <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
                           <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
                         </span>
@@ -263,14 +249,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Title Section -->
-
-
-  <!-- Description Section -->
-
-
-  <!-- Genres Section -->
-
-
 </div>

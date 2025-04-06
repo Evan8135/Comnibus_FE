@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { WebService } from '../web.service';  // Import WebService
+import { RouterModule } from '@angular/router';
+import { WebService } from '../web.service';
 
 @Component({
   selector: 'recommendations',
   templateUrl: './recommendations.component.html',
   styleUrls: ['./recommendations.component.css'],
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule],
   providers: [WebService],
   standalone: true
 })
@@ -41,12 +41,11 @@ export class RecommendationsComponent {
         this.haveReadBooks = data.have_read || [];
 
         const authorsOfReadBooks = this.haveReadBooks.flatMap((book: any) => book.author);
-        console.log("Authors of read books:", authorsOfReadBooks);  // Debug log to verify
+        console.log("Authors of read books:", authorsOfReadBooks);
 
-        // Now filter the recommended books by these authors
         this.haveReadBooksByAuthor = this.recommendations.filter(book => {
           const authors = Array.isArray(book.author) ? book.author : [book.author];
-          return authors.some((author: string) => authorsOfReadBooks.includes(author));  // Explicit 'author' type
+          return authors.some((author: string) => authorsOfReadBooks.includes(author));
         });
 
         console.log("Books by authors of 'have read' books:", this.haveReadBooksByAuthor);
@@ -57,7 +56,6 @@ export class RecommendationsComponent {
 
         console.log("Highly Rated Authors:", highlyRatedAuthors);
 
-        // Filter recommended books by these authors
         this.highRatedAuthorsBooks = this.recommendations.filter((book: any) => {
           const authors: string[] = Array.isArray(book.author) ? book.author : [book.author];
           return authors.some((author: string) => highlyRatedAuthors.includes(author));
@@ -117,28 +115,23 @@ export class RecommendationsComponent {
 
 
 
-  // Get a unique list of all genres across all books that are in the favorite genres
   getGenres(): string[] {
     const genres = this.recommendations.flatMap(book => book.genres);
-    // Filter out genres that are not in the user's favorite genres
     const filteredGenres = genres.filter(genre => this.favoriteGenres.includes(genre));
-    return Array.from(new Set(filteredGenres)); // Remove duplicates
+    return Array.from(new Set(filteredGenres));
   }
 
-  // Get books by a specific genre, but only if the genre is in favorite genres
   getBooksByGenre(genre: string): any[] {
     return this.recommendations.filter(book =>
       book.genres.includes(genre) && this.favoriteGenres.includes(genre)
     );
   }
 
-  // Handle next page of recommendations
   nextPage(): void {
     this.page += 1;
     this.fetchRecommendations();
   }
 
-  // Handle previous page of recommendations
   previousPage(): void {
     if (this.page > 1) {
       this.page -= 1;

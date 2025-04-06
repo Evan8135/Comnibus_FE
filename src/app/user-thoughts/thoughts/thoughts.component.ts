@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebService } from '../../web.service';
 import { AuthService } from '../../auth/auth.service';
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'thoughts',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './thoughts.component.html',
   styleUrls: ['./thoughts.component.css']
@@ -23,8 +23,9 @@ export class ThoughtsComponent implements OnInit {
   showThoughtForm: boolean = false;
   loggedInUserName: string = '';
   errorMessage: string = '';
-  isLoading: boolean = false;  // Define isLoading
-  submissionMessage: string = ''; // Define submissionMessage
+  isLoading: boolean = false;
+  submissionMessage: string = '';
+
 
   constructor(
     private route: ActivatedRoute,
@@ -72,7 +73,7 @@ export class ThoughtsComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Assuming the authors or other required fields might be there
+
     const thought = {
       ...this.thoughtForm.value,
       created_at: currentTime
@@ -86,7 +87,7 @@ export class ThoughtsComponent implements OnInit {
         this.submissionMessage = response.message;
         this.thoughtForm.reset();
         this.fetchThoughts();
-        // Optionally clear the form or update thoughts
+
       },
       (error) => {
         this.isLoading = false;
@@ -96,7 +97,7 @@ export class ThoughtsComponent implements OnInit {
   }
 
   toggleThoughtForm() {
-    this.showThoughtForm = !this.showThoughtForm; // Toggle the visibility
+    this.showThoughtForm = !this.showThoughtForm;
   }
 
   trackThought(index: number, thought: any): string {
@@ -119,11 +120,11 @@ export class ThoughtsComponent implements OnInit {
   }
 
   like(thought: any) {
-    if (thought._id) {  // Use thought._id instead of bookId
+    if (thought._id) {
       if (this.authService.isLoggedIn()) {
         this.webService.likeThought(thought._id)
           .subscribe((response) => {
-            thought.likes = response.likes;  // Adjust according to your API's response
+            thought.likes = response.likes;
             this.fetchThoughts();
           });
       } else {
@@ -133,7 +134,7 @@ export class ThoughtsComponent implements OnInit {
   }
 
   dislike(thought: any) {
-    if (thought._id) {  // Use thought._id instead of bookId
+    if (thought._id) {
       if (this.authService.isLoggedIn()) {
         this.webService.dislikeThought(thought._id)
           .subscribe((response) => {
@@ -157,7 +158,6 @@ export class ThoughtsComponent implements OnInit {
       if (this.authService.isAdmin() || thought.username === this.loggedInUserName) {
         this.webService.deleteThought(thought._id).subscribe(
           response => {
-            // Handle successful deletion
             this.thoughts = this.thoughts.filter(r => r._id !== thought._id);
           },
           error => {

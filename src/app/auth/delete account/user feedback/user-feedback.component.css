@@ -1,0 +1,26 @@
+.container {
+  max-width: 900px;
+  margin-top: 80px;
+}
+
+.loading, .no-users {
+  font-size: 18px;
+  color: gray;
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #343a40;
+  color: white;
+}

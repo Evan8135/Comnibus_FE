@@ -94,6 +94,7 @@ describe('AuthService', () => {
     const userData = {
       name: 'Test User',
       username: 'testuser',
+      pronouns: 'he\him',
       password: 'password',
       email: 'test@example.com',
       user_type: 'reader',
@@ -106,6 +107,7 @@ describe('AuthService', () => {
     service.signup(
       userData.name,
       userData.username,
+      userData.pronouns,
       userData.password,
       userData.email,
       userData.user_type,
@@ -125,6 +127,7 @@ describe('AuthService', () => {
     const userData = {
       name: 'Test User',
       username: 'testuser',
+      pronouns: 'he\him',
       password: 'password',
       email: 'test@example.com',
       user_type: 'reader',
@@ -139,6 +142,7 @@ describe('AuthService', () => {
     service.signup(
       userData.name,
       userData.username,
+      userData.pronouns,
       userData.password,
       userData.email,
       userData.user_type,

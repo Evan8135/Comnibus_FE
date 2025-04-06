@@ -1,16 +1,13 @@
 <div class="container">
 
-  <!-- Loading Indicator -->
   <div *ngIf="isLoading" class="loading">Loading users...</div>
 
-  <!-- Error Message -->
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
 
   <h2>Book Requests</h2>
 
-  <!-- Requests Table -->
   <table *ngIf="requests.length > 0" class="table table-bordered mt-3">
     <thead class="thead-dark">
       <tr>
@@ -36,12 +33,10 @@
     </tbody>
   </table>
 
-  <!-- Message if No Requests Found -->
   <p *ngIf="!isLoading && requests.length === 0" class="text-muted">
     No book requests found.
   </p>
 
-  <!-- Pagination Controls -->
   <div class="pagination-controls mt-3">
     <button class="btn btn-secondary" (click)="prevPage()" [disabled]="page === 1">
       Previous

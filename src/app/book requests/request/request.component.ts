@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { RouterOutlet, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -11,7 +10,7 @@ import { AuthService } from '../../auth/auth.service';
 @Component({
   selector: 'request',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.css']
@@ -33,12 +32,10 @@ export class RequestComponent implements OnInit {
 
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private webService: WebService,
-    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -53,7 +50,6 @@ export class RequestComponent implements OnInit {
     this.showApproveForm = true;
     this.selectedGenres = [...request.genres];
 
-    // Initialize the form with request data (allowing modifications)
     this.approveForm = this.formBuilder.group({
       title: [request.title, Validators.required],
       author: [request.author, Validators.required],
@@ -77,7 +73,6 @@ export class RequestComponent implements OnInit {
     });
     this.fetchGenres();
 
-    //this.previewUrl =
   }
 
   onFileSelected(event: any) {
@@ -118,7 +113,7 @@ export class RequestComponent implements OnInit {
     this.http.get<string[]>('http://localhost:5000/api/v1.0/genres').subscribe({
       next: (data) => {
         this.genres = data;
-        this.filteredGenres = data;  // Initially show all genres in the filtered list
+        this.filteredGenres = data;
       },
       error: (error: any) => {
         console.error('Error fetching genres:', error);
@@ -127,15 +122,13 @@ export class RequestComponent implements OnInit {
     });
   }
 
-  // Filter genres based on the search input
   onSearchGenres() {
-    const searchQuery = this.approveForm.get('genreSearch')?.value.toLowerCase() || '';  // Ensure genreSearch has a value
+    const searchQuery = this.approveForm.get('genreSearch')?.value.toLowerCase() || '';
     this.filteredGenres = this.genres.filter(genre =>
-      genre.toLowerCase().includes(searchQuery)  // Case-insensitive search
+      genre.toLowerCase().includes(searchQuery)
     );
   }
 
-  // Toggle genre selection
   toggleGenre(genre: string) {
     const index = this.selectedGenres.indexOf(genre);
     if (index === -1) {
@@ -144,7 +137,6 @@ export class RequestComponent implements OnInit {
       this.selectedGenres.splice(index, 1);
     }
 
-    // Update the FormArray for genres
     this.approveForm.get('genres')?.setValue(this.selectedGenres);
   }
 
@@ -167,7 +159,6 @@ export class RequestComponent implements OnInit {
       formData.append("isbn", approvedBook.isbn || "");
       formData.append("description", approvedBook.description || "");
 
-      // Ensure characters, triggers, and awards are arrays before joining
       formData.append(
         "characters",
         approvedBook.characters
@@ -197,7 +188,6 @@ export class RequestComponent implements OnInit {
       formData.append("firstPublishDate", approvedBook.firstPublishDate || "");
       formData.append("price", approvedBook.price?.toString() || 0.0);
 
-      // Append image file if available
       if (this.approveForm.get('coverImg')?.value) {
         formData.append("coverImg", this.approveForm.get('coverImg')?.value);
       }

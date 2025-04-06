@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'users',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule], // Import FormsModule
+  imports: [CommonModule, RouterModule, FormsModule],
   providers: [WebService, AuthService],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']

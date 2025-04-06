@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebService } from '../../web.service';
 import { AuthService } from '../../auth/auth.service';
@@ -9,21 +9,28 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'thought',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule, FormsModule],
   providers: [WebService, AuthService],
   templateUrl: './thought.component.html',
   styleUrls: ['./thought.component.css']
 })
 export class ThoughtComponent implements OnInit {
-  thoughts: any[] = []; // Array to store multiple thoughts
-  user: any; // The current user
-  newReplyContent: string = ''; // Store the content of the reply
-  showReplyForm: boolean = false; // Whether to show the reply form
+  thoughts: any[] = [];
+  user: any;
+  newReplyContent: string = '';
+  showReplyForm: boolean = false;
   loggedInUserName: string = '';
   errorMessage: string = '';
 
-  replies: any; // All replies for the current thought
-  topReplies: any[] = []; // Top replies based on likes
+  replies: any;
+  topReplies: any[] = [];
+  replyCount: number = 0;
+
+  showReportThoughtForm: boolean = false;
+  reportReason: string = '';
+  reportThoughtId: any = '';
+  showReportReplyForm: boolean = false;
+  reportReplyId: any = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -36,6 +43,7 @@ export class ThoughtComponent implements OnInit {
     this.webService.getThought(this.route.snapshot.paramMap.get('id'))
       .subscribe((response: any) => {
         this.thoughts = [response];
+        this.replyCount = response.replies?.length || 0;
       });
 
 
@@ -50,9 +58,9 @@ export class ThoughtComponent implements OnInit {
 
       this.webService.postReply(thoughtId, replyData).subscribe(
         (response) => {
-          console.log(response.message); // Log success message
-          this.newReplyContent = ''; // Clear the reply box
-          this.fetchReplies(thoughtId); // Fetch the updated list of replies for this thought
+          console.log(response.message);
+          this.newReplyContent = '';
+          this.fetchReplies(thoughtId);
         },
         (error) => {
           console.error('Error:', error);
@@ -79,14 +87,13 @@ export class ThoughtComponent implements OnInit {
 
   likeReply(thought: any, reply: any) {
     this.webService.likeReply(thought._id, reply).subscribe((response) => {
-      reply.likes = response.likes; // Update likes count
+      reply.likes = response.likes;
       this.fetchReplies(thought);
     },
     (error) => {
       console.error('Error:', error);
-    // Handle error: check for specific error messages from backend
       if (error.error && error.error.message) {
-        this.errorMessage = error.error.message;  // Assign the error message from backend
+        this.errorMessage = error.error.message;
       } else {
         this.errorMessage = 'An unexpected error occurred.';
       }
@@ -96,13 +103,12 @@ export class ThoughtComponent implements OnInit {
   likeThought(thought: any) {
 
     this.webService.likeThought(thought).subscribe((response) => {
-      thought.likes = response.likes; // Update likes count
+      thought.likes = response.likes;
     },
     (error) => {
       console.error('Error:', error);
-    // Handle error: check for specific error messages from backend
       if (error.error && error.error.message) {
-        this.errorMessage = error.error.message;  // Assign the error message from backend
+        this.errorMessage = error.error.message;
       } else {
         this.errorMessage = 'An unexpected error occurred.';
       }
@@ -111,7 +117,7 @@ export class ThoughtComponent implements OnInit {
 
   dislike(reply: any) {
     this.webService.dislikeReply(reply.thoughtId, reply).subscribe((response) => {
-      reply.dislikes = response.dislikes; // Update dislikes count
+      reply.dislikes = response.dislikes;
     });
   }
 
@@ -120,11 +126,60 @@ export class ThoughtComponent implements OnInit {
   }
 
   trackThought(index: number, thought: any): any {
-    return thought._id;  // Assuming each thought has a unique _id
+    return thought._id;
   }
 
 
   isIncomplete() {
     return this.isInvalid('content');
+  }
+
+  reportThought(thoughtId: any) {
+    if (this.reportReason.trim()) {
+      this.webService.reportThought(thoughtId, this.reportReason).subscribe(
+        (response: any) => {
+          console.log("Thought reported:", response);
+          this.showReportThoughtForm = false;
+          this.reportReason = '';
+        },
+        (error) => {
+          console.error("Error reporting thought:", error);
+          this.errorMessage = 'Failed to report thought.';
+        }
+      );
+    } else {
+      this.errorMessage = 'Please provide a reason for reporting the thought.';
+    }
+  }
+
+  reportReply(thoughtId: any, replyId: any) {
+    if (this.reportReason.trim()) {
+      this.webService.reportThoughtReply(thoughtId, replyId, this.reportReason).subscribe(
+        (response: any) => {
+          console.log("Reply reported:", response);
+          this.showReportReplyForm = false;
+          this.reportReason = '';
+        },
+        (error) => {
+          console.error("Error reporting reply:", error);
+          this.errorMessage = 'Failed to report reply.';
+        }
+      );
+    } else {
+      this.errorMessage = 'Please provide a reason for reporting the reply.';
+    }
+  }
+
+  toggleReportThoughtForm(thoughtId: any) {
+    this.reportThoughtId = thoughtId;
+    this.showReportThoughtForm = !this.showReportThoughtForm;
+    this.reportReason = '';
+  }
+
+  toggleReportReplyForm(replyId: any, thoughtId: any) {
+    this.reportReplyId = replyId;
+    this.reportThoughtId = thoughtId;
+    this.showReportReplyForm = !this.showReportReplyForm;
+    this.reportReason = '';
   }
 }

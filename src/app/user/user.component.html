@@ -1,6 +1,5 @@
 <div class="container user-container" style="margin-top: 80px;">
   <div class="row">
-    <!-- Display the main user details -->
     <div class="col-sm-12">
       <div class="card text-dark bg-light mb-3 user-card">
         <div class="card-header user-header">
@@ -19,7 +18,6 @@
         <div class="card-body user-card-body">
           <h4>Feed</h4>
 
-          <!-- Reviews by the user -->
           <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
             <div class="card-header">
               <p><strong>{{ review.title }}</strong></p>
@@ -27,12 +25,10 @@
             <div class="card-body">
               <p>{{ review.comment }}</p>
               <div class="card-footer">
-                <!-- You can add review footer information if necessary -->
               </div>
             </div>
           </div>
 
-          <!-- Books written by the author -->
           <div *ngIf="books_by_author.length > 0">
             <h4>Books Written</h4>
             <div *ngFor="let book of books_by_author" class="card text-dark bg-light mb-3 book-card">
@@ -48,12 +44,10 @@
       </div>
     </div>
 
-    <!-- If no reviews, show a message -->
     <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
       <p>No reviews by this user.</p>
     </div>
 
-    <!-- If no books by author, show a message -->
     <div *ngIf="books_by_author.length === 0 && user.user_type === 'author'" class="col-sm-12">
       <p>This author has not written any books yet.</p>
     </div>

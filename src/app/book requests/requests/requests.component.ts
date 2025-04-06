@@ -12,12 +12,12 @@ import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/route
   styleUrls: ['./requests.component.css']
 })
 export class RequestsComponent implements OnInit {
-  requests: any[] = []; // Stores book requests
+  requests: any[] = [];
   isLoading: boolean = true;
   errorMessage: string = '';
 
-  page: number = 1; // Current page number
-  pageSize: number = 10; // Number of items per page
+  page: number = 1;
+  pageSize: number = 10;
 
   constructor(private webService: WebService, private route: ActivatedRoute, private router: Router) {}
 
@@ -29,7 +29,7 @@ export class RequestsComponent implements OnInit {
     this.isLoading = true;
     this.webService.getRequests(this.page).subscribe({
       next: (data) => {
-        this.requests = data || []; // Ensure data is an array
+        this.requests = data || [];
         this.isLoading = false;
       },
       error: (error) => {
@@ -40,13 +40,11 @@ export class RequestsComponent implements OnInit {
     });
   }
 
-  // Function to go to the next page
   nextPage(): void {
     this.page++;
     this.fetchRequests();
   }
 
-  // Function to go to the previous page
   prevPage(): void {
     if (this.page > 1) {
       this.page--;

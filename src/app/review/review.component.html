@@ -1,12 +1,10 @@
 <div class="container review-container" style="margin-top: 80px;">
   <div class="row">
     <div class="col-sm-12">
-      <!-- Loop through all reviews -->
       <div *ngFor="let review of reviews; trackBy: trackReview" class="card text-dark bg-light mb-3 review-card">
         <div class="card-body review-card-body">
           <div class="row">
             <div class="col-md-8">
-              <!-- Display review content -->
               <h2><strong><i>{{ review.title }}</i></strong></h2>
               <span *ngFor="let star of getStarCount(review.stars)">
                 <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
@@ -20,10 +18,20 @@
             <div *ngIf="review.username === loggedInUserName || authService.isAdmin()">
               <button (click)="deleteReview(review)" class="btn btn-danger">Delete</button>
             </div>
-          </div>
+            <button *ngIf="loggedInUserName && !showReportReviewForm" (click)="toggleReportReviewForm(review._id)" class="btn btn-danger">
+              Report Review
+            </button>
+
         </div>
 
-        <!-- User-specific functionality: reply box -->
+        <div *ngIf="showReportReviewForm" class="report-form">
+          <h3>Report Review</h3>
+          <textarea [(ngModel)]="reportReason" placeholder="Provide a reason for reporting this review" rows="4"></textarea>
+          <button (click)="reportReview(reportReviewId)">Submit Report</button>
+          <button (click)="showReportReviewForm = false">Cancel</button>
+        </div>
+      </div>
+
         <div *ngIf="authService.isLoggedIn()">
           <div *ngIf="showReplyForm; else replyForm">
             <div class="form-group">
@@ -54,11 +62,11 @@
             <button *ngIf="!isIncomplete()" (click)="submitReply(review)" class="btn btn-primary" style="margin-top: 20px">Submit</button>
           </div>
           <ng-template #replyForm>
-            <button (click)="toggleReplyForm()">Reply</button>
+            <div><button (click)="toggleReplyForm()">Reply <img src="images/reply.png" alt="Like" style="width: 20px; height: 20px;"></button> {{ replyCount }}</div>
+
           </ng-template>
         </div>
 
-        <!-- Display Replies -->
         <div *ngIf="review.replies?.length > 0">
           <h3>Replies</h3>
           <div *ngFor="let reply of review.replies">
@@ -66,22 +74,30 @@
               <p>{{ reply.content }}</p>
               <small>Posted by: {{ reply.username }} | {{ reply.created_at | date }}</small>
 
-              <!-- Like/Dislike buttons -->
               <div>Likes: {{ reply.likes }} <button (click)="likeReply(review, reply)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
               <div style="display: right;">Dislikes: {{ reply.dislikes }} <button (click)="dislikeReply(reply)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
 
             </div>
+            <button *ngIf="loggedInUserName && !showReportReplyForm" (click)="toggleReportReplyForm(reply._id, review._id)">
+              Report Reply
+            </button>
+
           </div>
+          <div *ngIf="showReportReplyForm" class="report-form">
+            <h3>Report Reply</h3>
+            <textarea [(ngModel)]="reportReason" placeholder="Provide a reason for reporting this reply" rows="4"></textarea>
+            <button (click)="reportReply(reportReviewId, reportReplyId)">Submit Report</button>
+          </div>
+          <button (click)="showReportReplyForm = false">Cancel</button>
+
         </div>
 
-        <!-- Display a message when there are no replies -->
         <div *ngIf="review.replies?.length === 0">
           <p>No replies yet. Be the first to reply!</p>
         </div>
       </div>
     </div>
   </div>
-  <!-- Error handling -->
   <div *ngIf="errorMessage" class="error-message">
     <p>{{ errorMessage }}</p>
   </div>

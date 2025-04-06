@@ -70,7 +70,7 @@
 
 .grid-container.grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
 
@@ -135,7 +135,6 @@
   color: #777;
 }
 
-/* Styling for bookshelf */
 .book-lists-container {
   margin-top: 20px;
 }
@@ -144,10 +143,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center; /* Center the books */
+  justify-content: center;
 }
 
-/* Styling for each book section */
 .book-section {
   flex: 1;
   min-width: 300px;
@@ -156,11 +154,10 @@
 
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid layout */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
 }
 
-/* Book card styling */
 .book-card {
   background: #f8f9fa;
   border-radius: 8px;
@@ -168,12 +165,12 @@
   text-align: center;
   max-width: 150px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.3s ease; /* Added transition for hover effect */
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .book-card:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Slight increase in shadow on hover */
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .book-cover {
@@ -201,12 +198,11 @@
   width: 10px;
   opacity: 0.5;
 }
-/* Genre and Author Search Container */
+
 .form-group {
   margin-bottom: 20px;
 }
 
-/* Input fields for genre and author search */
 .form-control {
   width: 100%;
   padding: 10px;
@@ -220,7 +216,6 @@
   border-color: red;
 }
 
-/* Styling for the genre and author search result lists */
 .genre-results, .author-results {
   max-height: 200px;
   overflow-y: auto;
@@ -253,14 +248,12 @@
   color: white;
 }
 
-/* Error message styling when fewer than 3 genres are selected */
 .error-message {
   color: red;
   text-align: center;
   margin-top: 15px;
 }
 
-/* Genre search result list styling */
 .genre-results {
   max-height: 200px;
   overflow-y: auto;
@@ -305,7 +298,6 @@
   background-color: #f0f0f0;
 }
 
-/* Selected genre styling */
 .selected {
   background-color: #007bff;
   color: white;

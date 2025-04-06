@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { WebService } from '../../web.service';
 import { AuthService } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'currently-reading',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './current-reads.component.html',
   styleUrls: ['./current-reads.component.css']
@@ -22,7 +22,7 @@ export class CurrentReadsComponent {
   loading: boolean = true;
   errorMessage: string = '';
 
-  constructor(private webService: WebService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder) {}
+  constructor(private webService: WebService, private authService: AuthService, private route: ActivatedRoute, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('x-access-token');
@@ -45,18 +45,16 @@ export class CurrentReadsComponent {
     return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
   }
 
-  // Toggle the visibility of the rate form for a specific book
   toggleRateForm(book: any) {
-    book.showRateForm = !book.showRateForm; // Toggle visibility for this book only
+    book.showRateForm = !book.showRateForm;
   }
 
   fetchCurrentReads() {
     this.webService.getCurrentReads().subscribe(
       (response) => {
         this.currentReads = response.currently_reading;
-        // Initialize each book with a `showRateForm` property set to false
         this.currentReads.forEach(book => {
-          book.showRateForm = false; // Initialize the showRateForm flag for each book
+          book.showRateForm = false;
         });
         this.loading = false;
       },
@@ -70,7 +68,7 @@ export class CurrentReadsComponent {
   updateReadingProgress(bookId: string, currentPage: number) {
     this.webService.updateReadingProgress(bookId, currentPage).subscribe(
       (response) => {
-        this.fetchCurrentReads(); // Refresh the list after updating
+        this.fetchCurrentReads();
       },
       (error) => {
         this.errorMessage = 'Error updating reading progress.';
@@ -81,7 +79,7 @@ export class CurrentReadsComponent {
   removeFromCurrentReads(bookId: string) {
     this.webService.removeFromCurrentReads(bookId).subscribe(
       (response) => {
-        this.fetchCurrentReads(); // Refresh the list after removing
+        this.fetchCurrentReads();
       },
       (error) => {
         this.errorMessage = 'Error removing book from current reads.';
@@ -109,7 +107,7 @@ export class CurrentReadsComponent {
     const confirmSubmission = confirm(`You are about to submit a rating of ${rating} stars. Do you want to proceed?`);
 
     if (!confirmSubmission) {
-      return; // Stop submission if the user cancels
+      return;
     }
 
     this.webService.markBookAsRead(bookId, rating, dateRead).subscribe(

@@ -1,6 +1,9 @@
 <div class="container profile-container" style="margin-top: 80px;" *ngIf="user">
   <div class="row">
     <div class="col-sm-12">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-danger" [routerLink]="['/delete-account']">Delete Account</button>
+      </div>
       <div class="card text-dark bg-light mb-3 user-card">
         <div class="card-header profile-header">
           <h4>{{ user.username }}</h4>
@@ -13,7 +16,6 @@
           <p><strong>Favourite Authors:</strong> {{ user.favourite_authors.join(', ') || 'None' }}</p>
         </div>
 
-        <!-- Favourite Books Section -->
         <div *ngIf="favouriteBooks.length > 0" class="book-section mb-4">
           <h5>Favourite Books</h5>
           <div class="book-grid">
@@ -27,33 +29,27 @@
           </div>
         </div>
 
-        <!-- Edit Profile Button -->
         <button class="btn btn-primary" (click)="toggleEdit()">
           {{ isEditing ? 'Cancel Edit' : 'Edit Profile' }}
         </button>
 
-        <!-- Edit Profile Section -->
         <div *ngIf="isEditing" class="card-body">
           <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
-            <!-- Name Input -->
             <div class="form-group">
               <label for="name">Name</label>
               <input id="name" formControlName="name" class="form-control" type="text">
             </div>
 
-            <!-- Username Input -->
             <div class="form-group">
               <label for="username">Username</label>
               <input id="username" formControlName="username" class="form-control" type="text">
             </div>
 
-            <!-- Email Input -->
             <div class="form-group">
               <label for="email">Email</label>
               <input id="email" formControlName="email" class="form-control" type="email">
             </div>
 
-            <!-- Pronouns Dropdown -->
             <div class="form-group">
               <label for="pronouns">Pronouns</label>
               <select id="pronouns" class="form-control" formControlName="pronouns">
@@ -64,7 +60,6 @@
               </select>
             </div>
 
-            <!-- Favourite Genres -->
             <div class="form-group">
               <label for="favourite_genres">Favourite Genres</label>
               <input type="text" name="favourite_genres" id="favourite_genres" class="form-control" formControlName="favourite_genres" />
@@ -78,7 +73,6 @@
               </div>
             </div>
 
-            <!-- Favourite Authors -->
             <div class="form-group">
               <label for="favourite_authors">Favourite Authors</label>
               <input type="text" name="favourite_authors" id="favourite_authors" class="form-control" formControlName="favourite_authors" />
@@ -93,7 +87,6 @@
               </div>
             </div>
 
-            <!-- Display Selected Genres -->
             <div *ngIf="selectedGenres.length > 0">
               <p><strong>Selected Genres:</strong>
                 <span *ngFor="let genre of selectedGenres; let i = index">
@@ -104,7 +97,6 @@
               </p>
             </div>
 
-            <!-- Display Selected Authors -->
             <div *ngIf="selectedAuthors.length > 0">
               <p><strong>Selected Authors:</strong>
                 <span *ngFor="let author of selectedAuthors; let i = index">
@@ -118,14 +110,12 @@
 
 
 
-            <!-- Profile Picture Preview -->
             <div *ngIf="previewUrl">
               <p><strong>Image URL:</strong> {{ previewUrl }}</p>
               <h5>Preview of selected profile picture:</h5>
               <img [src]="previewUrl || '/images/profile.png'" alt="Profile Picture Preview" class="img-fluid" style="max-height: 200px;">
             </div>
 
-            <!-- File Upload for Profile Picture -->
             <input type="file" formControlName="profile_pic" class="form-control" (change)="onFileSelected($event)" />
             <button type="submit" [disabled]="editProfileForm.invalid" class="btn btn-primary">Save Changes</button>
           </form>
@@ -133,10 +123,8 @@
 
 
 
-        <!-- Bookshelf Section -->
         <h4>My Bookshelf</h4>
 
-        <!-- Currently Reading -->
         <div *ngIf="currentlyReading.length > 0" class="book-section mb-4">
           <h5>Current Reads</h5>
           <div class="d-flex justify-content-end">
@@ -154,7 +142,6 @@
           </div>
         </div>
 
-        <!-- Have Read Books -->
         <div *ngIf="have_read_books.length > 0" class="book-section mb-4">
           <h5>Have Read List</h5>
           <div class="d-flex justify-content-end">
@@ -177,7 +164,6 @@
           </div>
         </div>
 
-        <!-- TBR Books -->
         <div *ngIf="tbrBooks.length > 0" class="book-section mb-4">
           <h5>TBR List</h5>
           <div class="book-grid">
@@ -189,26 +175,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- User Reviews -->
-        <div class="card-body user-card-body">
-          <h4>My Reviews</h4>
-          <div *ngFor="let review of reviews_by_user;" class="card text-dark bg-light mb-3 review-card">
-            <div class="card-header">
-              <p><strong>{{ review.title }}</strong></p>
-            </div>
-            <div class="card-body">
-              <p>{{ review.comment }}</p>
-              <div class="card-footer">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- No Reviews Message -->
-        <div *ngIf="reviews_by_user.length === 0" class="col-sm-12">
-          <p>No reviews by this user.</p>
         </div>
 
       </div>

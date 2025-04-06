@@ -4,7 +4,6 @@
       <h2 class="text-center">Sign Up</h2>
       <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
 
-        <!-- Name field -->
         <div class="form-group">
           <label for="name">Name</label>
           <input
@@ -17,7 +16,6 @@
           />
         </div>
 
-        <!-- Username field -->
         <div class="form-group">
           <label for="username">Username</label>
           <input
@@ -30,7 +28,6 @@
           />
         </div>
 
-        <!-- User type dropdown -->
         <div class="form-group">
           <label for="pronouns">Pronouns</label>
           <select
@@ -46,7 +43,6 @@
           </select>
         </div>
 
-        <!-- Email field -->
         <div class="form-group">
           <label for="email">Email</label>
           <input
@@ -59,7 +55,6 @@
           />
         </div>
 
-        <!-- Password field -->
         <div class="form-group">
           <label for="password">Password</label>
           <input
@@ -74,7 +69,6 @@
 
 
 
-        <!-- User type dropdown -->
         <div class="form-group">
           <label for="user_type">User Type</label>
           <select
@@ -88,10 +82,8 @@
           </select>
         </div>
 
-        <!-- Genre search field -->
         <div class="form-group">
           <label>Favourite Genres (Pick at least 3):</label>
-          <!-- Bind formControlName for search bar -->
           <input
             type="text"
             formControlName="genreSearch"
@@ -101,7 +93,6 @@
           />
 
 
-          <!-- Display filtered genres -->
           <div *ngIf="filteredGenres.length > 0" class="genre-results">
             <ul>
               <li *ngFor="let genre of filteredGenres" (click)="toggleGenre(genre)" [class.selected]="selectedGenres.includes(genre)">
@@ -110,11 +101,9 @@
             </ul>
           </div>
 
-          <!-- Error message if fewer than 3 genres are selected -->
           <div *ngIf="favouriteGenres.errors?.['minlength']" class="error-message">You must select at least 3 genres.</div>
         </div>
 
-        <!-- Favourite authors field (optional) -->
         <div class="form-group">
           <label>Favourite Authors (Optional):</label>
           <input
@@ -133,10 +122,8 @@
           </div>
         </div>
 
-        <!-- Error message display -->
         <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
-        <!-- Submit button -->
         <button *ngIf="!isIncomplete()" class="btn btn-primary" type="submit" style="margin-top: 20px">Sign Up</button>
         <span *ngIf="isIncomplete()" class="error-message">Please complete all fields</span>
       </form>

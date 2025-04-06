@@ -42,7 +42,6 @@
     </div>
   </div>
 
-    <!-- Loading spinner -->
   <div *ngIf="loading" class="loading-spinner">
     <div class="spinner-border text-dark" role="status">
     </div>
@@ -57,10 +56,8 @@
       <p><strong>Posted By:</strong> {{ thought.username }}</p>
       <p><strong>Uploaded: </strong> {{ thought.created_at }}</p>
       <p style="cursor: pointer">
-        <!-- Display a truncated comment with a link to show more -->
         {{ thought.showFullComment ? thought.comment : (thought.comment | slice:0:200) + '...' }}
 
-        <!-- Link to the Thought's Detail Page -->
         <a [routerLink]="['/thoughts', thought._id]" class="show-more">Show More</a>
       </p>
       <div>Likes: {{ thought.likes }} <button (click)="like(thought)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>

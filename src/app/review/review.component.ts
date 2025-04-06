@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
@@ -9,22 +9,27 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'review',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule, FormsModule],
   providers: [WebService, AuthService],
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.css']
 })
 export class ReviewComponent implements OnInit {
-  reviews: any[] = []; // Array to store multiple reviews
-  user: any; // The current user
-  newReplyContent: string = ''; // Store the content of the reply
-  showReplyForm: boolean = false; // Whether to show the reply form
+  reviews: any[] = [];
+  user: any;
+  newReplyContent: string = '';
+  showReplyForm: boolean = false;
   loggedInUserName: string = '';
   errorMessage: string = '';
-  replies: any; // All replies for the current thought
+  replies: any;
   topReplies: any[] = [];
 
-
+  showReportReviewForm: boolean = false;
+  reportReason: string = '';
+  reportReviewId: any = '';
+  showReportReplyForm: boolean = false;
+  reportReplyId: any = '';
+  replyCount: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,7 +45,8 @@ export class ReviewComponent implements OnInit {
     if (reviewId) {
       this.webService.getReview(reviewId).subscribe(
         (response: any) => {
-          this.reviews = [response]; // Store as an array
+          this.reviews = [response];
+          this.replyCount = response.replies?.length || 0;
         },
         (error) => {
           console.error('Error fetching review:', error);
@@ -62,9 +68,9 @@ export class ReviewComponent implements OnInit {
 
        this.webService.postReviewReply(review.book_id, review._id, replyData).subscribe(
          (response) => {
-           console.log(response.message); // Log success message
-           this.newReplyContent = ''; // Clear the reply box
-           this.fetchReplies(review.book_id, review._id); // Fetch the updated list of replies for this review
+           console.log(response.message);
+           this.newReplyContent = '';
+           this.fetchReplies(review.book_id, review._id);
          },
          (error) => {
            console.error('Error:', error);
@@ -90,21 +96,20 @@ export class ReviewComponent implements OnInit {
    }
 
   getStarCount(stars: number): any[] {
-    const fullStars = Math.floor(stars);  // Get the number of full stars
-    const halfStar = stars % 1 >= 0.5 ? 1 : 0;  // Check if there's a half star
+    const fullStars = Math.floor(stars);
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;
 
-    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];  // Return full stars and half star if needed
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
   }
 
   like(review: any) {
     this.webService.likeReview(review.book_id, review).subscribe((response) => {
-      review.likes = response.likes; // Update likes count
+      review.likes = response.likes;
     },
     (error) => {
       console.error('Error:', error);
-    // Handle error: check for specific error messages from backend
       if (error.error && error.error.message) {
-        this.errorMessage = error.error.message;  // Assign the error message from backend
+        this.errorMessage = error.error.message;
       } else {
         this.errorMessage = 'An unexpected error occurred.';
       }
@@ -113,22 +118,20 @@ export class ReviewComponent implements OnInit {
 
   dislike(review: any) {
     this.webService.dislikeReview(review.book_id, review).subscribe((response) => {
-      review.dislikes = response.dislikes; // Update dislikes count
+      review.dislikes = response.dislikes;
     });
   }
 
   likeReply(review: any, reply: any) {
     this.webService.likeReviewReply(review._id, reply).subscribe(
       (response) => {
-        // Successfully liked the reply, update the UI with the new like count
-        reply.likes += 1;  // Increase the likes count directly
+        reply.likes += 1;
         console.log('Reply liked successfully:', response);
       },
       (error) => {
         console.error('Error:', error);
-      // Handle error: check for specific error messages from backend
         if (error.error && error.error.message) {
-          this.errorMessage = error.error.message;  // Assign the error message from backend
+          this.errorMessage = error.error.message;
         } else {
           this.errorMessage = 'An unexpected error occurred.';
         }
@@ -138,7 +141,7 @@ export class ReviewComponent implements OnInit {
 
   dislikeReply(review: any) {
     this.webService.dislikeReview(review.book_id, review).subscribe((response) => {
-      review.dislikes = response.dislikes; // Update dislikes count
+      review.dislikes = response.dislikes;
     });
   }
 
@@ -147,7 +150,7 @@ export class ReviewComponent implements OnInit {
    }
 
   trackReview(index: number, review: any): any {
-    return review._id;  // Assuming each review has a unique _id
+    return review._id;
   }
 
   deleteReview(review: any) {
@@ -155,7 +158,6 @@ export class ReviewComponent implements OnInit {
       if (this.authService.isAdmin() || review.username === this.loggedInUserName) {
         this.webService.deleteReview(review.book_id, review).subscribe(
           response => {
-            // Handle successful deletion
             this.reviews = this.reviews.filter(r => r._id !== review._id);
           },
           error => {
@@ -175,4 +177,55 @@ export class ReviewComponent implements OnInit {
    isIncomplete() {
      return this.isInvalid('content');
    }
+
+  reportReview(reviewId: any) {
+    if (this.reportReason.trim()) {
+      this.webService.reportReview(reviewId, this.reportReason).subscribe(
+        (response: any) => {
+          console.log("Review reported:", response);
+          this.showReportReviewForm = false;
+          this.reportReason = '';
+        },
+        (error) => {
+          console.error("Error reporting review:", error);
+          this.errorMessage = 'Failed to report review.';
+        }
+      );
+    } else {
+      this.errorMessage = 'Please provide a reason for reporting the review.';
+    }
+  }
+
+  reportReply(reviewId: any, replyId: any) {
+    if (this.reportReason.trim()) {
+      this.webService.reportReviewReply(reviewId, replyId, this.reportReason).subscribe(
+        (response: any) => {
+          console.log("Reply reported:", response);
+          this.showReportReplyForm = false;
+          this.reportReason = '';
+        },
+        (error) => {
+          console.error("Error reporting reply:", error);
+          this.errorMessage = 'Failed to report reply.';
+        }
+      );
+    } else {
+      this.errorMessage = 'Please provide a reason for reporting the reply.';
+    }
+  }
+
+  toggleReportReviewForm(reviewId: any) {
+    this.reportReviewId = reviewId;
+    this.showReportReviewForm = !this.showReportReviewForm;
+    this.reportReason = '';
+  }
+
+  toggleReportReplyForm(replyId: any, reviewId: any) {
+    this.reportReplyId = replyId;
+    this.reportReviewId = reviewId;
+    this.showReportReplyForm = !this.showReportReplyForm;
+    this.reportReason = '';
+  }
+
+
 }

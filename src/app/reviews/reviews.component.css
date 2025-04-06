@@ -25,7 +25,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
 }
 
 .spinner-border {
@@ -33,7 +33,7 @@
   height: 3rem;
 }
 .loading-text {
-  margin-left: 10px; /* Space between spinner and text */
+  margin-left: 10px;
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -46,5 +46,5 @@
 }
 
 .error-count {
-  color: red; /* Change color to red when under 1000 characters */
+  color: red;
 }

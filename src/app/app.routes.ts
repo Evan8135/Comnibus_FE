@@ -22,6 +22,11 @@ import { TopBooksComponent } from './top books/top-books.component';
 import { ReadBooksComponent } from './bookshelves/have read/read-books.component';
 import { ReviewComponent } from './review/review.component';
 import { newBooksComponent } from './new books/new-books.component';
+import { ReportsComponent } from './reports/reports.component';
+import { ReportComponent } from './report/report.component';
+import { GoodbyeComponent } from './auth/delete account/goodbye/goodbye.component';
+import { DeleteAccountComponent } from './auth/delete account/delete-account.component';
+import { UserFeedbackComponent } from './auth/delete account/user feedback/user-feedback.component';
 
 export const routes: Routes = [
   {
@@ -120,5 +125,25 @@ export const routes: Routes = [
   {
     path: 'thoughts/:id',
     component: ThoughtComponent
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent
+  },
+  {
+    path: 'reports/:id',
+    component: ReportComponent
+  },
+  {
+    path: 'delete-account',
+    component: DeleteAccountComponent
+  },
+  {
+    path: 'goodbye',
+    component: GoodbyeComponent
+  },
+  {
+    path: 'user-feedback',
+    component: UserFeedbackComponent
   }
 ];

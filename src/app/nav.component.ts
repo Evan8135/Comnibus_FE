@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { WebService } from './web.service';  // Import WebService
 import { AuthService } from './auth/auth.service';
@@ -7,7 +7,7 @@ import { AuthService } from './auth/auth.service';
 @Component({
   selector: 'navigation',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './nav.component.html',
   providers: [WebService, AuthService]
 })

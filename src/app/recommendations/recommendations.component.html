@@ -1,18 +1,15 @@
 <div class="book-container">
   <h2>Recommended Books</h2>
 
-  <!-- Display Error Message if present -->
   <div *ngIf="errorMessage" class="error-message">
     <p>{{ errorMessage }}</p>
   </div>
 
-  <!-- Display No Recommendations message if there are no books to recommend -->
   <div *ngIf="!errorMessage && recommendations.length === 0" class="no-recommendations">
     <p>No recommendations available.</p>
   </div>
 
   <div *ngIf="!errorMessage && recommendations.length > 0">
-    <!-- Display Books Matching At Least 3 Favorite Genres -->
     <div *ngIf="booksMatchingMultipleGenres.length > 0" class="genre-section">
       <h3>Perfect Match For You</h3>
       <div class="genre-row">
@@ -39,7 +36,6 @@
       </div>
     </div>
 
-    <!-- Loop over different genres and display books by genre -->
     <div *ngFor="let genre of getGenres()" class="genre-section">
       <h3>{{ genre }} Books</h3>
       <div class="genre-row">
@@ -53,7 +49,6 @@
       </div>
     </div>
 
-    <!-- Loop over books grouped by author -->
     <div *ngFor="let author of booksByAuthor | keyvalue" class="author-section">
       <div *ngIf="author.value.length > 0">
         <h3>More Books Written by {{ author.key }}</h3>
@@ -70,7 +65,6 @@
     </div>
   </div>
 
-  <!-- Pagination Controls -->
   <div class="pagination">
     <button [disabled]="page === 1" (click)="previousPage()">Previous</button>
     <span>Page {{ page }}</span>

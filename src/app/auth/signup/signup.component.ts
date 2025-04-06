@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
@@ -10,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'signup',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [AuthService],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
@@ -151,10 +150,10 @@ export class SignupComponent {
   // Submit form logic
   onSubmit() {
     if (this.signupForm.valid) {
-      const { name, username, password, email, user_type, favourite_genres, favourite_authors } = this.signupForm.value;
+      const { name, username, pronouns, password, email, user_type, favourite_genres, favourite_authors } = this.signupForm.value;
       const admin = false; // Admin is always false
 
-      this.authService.signup(name, username, password, email, user_type, favourite_genres.join(','), favourite_authors, admin).subscribe({
+      this.authService.signup(name, username, pronouns, password, email, user_type, favourite_genres.join(','), favourite_authors, admin).subscribe({
         next: () => {
           this.successMessage = 'Signup successful!';
           this.errorMessage = null;
@@ -162,7 +161,7 @@ export class SignupComponent {
         },
         error: (error) => {
           this.successMessage = null;
-          this.errorMessage = 'Signup failed. Please try again.';
+          this.errorMessage = error.error.message
           console.error(error);
         }
       });

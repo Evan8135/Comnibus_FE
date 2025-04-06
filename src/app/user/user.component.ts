@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  user: any = null;  // The current user's details
-  reviews_by_user: any[] = []; // Array for reviews by this user
+  user: any = null;
+  reviews_by_user: any[] = [];
   books_by_author: any[] = [];
   followersCount: number = 0;
   followingCount: number = 0;
@@ -37,14 +37,11 @@ export class UserComponent implements OnInit {
       this.followersCount = response.user.followers.length;
       this.followingCount = response.user.following.length;
 
-      // Fetch the current user's profile
       this.webService.getProfile().subscribe((profileResponse: any) => {
         this.currentUser = profileResponse;
 
-        // Get followers from AuthService (which returns a string)
         const followersData = this.authService.getFollowers();
 
-        // Directly check if the user ID is in the string (without parsing)
         this.isFollowing = followersData.includes(this.user._id);
       });
     });

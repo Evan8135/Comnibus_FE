@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
@@ -11,38 +11,37 @@ import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'book',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.css']
 })
 export class BookComponent implements OnInit {
-  book: any; // The current book's details
-  user: any; // The current user
-  rateForm: any; // Form for rating a book
-  showRateForm: boolean = false; // Whether to show the rating form
-  Same_Author_Books: any[] = []; // Array for same author books
+  book: any;
+  user: any;
+  rateForm: any;
+  showRateForm: boolean = false;
+  Same_Author_Books: any[] = [];
+  triggers: any;
   triggerForm: any;
   showTriggerForm: boolean = false;
-  reviews: any[] = []; // All reviews for the current book
-  topReviews: any[] = []; // Top reviews based on likes
-  isMarkedAsRead: boolean = false; // Whether the book is marked as read
-  userBookRating: any; // The rating given by the user
-  isAddedToTBR: boolean = false; // Whether the book is added to "Want to Read"
-  isCurrentlyReading: boolean = false; // Whether the book is in the "Currently Reading" list
-  isFavouriteBook: boolean = false; // Whether the book is in the "Favourite Books" list
+  reviews: any[] = [];
+  topReviews: any[] = [];
+  isMarkedAsRead: boolean = false;
+  userBookRating: any;
+  isAddedToTBR: boolean = false;
+  isCurrentlyReading: boolean = false;
+  isFavouriteBook: boolean = false;
   errorMessage: string | null = null;
   previewUrl: string | null = null;
   isUploading: boolean = false;
 
-  // Form groups for editing title, description, and genres
   editBookFormTitle: any;
   editBookFormDescription: any;
   editBookFormGenres: any;
   editBookFormPublishDate: any;
   editBookFormCoverImg: any;
 
-  // Flags to toggle edit modes
   isEditingTitle: boolean = false;
   isEditingDescription: boolean = false;
   isEditingGenres: boolean = false;
@@ -62,7 +61,6 @@ export class BookComponent implements OnInit {
     const bookId = this.route.snapshot.paramMap.get('id');
     this.reviews = [];
 
-    // Initialize forms for title, description, and genres
     this.editBookFormTitle = this.formBuilder.group({
       title: [this.book?.title || '', Validators.required]
     });
@@ -79,7 +77,6 @@ export class BookComponent implements OnInit {
       coverImg: [this.book?.coverImg || '', Validators.required]
     });
 
-    // Fetch data from WebService
     if (this.authService.isLoggedIn()) {
       this.webService.getProfile().subscribe(user => {
         this.user = user;
@@ -88,9 +85,26 @@ export class BookComponent implements OnInit {
           return;
         }
 
+        console.log('User Have Read Books:', this.user.have_read);
+
+        this.triggerForm = this.formBuilder.group({
+          triggers: ['', Validators.required]
+        });
+
         this.webService.getBook(bookId).subscribe((response: any) => {
           this.book = response.book;
+          const userReadBook = this.user.have_read?.find((book: { _id: string; stars: number }) => book._id === this.book._id);
+
+          if (userReadBook) {
+            this.userBookRating = userReadBook.stars;
+            this.isMarkedAsRead = true;
+            console.log('User Rating:', this.userBookRating)
+          } else {
+            this.userBookRating = null;
+          }
+
           console.log(this.book)
+
           const authorName = this.book.author[0];
           this.Same_Author_Books = response.same_author_books.filter((book: any) => book.author && book.author[0] === authorName);
         });
@@ -100,18 +114,14 @@ export class BookComponent implements OnInit {
           date_read: ["", Validators.required]
         });
 
+        this.webService.getReviews(bookId).subscribe((response) => {
+          this.reviews = response;
 
+          this.topReviews = [...this.reviews]
+            .sort((a, b) => b.likes - a.likes)
+            .slice(0, 3);
+        });
       });
-      if (this.book.user_reviews > 1){
-        this.webService.getReviews(bookId).subscribe(
-          (response) => {
-            if (response) {
-              this.reviews = response;
-              this.topReviews = [...this.reviews].sort((a, b) => b.likes - a.likes).slice(0, 3);
-            }
-          }
-        );
-      }
 
     } else {
       this.webService.getBook(bookId).subscribe((response: any) => {
@@ -124,21 +134,17 @@ export class BookComponent implements OnInit {
         stars: [5, [Validators.required, Validators.min(0), Validators.max(5)]],
         date_read: ['', [Validators.required]]
       });
-      if (this.book.user_reviews > 1){
-        this.webService.getReviews(bookId).subscribe(
-          (response) => {
-            if (response) {
-              this.reviews = response;
-              this.topReviews = [...this.reviews].sort((a, b) => b.likes - a.likes).slice(0, 3);
-            }
-          }
-        );
-      }
+      this.webService.getReviews(bookId).subscribe((response) => {
+           this.reviews = response;
+
+           this.topReviews = [...this.reviews]
+             .sort((a, b) => b.likes - a.likes)
+             .slice(0, 3);
+         });
 
     }
   }
 
-  // Methods to toggle edit forms
   toggleEditTitle() {
     this.isEditingTitle = !this.isEditingTitle;
   }
@@ -159,7 +165,6 @@ export class BookComponent implements OnInit {
     this.isEditingCoverImg = !this.isEditingCoverImg;
   }
 
-  // Save the updated title
   onSaveTitle() {
     if (this.editBookFormTitle.invalid) return;
 
@@ -180,7 +185,6 @@ export class BookComponent implements OnInit {
   }
 
 
-  // Save the updated description
   onSaveDescription() {
     if (this.editBookFormDescription.invalid) return;
 
@@ -200,12 +204,6 @@ export class BookComponent implements OnInit {
     this.isEditingDescription = false;
   }
 
-  // Save the updated genres
-  // onSaveGenres() {
-  //   if (this.editBookFormGenres.invalid) return;
-  //   this.book.genres = this.editBookFormGenres.value.genres;
-  //   this.isEditingGenres = false;
-  // }
 
   onSavePublishDate() {
     if (this.editBookFormPublishDate.invalid) return;
@@ -267,7 +265,7 @@ export class BookComponent implements OnInit {
     this.webService.updateBook(this.book._id, { coverImg: newCoverImg }).subscribe(
       (response) => {
         alert('Cover image updated successfully!');
-        this.book.coverImg = newCoverImg; // Update the local book data
+        this.book.coverImg = newCoverImg;
       },
       (error) => {
         alert('Failed to update cover image.');
@@ -278,33 +276,24 @@ export class BookComponent implements OnInit {
   }
 
 
-  // Track books by their ID for rendering optimizations
   trackBook(index: number, book: any): string {
     return book._id;
   }
 
-  // Method to get the star count for ratings
-  getStarCount(rating: number): number[] {
-    if (rating === undefined || rating === null || isNaN(rating) || rating < 0 || rating > 5) {
-      return []; // Return an empty array if the rating is invalid
-    }
+  getStarCountRating(stars: number): any[] {
+    const fullStars = Math.floor(stars);
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;
 
-    const fullStars = Math.floor(rating);
-    const halfStar = (rating - fullStars) >= 0.5 ? 0.5 : 0;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
+  }
 
-    const starsArray = [];
-    for (let i = 0; i < fullStars; i++) {
-      starsArray.push(1); // Full star
-    }
-    if (halfStar) {
-      starsArray.push(0.5); // Half star
-    }
-    for (let i = 0; i < emptyStars; i++) {
-      starsArray.push(0); // Empty star
-    }
 
-    return starsArray;
+
+  getStarCountReviews(stars: number): any[] {
+    const fullStars = Math.floor(stars);
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;
+
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
   }
 
 
@@ -312,18 +301,16 @@ export class BookComponent implements OnInit {
 
 
 
-  // Toggle the visibility of the rate form
   toggleRateForm() {
     this.showRateForm = !this.showRateForm;
   }
 
-  // Method to mark a book as currently reading
   currentlyReading() {
     const bookId = this.book._id;
     this.webService.addToCurrentReads(bookId).subscribe(
       (response: any) => {
         alert(response.message);
-        this.isCurrentlyReading = true;  // Update the status to indicate the book is added to TBR
+        this.isCurrentlyReading = true;
       },
       (error) => {
         alert("Error adding book to TBR: " + error.error.error);
@@ -331,7 +318,6 @@ export class BookComponent implements OnInit {
     );
   }
 
-  // Remove the book from the "Currently Reading" list
   removeFromCurrentReads(bookId: string) {
     this.webService.removeFromCurrentReads(bookId).subscribe(
       (response: any) => {
@@ -341,12 +327,10 @@ export class BookComponent implements OnInit {
     );
   }
 
-  // Method to mark a book as read and submit rating
   markAsRead() {
     const ratingControl = this.rateForm.get('stars');
     const dateControl = this.rateForm.get('date_read');
 
-    // Mark the control as touched to trigger validation
     ratingControl?.markAsTouched();
     dateControl?.markAsTouched();
     ratingControl?.updateValueAndValidity();
@@ -358,20 +342,17 @@ export class BookComponent implements OnInit {
     console.log("Rating value before submission: ", rating);
     console.log("Date read: ", dateRead);
 
-    // Validate the rating value
     if (rating === null || rating < 0 || rating > 5) {
       alert("Please provide a rating between 0 and 5.");
       return;
     }
 
-    // Show a confirmation prompt before submitting
     const confirmSubmission = confirm(`You are about to submit a rating of ${rating} stars. Do you want to proceed?`);
 
     if (!confirmSubmission) {
-      return; // Stop submission if the user cancels
+      return;
     }
 
-    // Make the API call to mark the book as read
     this.webService.markBookAsRead(this.book._id, rating, dateRead).subscribe(
       (response: any) => {
         alert(response.message);
@@ -392,7 +373,6 @@ export class BookComponent implements OnInit {
     );
   }
 
-  // Add to "Want to Read" list (TBR)
   addToTBR() {
     const bookId = this.book._id;
     this.webService.addToWantToRead(bookId).subscribe(
@@ -406,7 +386,6 @@ export class BookComponent implements OnInit {
     );
   }
 
-  // Remove from "Want to Read" list (TBR)
   removeFromTBR(bookId: string) {
     this.webService.removeBookFromTBR(bookId).subscribe(
       (response: any) => {
@@ -421,7 +400,7 @@ export class BookComponent implements OnInit {
     this.webService.addToFavourites(bookId).subscribe(
       (response: any) => {
         alert(response.message);
-        this.isFavouriteBook = true;  // Update the status to indicate the book is added to TBR
+        this.isFavouriteBook = true;
       },
       (error) => {
         alert("Error adding book to TBR: " + error.error.error);
@@ -432,12 +411,10 @@ export class BookComponent implements OnInit {
 
 
 
-  // Filter books by genre
   filterByGenre(genre: string): void {
     this.router.navigate(['/books'], { queryParams: { genre: genre } });
   }
 
-  // Filter books by author
   filterByAuthor(author: string): void {
     this.router.navigate(['/books'], { queryParams: { author: author } });
   }
@@ -448,55 +425,55 @@ export class BookComponent implements OnInit {
 
   addTriggers(): void {
     if (this.triggerForm.invalid) {
-      // If the form is invalid, stop the submission and possibly show a message
       return;
     }
 
     const newTriggers = this.triggerForm.value.triggers.split(',').map((trigger: string) => trigger.trim());
 
-    // Get the current triggers from the book's existing trigger list (if any)
-    const existingTriggers = this.book.triggers || [];
+    const updatedTriggers = [...new Set([...this.book.triggers, ...newTriggers])];
 
-    // Combine the existing triggers with the new ones (if not already present)
-    const updatedTriggers = [...new Set([...existingTriggers, ...newTriggers])]; // Using Set to avoid duplicates
+    console.log('Updated triggers:', updatedTriggers);
 
-    // Assuming you have a service method to update the book's triggers
     this.webService.UpdateTriggers(this.book._id, updatedTriggers).subscribe(
       (response) => {
-        // If the request is successful, update the book's triggers on the UI
         this.book.triggers = updatedTriggers;
-        this.showTriggerForm = false; // Close the form
-        this.triggerForm.reset(); // Reset the form
-        alert('Trigger warnings added successfully!');
+        this.showTriggerForm = false;
+        this.triggerForm.reset();
+        alert('Triggers updated successfully!');
       },
       (error) => {
-        // If there's an error, show an error message
         console.error('Error adding trigger warnings:', error);
-        alert('Failed to add trigger warnings.');
+      }
+    );
+}
+
+fetchBookDetails(): void {
+    this.webService.getBook(this.book._id).subscribe(
+      (book) => {
+        this.book = book;
+        console.log('Updated book data:', this.book);
+      },
+      (error) => {
+        console.error('Error fetching book details:', error);
       }
     );
   }
 
 
-
-  // Like a review
   like(review: any) {
     if (this.book._id) {
       this.webService.likeReview(this.book._id, review)
         .subscribe((response) => {
-          // Update review data after liking
-          review.likes = response.likes;  // Adjust according to your API's response
+          review.likes = response.likes;
         });
     }
   }
 
-  // Dislike a review
   dislike(review: any) {
     if (this.book._id) {
       this.webService.dislikeReview(this.book._id, review)
         .subscribe((response) => {
-          // Update review data after disliking
-          review.dislikes = response.dislikes;  // Adjust according to your API's response
+          review.dislikes = response.dislikes;
         });
     }
   }
@@ -508,9 +485,8 @@ export class BookComponent implements OnInit {
         if (confirmDeletion) {
           this.webService.deleteBook(book._id).subscribe(
             response => {
-              // Handle successful deletion
               alert('Book deleted successfully!');
-              this.router.navigate(['/books']);  // Redirect to the books list or another page
+              this.router.navigate(['/books']);
             },
             error => {
               console.error("Error deleting book: ", error);

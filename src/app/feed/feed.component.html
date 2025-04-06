@@ -1,10 +1,8 @@
 <div class="feed-container">
   <h3>Recent Activities</h3>
 
-  <!-- Loading state -->
   <div *ngIf="loading">Loading feed...</div>
 
-  <!-- Feed content -->
   <div *ngIf="!loading && feed.length > 0">
     <div *ngFor="let activity of feed" class="feed-card">
       <span>
@@ -13,29 +11,27 @@
           <span style="margin-left: auto; font-size: 0.9em;">{{ activity.timestamp | date: 'short' }}</span>
         </p>
 
-
-
-
-        <!-- Show progress or current page based on activity type -->
         <p *ngIf="activity.activity_type === 'Reading Progress' || activity.activity_type === 'Started Reading'">
           <strong>Progress: </strong>{{ activity.progress }} |
           <strong>Current Page:</strong> {{ activity.current_page }}
         </p>
 
-        <!-- Show review content if the activity is a review -->
+        <p *ngIf="activity.activity_type === 'Finished Reading'">
+          <span *ngFor="let star of getStarCountRating(activity.rating)">
+            <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
+            <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">
+          </span>
+        </p>
+
         <p *ngIf="activity.activity_type === 'reviewed'">
-
           {{ activity.showFullReview ? activity.review_content : (activity.review_content | slice:0:200) + '...' }}
-
           <a [routerLink]="['/review', activity.review_id]" class="show-more">Show More</a>
         </p>
 
-        <!-- Show thought content if the activity is a thought -->
         <p *ngIf="activity.activity_type === 'posted a thought'" style="cursor: pointer;" [routerLink]="['/thoughts', activity.thought_id]">
           {{ activity.thought_content }}
         </p>
 
-        <!-- Show reply content if the activity is a reply -->
         <p *ngIf="activity.activity_type === 'replied to a thought by'" style="cursor: pointer;" [routerLink]="['/thoughts', activity.thought_id]">
           {{ activity.reply_content }}
         </p>
@@ -48,8 +44,8 @@
     </div>
   </div>
 
-  <!-- No feed content available -->
   <div *ngIf="!loading && feed.length === 0">
     <p>No recent activities.</p>
   </div>
 </div>
+

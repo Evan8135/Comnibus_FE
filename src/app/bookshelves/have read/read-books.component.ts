@@ -9,14 +9,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'have-read',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './read-books.component.html',
   styleUrls: ['./read-books.component.css']
 })
 export class ReadBooksComponent implements OnInit {
   readBooks: any[] = [];
-  editForms: { [key: string]: FormGroup } = {}; // Stores a form for each book
+  editForms: { [key: string]: FormGroup } = {};
   token: string | null = null;
   loading: boolean = true;
   errorMessage: string = '';
@@ -39,14 +39,13 @@ export class ReadBooksComponent implements OnInit {
         this.readBooks = response.have_read;
         this.readBooks.sort((a, b) => new Date(b.date_read).getTime() - new Date(a.date_read).getTime());
 
-        // Initialize each book with a form
         this.readBooks.forEach(book => {
           this.editForms[book._id] = this.formBuilder.group({
             stars: [book.stars, [Validators.min(0), Validators.max(5)]],
             date_read: [book.date_read]
           });
 
-          book.showEditForm = false; // Initially hide the edit form
+          book.showEditForm = false;
         });
 
         this.loading = false;
@@ -59,7 +58,7 @@ export class ReadBooksComponent implements OnInit {
   }
 
   toggleEditForm(book: any) {
-    book.showEditForm = !book.showEditForm; // Toggle form visibility
+    book.showEditForm = !book.showEditForm;
   }
 
   submitEditForm(bookId: string) {
@@ -70,7 +69,6 @@ export class ReadBooksComponent implements OnInit {
 
     const updatedData = this.editForms[bookId].value;
 
-    // Only include fields that have changed
     const requestData: any = {};
     if (updatedData.stars !== null && updatedData.stars !== this.readBooks.find(b => b._id === bookId)?.stars) {
       requestData.stars = updatedData.stars;
@@ -87,7 +85,7 @@ export class ReadBooksComponent implements OnInit {
     this.webService.updateReadBook(bookId, requestData).subscribe(
       (response) => {
         alert('Book updated successfully.');
-        this.fetchReadBooks(); // Refresh data
+        this.fetchReadBooks();
       },
       (error) => {
         alert('Error updating book: ' + error.error.error);
@@ -106,7 +104,7 @@ export class ReadBooksComponent implements OnInit {
   removeReadBook(bookId: string) {
     this.webService.removeBookFromRead(bookId).subscribe(
       () => {
-        this.fetchReadBooks(); // Refresh the list
+        this.fetchReadBooks();
       },
       (error) => {
         this.errorMessage = 'Error removing book from read list.';

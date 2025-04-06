@@ -20,17 +20,17 @@ export class AddRequestComponent implements OnInit {
   isLoading: boolean = false;
   loggedInUserName: string = '';
 
-  genres: string[] = [];  // Full list of genres fetched from API
-  filteredGenres: string[] = [];  // List of filtered genres based on search query
-  selectedGenres: string[] = [];  // Stores selected genres
-  genreSearch: string = '';  // Stores the search query
+  genres: string[] = [];
+  filteredGenres: string[] = [];
+  selectedGenres: string[] = [];
+  genreSearch: string = '';
 
   constructor(
     private fb: FormBuilder,
     private webService: WebService,
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient  // Inject HttpClient to fetch genres
+    private http: HttpClient
   ) {
     this.loggedInUserName = this.authService.getLoggedInName();
   }
@@ -38,7 +38,7 @@ export class AddRequestComponent implements OnInit {
   ngOnInit(): void {
     this.RequestForm = this.fb.group({
       title: ['', Validators.required],
-      author: ['', Validators.required], // Single string for author
+      author: ['', Validators.required],
       genreSearch: [''],
       genres: this.fb.array([]),
       language: ['', Validators.required],
@@ -47,15 +47,14 @@ export class AddRequestComponent implements OnInit {
       username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
     });
 
-    this.fetchGenres();  // Fetch the genres when the component loads
+    this.fetchGenres();
   }
 
-  // Fetch the list of genres from the API
   fetchGenres() {
     this.http.get<string[]>('http://localhost:5000/api/v1.0/genres').subscribe({
       next: (data) => {
         this.genres = data;
-        this.filteredGenres = data;  // Initially show all genres in the filtered list
+        this.filteredGenres = data;
       },
       error: (error) => {
         console.error('Error fetching genres:', error);
@@ -64,15 +63,13 @@ export class AddRequestComponent implements OnInit {
     });
   }
 
-  // Filter genres based on the search input
   onSearchGenres() {
     const searchQuery = this.RequestForm.get('genreSearch')?.value?.toLowerCase() || '';
     this.filteredGenres = this.genres.filter(genre =>
-      genre.toLowerCase().includes(searchQuery)  // Case-insensitive search
+      genre.toLowerCase().includes(searchQuery)
     );
   }
 
-  // Toggle genre selection with FormArray synchronization
   toggleGenre(genre: string) {
     const genresArray = this.RequestForm.get('genres') as FormArray;
     const trimmedGenre = genre.trim();
@@ -81,11 +78,10 @@ export class AddRequestComponent implements OnInit {
 
     if (index === -1) {
       this.selectedGenres.push(trimmedGenre);
-      genresArray.push(this.fb.control(trimmedGenre)); // Add to FormArray
+      genresArray.push(this.fb.control(trimmedGenre));
     } else {
       this.selectedGenres.splice(index, 1);
 
-      // Find the correct index in FormArray and remove it
       const formIndex = genresArray.controls.findIndex(control => control.value === trimmedGenre);
       if (formIndex !== -1) {
         genresArray.removeAt(formIndex);
@@ -93,7 +89,6 @@ export class AddRequestComponent implements OnInit {
     }
   }
 
-  // Convert the authors from comma-separated string to an array
   onSubmit(): void {
     if (this.RequestForm.invalid) {
       this.submissionMessage = 'Please fill all required fields!';
@@ -102,7 +97,6 @@ export class AddRequestComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Convert authors from comma-separated string to array
     const authorsString = this.RequestForm.value.author;
     if (!authorsString || authorsString.trim() === '') {
       this.submissionMessage = 'At least one author is required.';
@@ -110,13 +104,13 @@ export class AddRequestComponent implements OnInit {
     }
 
     const authorsArray = authorsString
-      .split(',')  // Split by comma
-      .map((author: string) => author.trim());  // Remove extra spaces
+      .split(',')
+      .map((author: string) => author.trim());
 
     const request = {
       ...this.RequestForm.value,
-      author: authorsArray, // Now the authors are an array
-      genres: this.selectedGenres, // Genres already handled as an array
+      author: authorsArray,
+      genres: this.selectedGenres,
     };
 
     this.webService.postBookRequest(request).subscribe(

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
-import { MessageService } from '../message.service'; // Import the shared service
+import { MessageService } from '../message.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,7 +23,7 @@ export class InboxComponent implements OnInit {
     private router: Router,
     public webService: WebService,
     private authService: AuthService,
-    private messageService: MessageService // Inject the shared service
+    private messageService: MessageService
   ) {
     this.loggedInUserName = this.authService.getLoggedInName();
   }
@@ -45,11 +45,11 @@ export class InboxComponent implements OnInit {
         if (response && response.messages) {
           this.messages = response.messages;
           const hasUnreadMessages = response.hasUnreadMessages || false;
-          this.messageService.setUnreadMessages(hasUnreadMessages); // Update shared service
+          this.messageService.setUnreadMessages(hasUnreadMessages);
           this.messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         } else {
           this.messages = [];
-          this.messageService.setUnreadMessages(false); // Update shared service
+          this.messageService.setUnreadMessages(false);
         }
         this.loading = false;
       },
@@ -94,8 +94,7 @@ export class InboxComponent implements OnInit {
     this.webService.markAsRead(id).subscribe({
       next: () => {
         console.log("Message marked as read:", id);
-        this.getMessages(); // Refresh messages
-        // After refreshing messages, update unread message status
+        this.getMessages();
         const hasUnreadMessages = this.messages.some(message => !message.read);
         this.messageService.setUnreadMessages(hasUnreadMessages);
       },

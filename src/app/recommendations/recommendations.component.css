@@ -27,7 +27,7 @@ h2 {
   overflow: hidden;
   background-color: #fff;
   transition: transform 0.3s ease-in-out;
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
 }
 
 .book-card:hover {

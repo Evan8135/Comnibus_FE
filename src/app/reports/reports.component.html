@@ -1,0 +1,37 @@
+<div class="container">
+
+  <div *ngIf="isLoading" class="loading">Loading users...</div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <h2>Reports by Users</h2>
+
+  <table *ngIf="reports.length > 0" class="table table-bordered mt-3">
+    <thead class="thead-dark">
+      <tr>
+        <th>Type</th>
+        <th>Reason</th>
+        <th>Reported At</th>
+        <th>Reported By</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of reports"  style="cursor: pointer" [routerLink]="['/reports', report._id]">
+        <td>{{ report.type }}</td>
+        <td>{{ report.reason }}</td>
+        <td>{{ report.reported_at }}</td>
+        <td>{{ report.reported_by }}</td>
+        <td>{{ report.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!isLoading && reports.length === 0" class="text-muted">
+    No user reports found.
+  </p>
+
+
+</div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,6 @@ export class newBooksComponent {
   constructor(private webService: WebService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    // Handle query parameters from the URL
     this.route.queryParams.subscribe((params) => {
       if (params['character']) {
         this.characterFilter = params['character'];
@@ -88,21 +87,21 @@ export class newBooksComponent {
   clearGenreFilter(): void {
     this.genreFilter = '';
     this.selectedGenre = '';
-    this.page = 1; // Reset to the first page when clearing the filter
+    this.page = 1;
     this.fetchBooks();
   }
 
   clearAuthorFilter(): void {
     this.authorFilter = '';
     this.selectedAuthor = '';
-    this.page = 1; // Reset to the first page when clearing the filter
+    this.page = 1;
     this.fetchBooks();
   }
 
   clearCharacterFilter(): void {
     this.characterFilter = '';
     this.selectedCharacter = '';
-    this.page = 1; // Reset to the first page when clearing the filter
+    this.page = 1;
     this.fetchBooks();
   }
 

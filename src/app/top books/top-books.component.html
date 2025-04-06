@@ -1,27 +1,23 @@
 <div class="book-container">
   <div class="filters">
-    <!-- Title filter input -->
     <input
       type="text"
       placeholder="Search by Title"
       [(ngModel)]="titleFilter"
       (input)="applyFilters()"
     />
-    <!-- Author filter input -->
     <input
       type="text"
       placeholder="Filter by Author"
       [(ngModel)]="authorFilter"
       (input)="applyFilters()"
     />
-    <!-- Genre filter input -->
     <input
       type="text"
       placeholder="Filter by Genre"
       [(ngModel)]="genreFilter"
       (input)="applyFilters()"
     />
-    <!-- Character filter input -->
     <input
       type="text"
       placeholder="Filter by Character in book"

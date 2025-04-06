@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebService } from '../web.service';
 import { AuthService } from '../auth/auth.service';
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'reviews',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule, ReactiveFormsModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule],
   providers: [WebService, AuthService],
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.css']
@@ -51,7 +51,7 @@ export class ReviewsComponent {
           username: [{ value: this.loggedInUserName, disabled: true }, Validators.required],
           title: [''],
           comment: ['', [Validators.required, Validators.minLength(1000)]],
-          stars: 5
+          stars: [5, [Validators.required, Validators.min(0.5), Validators.max(5)]]
     });
     this.bookId = this.route.snapshot.paramMap.get('id');
     if (this.bookId) {
@@ -67,29 +67,28 @@ export class ReviewsComponent {
 
 
   onSubmit() {
-    const currentTime = new Date().toISOString();  // ISO format timestamp
+    const currentTime = new Date().toISOString();
 
-    // Add the timestamp to the review data
     const reviewData = {
       ...this.reviewForm.value,
-      created_at: currentTime,  // Include the timestamp when the review is created
-      updated_at: currentTime   // Include the timestamp for when it's updated
+      stars: parseFloat(this.reviewForm.value.stars),
+      created_at: currentTime,
+      updated_at: currentTime
     };
 
     this.webService.postReview(
       this.route.snapshot.paramMap.get('id'),
-      this.reviewForm.value
+      reviewData
     ).subscribe(
       (response) => {
-        console.log(response.message); // Log success message if needed
+        console.log(response.message);
         this.reviewForm.reset();
-        this.fetchReviews(); // Fetch reviews after successfully posting
+        this.fetchReviews();
       },
       (error) => {
         console.error('Error:', error);
-        // Handle error: check for specific error messages from backend
         if (error.error && error.error.error) {
-          this.errorMessage = error.error.error;  // Assign the error message from backend
+          this.errorMessage = error.error.error;
         } else {
           this.errorMessage = 'An unexpected error occurred.';
         }
@@ -98,15 +97,16 @@ export class ReviewsComponent {
   }
 
 
-  getStarCount(stars: number): any[] {
-    const fullStars = Math.floor(stars);  // Get the number of full stars
-    const halfStar = stars % 1 >= 0.5 ? 1 : 0;  // Check if there's a half star
 
-    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];  // Return full stars and half star if needed
+  getStarCount(stars: number): any[] {
+    const fullStars = Math.floor(stars);
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;
+
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
   }
 
   toggleReviewForm() {
-    this.showReviewForm = !this.showReviewForm; // Toggle the visibility
+    this.showReviewForm = !this.showReviewForm;
   }
 
   trackReview(index: number, review: any): string {
@@ -126,44 +126,6 @@ export class ReviewsComponent {
     return this.isInvalid('username') ||
     this.isInvalid('comment') ||
     this.isUntouched();
-  }
-
-  like(review: any) {
-    if (this.bookId) {
-      if (this.authService.isLoggedIn()) {
-        this.webService.likeReview(this.bookId, review)
-          .subscribe((response) => {
-            review.likes = response.likes;
-            this.fetchReviews();
-          },
-          (error) => {
-            console.error('Error:', error);
-            // Handle error: check for specific error messages from backend
-            if (error.error && error.error.error) {
-              this.errorMessage = error.error.error;  // Assign the error message from backend
-            } else {
-              this.errorMessage = 'An unexpected error occurred.';
-            }
-          });
-      } else {
-        this.router.navigate(['/login']);
-      }
-    }
-  }
-
-  // Method to handle disliking a review
-  dislike(review: any) {
-    if (this.bookId) {
-      if (this.authService.isLoggedIn()) {
-        this.webService.dislikeReview(this.bookId, review)
-          .subscribe((response) => {
-            review.dislikes = response.dislikes;
-            this.fetchReviews();
-          });
-      } else {
-        this.router.navigate(['/login']);
-      }
-    }
   }
 
   fetchReviews() {

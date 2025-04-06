@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'home',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   providers: [WebService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']

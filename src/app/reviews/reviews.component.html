@@ -83,7 +83,6 @@
     </div>
   </div>
 
-    <!-- Loading spinner -->
   <div *ngIf="loading" class="loading-spinner">
     <div class="spinner-border text-dark" role="status">
     </div>
@@ -108,8 +107,8 @@
         {{ review.showFullComment ? review.comment : (review.comment | slice:0:200) + '...' }}
         <a [routerLink]="['/review', review._id]" class="show-more">Show More</a>
       </p>
-      <div>Likes: {{ review.likes }} <button (click)="like(review)"><img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
-      <div style="display: right;">Dislikes: {{ review.dislikes }} <button (click)="dislike(review)"><img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></button></div>
+      <div>Likes: {{ review.likes }} <img src="images/like.png" alt="Like" style="width: 20px; height: 20px;"></div>
+      <div>Dislikes: {{ review.dislikes }} <img src="images/dislike.png" alt="Like" style="width: 20px; height: 20px;"></div>
       <div *ngIf="review.username === loggedInUserName || authService.isAdmin()">
         <button (click)="deleteReview(review)" class="btn btn-danger">Delete</button>
       </div>

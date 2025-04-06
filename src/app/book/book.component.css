@@ -75,50 +75,47 @@
   color: #666;
 }
 
-/* Style for Trigger Warnings Section */
 .trigger-warnings-container {
-  background-color: #f8d7da; /* Light red background */
-  border: 1px solid #f5c6cb; /* Border color to match background */
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
   padding: 15px;
   margin-top: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow to match card design */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .trigger-warnings-list {
-  display: grid; /* Enable CSS Grid */
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Auto columns based on container width */
-  gap: 10px; /* Space between items */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
 }
 
 .trigger-warnings-list li {
   list-style: none;
-  /* You can adjust padding and margin here to make the list look cleaner */
 }
 
 
 .trigger-warnings-title {
-  color: #721c24; /* Dark red for the title */
+  color: #721c24;
   font-weight: bold;
-  font-size: 18px; /* Slightly larger to draw attention */
+  font-size: 18px;
 }
 
 .trigger-warnings-list {
-  list-style-type: none; /* Remove default list styling */
+  list-style-type: none;
   padding-left: 0;
   margin-top: 10px;
 }
 
 .trigger-warnings-list li {
-  color: #721c24; /* Dark red text */
-  font-size: 16px; /* Increase font size for better readability */
+  color: #721c24;
+  font-size: 16px;
   margin: 5px 0;
 }
 
-/* Additional Styling for the Button */
 button.btn-outline-dark.ms-auto {
-  margin-top: 10px; /* Spacing for the "Add Content/Trigger Warnings" button */
-  border-color: #721c24; /* Border color matches the warning theme */
+  margin-top: 10px;
+  border-color: #721c24;
   color: #721c24;
 }
 
@@ -139,7 +136,7 @@ button.btn-outline-dark.ms-auto:hover {
 
 .grid-container.grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
 
@@ -152,7 +149,7 @@ button.btn-outline-dark.ms-auto:hover {
 }
 
 .same-author-books-card:hover {
-  transform: scale(1.05); /* Scale effect on hover */
+  transform: scale(1.05);
 }
 
 .same-author-books-card img {
@@ -220,7 +217,6 @@ button.btn-outline-dark.ms-auto:hover {
   margin-bottom: 20px;
 }
 
-/* Input fields for genre and author search */
 .form-control {
   width: 100%;
   padding: 10px;
@@ -234,7 +230,6 @@ button.btn-outline-dark.ms-auto:hover {
   border-color: red;
 }
 
-/* Styling for the genre and author search result lists */
 .genre-results, .author-results {
   max-height: 200px;
   overflow-y: auto;
@@ -267,14 +262,12 @@ button.btn-outline-dark.ms-auto:hover {
   color: white;
 }
 
-/* Error message styling when fewer than 3 genres are selected */
 .error-message {
   color: red;
   text-align: center;
   margin-top: 15px;
 }
 
-/* Genre search result list styling */
 .genre-results {
   max-height: 200px;
   overflow-y: auto;
@@ -298,7 +291,6 @@ button.btn-outline-dark.ms-auto:hover {
 }
 
 
-/* Selected genre styling */
 .selected {
   background-color: #007bff;
   color: white;

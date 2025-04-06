@@ -1,7 +1,6 @@
 <div class="container" style="margin-top: 80px;">
   <h2>Submit a Book Request</h2>
   <form [formGroup]="RequestForm" (ngSubmit)="onSubmit()">
-    <!-- Title Input -->
     <div class="form-group">
       <label for="title">Title</label>
       <input id="title" formControlName="title" class="form-control" />
@@ -10,7 +9,6 @@
       </div>
     </div>
 
-    <!-- Author Input -->
     <div class="form-group">
       <label for="author">Author</label>
       <input id="author" formControlName="author" class="form-control" placeholder="Enter authors, separated by commas" />
@@ -19,10 +17,8 @@
       </div>
     </div>
 
-    <!-- Genre Search and Selection -->
     <div class="form-group">
       <label for="genres">Genres</label>
-      <!-- Use formControlName for genre search -->
       <input
         id="genres"
         type="text"
@@ -32,7 +28,6 @@
         placeholder="Search genres..."
       />
 
-      <!-- Filtered genre results -->
       <div *ngIf="filteredGenres.length > 0" class="genre-results">
         <ul>
           <li *ngFor="let genre of filteredGenres"
@@ -43,13 +38,11 @@
         </ul>
       </div>
 
-      <!-- Error message if genres are required -->
       <div *ngIf="RequestForm.get('genres')?.invalid && RequestForm.get('genres')?.touched" class="text-danger">
         Genres are required.
       </div>
     </div>
 
-    <!-- Language Input -->
     <div class="form-group">
       <label for="language">Language</label>
       <input id="language" formControlName="language" class="form-control" />
@@ -58,14 +51,12 @@
       </div>
     </div>
 
-    <!-- Series Input (Optional) -->
     <div class="form-group">
       <label for="series">Series <i style="font-size: 0.8em;">*Optional</i></label>
       <input id="series" formControlName="series" class="form-control" />
     </div>
 
 
-    <!-- ISBN Input (Optional) -->
     <div class="form-group">
       <label for="isbn">ISBN <i style="font-size: 0.8em;">*Optional</i></label>
       <input id="isbn" formControlName="isbn" class="form-control" />
@@ -85,18 +76,15 @@
     </div>
 
 
-    <!-- Submit Button -->
     <button type="submit" class="btn btn-primary" [disabled]="RequestForm.invalid || isLoading">
       Submit Request
     </button>
   </form>
 
-  <!-- Submission Message -->
   <div *ngIf="submissionMessage" class="alert mt-3" [ngClass]="{ 'alert-success': !isLoading, 'alert-danger': isLoading }">
     {{ submissionMessage }}
   </div>
 
-  <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="spinner-border text-primary mt-3" role="status">
     <span class="sr-only">Loading...</span>
   </div>

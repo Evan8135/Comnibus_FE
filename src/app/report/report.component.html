@@ -1,0 +1,33 @@
+<div class="container report-container" style="margin-top: 80px;">
+  <div class="row">
+    <div class="col-sm-12">
+      @for(report of reports; track report.type){
+      <div class="card text-dark bg-light mb-3 report-card">
+        <div class="card-header report-header">
+          <h4>Report Submitted by {{ report.reported_by }}</h4>
+        </div>
+        <div class="card-body report-card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <p><strong>Type: </strong>{{ report.type }}</p>
+              <p><strong>Reason: </strong> {{ report?.reason }}</p>
+              <p><strong>Reported at: </strong> {{ report?.reported_at }}</p>
+              <p><strong>Status: </strong>{{ report.status }}</p>
+              <div class="d-flex justify-content-end" *ngIf="report.type == 'review'">
+                <button class="btn btn-link" [routerLink]="['/review', report.item_id]">See Reported Review</button>
+              </div>
+              <div class="d-flex justify-content-end" *ngIf="report.type == 'review reply'">
+                <button class="btn btn-link" [routerLink]="['/review', report.item_id]">See Reported Review</button>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-success mt-3" (click)="approveReport(report)">Approve</button>
+          <button class="btn reject-btn mt-3" (click)="rejectReport(report)">Reject</button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+

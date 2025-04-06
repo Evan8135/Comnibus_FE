@@ -38,11 +38,9 @@ export class FeedComponent implements OnInit {
   loadFeedData() {
     this.webService.getFeed().subscribe(
       (response: any) => {
-        console.log(response); // Check what response is being received
+        console.log(response);
         this.feed = response.feed || [];
         this.loading = false;
-
-        // Sort the feed by timestamp (most recent first)
         this.feed.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
       },
       (error) => {
@@ -50,6 +48,13 @@ export class FeedComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  getStarCountRating(stars: number): any[] {
+    const fullStars = Math.floor(stars);
+    const halfStar = stars % 1 >= 0.5 ? 1 : 0;
+
+    return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
   }
 
 }

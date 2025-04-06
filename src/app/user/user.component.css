@@ -66,58 +66,51 @@
   margin-bottom: 20px;
 }
 
-/* Book Section Styling */
 .book-lists-container {
-  margin-top: 40px; /* Adds some space above the books section */
+  margin-top: 40px;
 }
 
 .book-lists-row {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center; /* Center the books */
+  justify-content: center;
 }
 
-/* Book card container */
 .book-section {
   flex: 1;
   min-width: 300px;
   margin-bottom: 30px;
 }
 
-/* Book card grid */
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid layout */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
 
-/* Styling for each book card */
 .book-card {
   background: #fff;
   border-radius: 8px;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow */
-  transition: transform 0.2s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
   margin-bottom: 20px;
 }
 
-/* Hover effect on the book card */
 .book-card:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Book cover styling */
 .book-cover {
-  max-height: 200px; /* Adjust the height of the cover */
+  max-height: 200px;
   width: 100%;
   object-fit: cover;
   border-radius: 5px;
 }
 
-/* Book title and details */
 .book-details {
   margin-top: 15px;
 }
@@ -149,7 +142,6 @@
   margin-top: 5px;
 }
 
-/* Styling for book's genre */
 .book-genre {
   font-size: 14px;
   color: #555;
@@ -162,7 +154,6 @@
   margin-top: 5px;
 }
 
-/* Author's books grid styling */
 .book-list-container {
   margin-top: 40px;
 }
@@ -201,7 +192,7 @@
 
 .grid-container.grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
 
