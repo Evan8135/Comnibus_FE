@@ -16,7 +16,7 @@
           <strong>Current Page:</strong> {{ activity.current_page }}
         </p>
 
-        <p *ngIf="activity.activity_type === 'Finished Reading'">
+        <p *ngIf="activity.activity_type === 'Finished Reading'" style="cursor: pointer;" [routerLink]="['/books', activity.book_id]">
           <span *ngFor="let star of getStarCountRating(activity.rating)">
             <img *ngIf="star === 0" src="images/star.png" alt="Full Star" style="width: 30px; height: 30px;">
             <img *ngIf="star === 0.5" src="images/half_star.png" alt="Half Star" style="width: 15px; height: 30px;">

@@ -748,7 +748,7 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + id + '/replies/' + reply._id + '/dislike', {}, {headers});
   }
 
-  reportThoughtReply(reviewId: any, replyId: any, reason: string) {
+  reportThoughtReply(thoughtId: any, replyId: any, reason: string) {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
     if (token) {
@@ -758,7 +758,7 @@ export class WebService {
     const postData = new FormData();
     postData.append('reason', reason);
 
-    return this.http.post<any>(`http://localhost:5000/api/v1.0/review/${reviewId}/replies/${replyId}/report`, postData, { headers });
+    return this.http.post<any>('http://localhost:5000/api/v1.0/thoughts/' + thoughtId + '/replies/' + replyId + '/report', postData, {headers});
   }
 
 //------------------------------------------------------------------------------------------------------------------

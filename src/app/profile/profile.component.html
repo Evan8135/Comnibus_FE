@@ -122,6 +122,24 @@
         </div>
 
 
+        <div *ngIf="book_awards.length > 0" class="book-section mb-4">
+          <h4>My Awards</h4>
+          <div class="book-grid">
+            <div *ngFor="let award of book_awards" class="book-card">
+              <ng-container [ngSwitch]="award">
+                <img *ngSwitchCase="'First Book Read'" src="/images/1book.png" alt="First Book Read Award" class="award-image">
+                <img *ngSwitchCase="'5 Books Read'" src="/images/5books.png" alt="5 Books Read Award" class="award-image">
+                <img *ngSwitchCase="'10 Books Read'" src="/images/10books.png" alt="10 Books Read Award" class="award-image">
+                <img *ngSwitchCase="'25 Books Read'" src="/images/25books.png" alt="25 Books Read Award" class="award-image">
+                <img *ngSwitchCase="'50 Books Read'" src="/images/50books.png" alt="50 Books Read Award" class="award-image">
+                <img *ngSwitchCase="'100 Books Read'" src="/images/100books.png" alt="100 Books Read Award" class="award-image">
+                <span *ngSwitchDefault>{{ award }}</span>
+              </ng-container>
+              <div class="award-text">{{ award }}</div>
+            </div>
+          </div>
+        </div>
+
 
         <h4>My Bookshelf</h4>
 

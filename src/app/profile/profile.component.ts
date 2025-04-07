@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   favouriteBooks: any[] = [];
   currentlyReading: any[] = [];
   have_read_books: any[] = [];
+  book_awards: any[] = [];
   tbrBooks: any[] = [];
   loading: boolean = true;
   token: string | null = null;
@@ -58,6 +59,7 @@ export class ProfileComponent implements OnInit {
         this.currentlyReading = response.currently_reading || [];
         this.tbrBooks = response.want_to_read || [];
         this.have_read_books = response.have_read || [];
+        this.book_awards = response.awards || [];
 
         this.initForm();
         this.fetchGenres();
@@ -275,6 +277,7 @@ export class ProfileComponent implements OnInit {
         this.currentlyReading = response.currently_reading || [];
         this.tbrBooks = response.want_to_read || [];
         this.have_read_books = response.have_read || [];
+        this.book_awards = response.awards || [];
 
         this.initForm();
         this.fetchGenres();
@@ -287,4 +290,17 @@ export class ProfileComponent implements OnInit {
     const halfStar = stars % 1 >= 0.5 ? 1 : 0;
     return [...new Array(fullStars).fill(0), ...new Array(halfStar).fill(0.5)];
   }
+
+  getAwardImage(award: string): string {
+    const awardImages: { [key: string]: string } = {
+      "First Book Read": "/images/1book.png",
+      "5 Books Read": "/images/5books.png",
+      "10 Books Read": "/images/10books.png",
+      "25 Books Read": "/images/25books.png",
+      "50 Books Read": "/images/50books.png",
+      "100 Books Read": "/images/100books.png"
+    };
+    return awardImages[award] || '/images/default_award.png';
+  }
+
 }
