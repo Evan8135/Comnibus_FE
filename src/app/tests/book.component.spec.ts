@@ -84,9 +84,9 @@ describe('BookComponent', () => {
   }));
 
 
-  it('should not allow non-authors to edit the title', waitForAsync(() => {
+  it('should allow admins to edit the title', waitForAsync(() => {
     spyOn(authService, 'isLoggedIn').and.returnValue(true);  // Make sure user is logged in
-    spyOn(authService, 'getLoggedInName').and.returnValue('Not');  // Simulate a non-author logged in
+    spyOn(authService, 'isAdmin').and.returnValue(true);  // Simulate a non-author logged in
 
 
     component.book = { _id: '1', title: 'Test Book', author: ['Test Author'] };
@@ -95,7 +95,7 @@ describe('BookComponent', () => {
 
     fixture.whenStable().then(() => {
       component.toggleEditTitle();  // Try toggling edit title for a non-author
-      expect(component.isEditingTitle).toBeFalse();  // Non-authors should not be able to edit the title
+      expect(component.isEditingTitle).toBeTrue();  // Non-authors should not be able to edit the title
     });
   }));
 });
