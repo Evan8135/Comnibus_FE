@@ -3,6 +3,9 @@
     <div class="col-sm-12">
       @for(report of reports; track report.type){
       <div class="card text-dark bg-light mb-3 report-card">
+        <div>
+          <button class="btn delete-btn" (click)="deleteReport(report)">Delete</button>
+        </div>
         <div class="card-header report-header">
           <h4>Report Submitted by {{ report.reported_by }}</h4>
         </div>

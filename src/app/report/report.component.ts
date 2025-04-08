@@ -43,7 +43,7 @@ export class ReportComponent implements OnInit {
       this.webService.approveReport(report._id).subscribe({
         next: () => {
           console.log("report deleted successfully.");
-          this.webService.getAllReports();
+          this.router.navigate(['/reports']);
         },
         error: (err) => {
           console.error("Error deleting report:", err);
@@ -59,7 +59,7 @@ export class ReportComponent implements OnInit {
       this.webService.rejectReport(report._id).subscribe({
         next: () => {
           console.log("report deleted successfully.");
-          window.location.reload();
+          this.router.navigate(['/reports']);
         },
         error: (err) => {
           console.error("Error deleting report:", err);
@@ -67,6 +67,22 @@ export class ReportComponent implements OnInit {
       });
     } else {
       console.error("No token found, cannot delete report.");
+    }
+  }
+
+  deleteReport(report: any) {
+    const confirmDeletion = confirm("Are you sure you want to delete this book?");
+    if (confirmDeletion) {
+      this.webService.deleteReport(report._id).subscribe(
+        response => {
+          alert('Book deleted successfully!');
+          this.router.navigate(['/reports']);
+        },
+        error => {
+          console.error("Error deleting book: ", error);
+          alert("Failed to delete the book.");
+        }
+      );
     }
   }
 }

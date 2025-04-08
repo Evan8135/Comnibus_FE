@@ -428,18 +428,6 @@ export class WebService {
   }
 
 
-
-  deleteReport(reportId: any) {
-    const token = localStorage.getItem('x-access-token');
-    let headers = new HttpHeaders();
-    if (token) {
-      headers = headers.set('x-access-token', token);
-    }
-
-    return this.http.delete<any>(`http://localhost:5000/api/v1.0/reports/${reportId}`, { headers });
-  }
-
-
 //------------------------------------------------------------------------------------------------------------------
 // 3. INBOX CALLS
   getMessages() {
@@ -803,6 +791,18 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/reports/' + reportId + '/approve', {}, { headers });
   }
 
+  deleteReport(reportId: any) {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+
+    return this.http.delete<any>(`http://localhost:5000/api/v1.0/reports/${reportId}`, { headers });
+  }
+
+//------------------------------------------------------------------------------------------------------------------
+// 8. FEEDBACK CALLS
   getAllFeedback() {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
