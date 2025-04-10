@@ -172,14 +172,19 @@ export class BookComponent implements OnInit {
 
     this.webService.updateBook(this.book._id, { title: newTitle }).subscribe(
       (response) => {
-        alert('Title updated successfully!');
-        this.book.title = newTitle;
+         alert('Title updated successfully!');
+         this.book.title = newTitle;
       },
       (error) => {
-        alert('Failed to update title.');
-        console.error(error);
+         if (error.status === 403) {
+            alert('You are not authorized to edit this book.');
+         } else {
+            alert('Failed to update title.');
+         }
+         console.error(error);
       }
     );
+
 
     this.isEditingTitle = false;
   }

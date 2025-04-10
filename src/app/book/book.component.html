@@ -4,13 +4,13 @@
       <div class="card text-dark bg-light mb-3 book-card">
 
         <div class="card-header book-header">
-          <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+          <div *ngIf="authService.isAdmin() || (authService.isAuthor() && book.author?.includes(authService.getAuthorName()))">
             <button (click)="deleteBook(book)" class="btn btn-danger">Delete Book</button>
           </div>
 
           <div *ngIf="!isEditingTitle">
             <h3>{{ book.title }}</h3>
-            <div *ngIf="authService.isAdmin() || authService.isAuthor()"><button (click)="toggleEditTitle()">Edit Title</button></div>
+            <div *ngIf="authService.isAdmin() || (authService.isAuthor() && book.author?.includes(authService.getAuthorName()))"><button (click)="toggleEditTitle()">Edit Title</button></div>
           </div>
 
           <div *ngIf="isEditingTitle">
@@ -72,7 +72,7 @@
           <img [src]="book.coverImg || 'images/no_cover.png'" [alt]="book.title" class="book-cover-img">
         </div>
 
-        <div *ngIf="authService.isAdmin() || authService.isAuthor()"><button (click)="toggleEditCoverImg()">Edit Cover</button></div>
+        <div *ngIf="authService.isAdmin() || (authService.isAuthor() && book.author?.includes(authService.getAuthorName()))"><button (click)="toggleEditCoverImg()">Edit Cover</button></div>
 
         <div *ngIf="isEditingCoverImg">
           <form [formGroup]="editBookFormCoverImg" (ngSubmit)="onSaveCoverImg()">
@@ -127,13 +127,13 @@
             <h4><strong>Description:</strong></h4>
             <div *ngIf="!isEditingDescription">
               <p>{{ book.description }}</p>
-              <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+              <div *ngIf="authService.isAdmin() || (authService.isAuthor() && book.author?.includes(authService.getAuthorName()))">
                 <button (click)="toggleEditDescription()">Edit Description</button>
               </div>
             </div>
 
             <div *ngIf="isEditingDescription">
-              <form [formGroup]="editBookFormDescription" (ngSubmit)="onSaveDescription()">
+              <form *ngIf="authService.isAdmin() || authService.isAuthor()">
                 <textarea formControlName="description" placeholder="Enter new description"></textarea>
                 <button type="submit">Save</button>
                 <button type="button" (click)="toggleEditDescription()">Cancel</button>
@@ -155,7 +155,7 @@
                 <p><strong>Published:</strong> {{ book.publishDate || 'Unknown' }}
                    <i>First Published in {{ book.firstPublishDate }}</i>
                 </p>
-                <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+                <div *ngIf="authService.isAdmin() || (authService.isAuthor() && book.author?.includes(authService.getAuthorName()))">
                   <button (click)="toggleEditPublishDate()">Edit</button>
                 </div>
               </div>
@@ -179,7 +179,7 @@
                   <button (click)="filterByGenre(genre)" class="btn btn-link">{{ genre }}</button>
 
                 </li>
-                <div *ngIf="authService.isAdmin() || authService.isAuthor()">
+                <div *ngIf="authService.isAdmin() || (authService.isAuthor() && book.author?.includes(authService.getAuthorName()))">
                   <button (click)="toggleEditGenres()">Edit Genres</button>
                 </div>
 

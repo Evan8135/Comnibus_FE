@@ -140,6 +140,18 @@ export class AuthService {
 
   }
 
+  getAuthorName(): string {
+    const token = localStorage.getItem('x-access-token'); // Ensure the token is stored here
+    console.log('Token:', token);
+    if (token) {
+      const payload = token.split('.')[1];
+      const decodedPayload = JSON.parse(atob(payload));
+      return decodedPayload.name || ''; // Ensure "name" is part of the payload
+    }
+    return '';
+
+  }
+
   getFollowers(): string {
     const token = localStorage.getItem('x-access-token'); // Ensure the token is stored here
     console.log('Token:', token);
