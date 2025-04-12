@@ -86,6 +86,9 @@ export class BookComponent implements OnInit {
         }
 
         console.log('User Have Read Books:', this.user.have_read);
+        console.log('User Current Reads:', this.user.currently_reading);
+        console.log('User TBR Books:', this.user.want_to_read);
+        console.log('User Favourite Books:', this.user.favourite_books);
 
         this.triggerForm = this.formBuilder.group({
           triggers: ['', Validators.required]
@@ -94,6 +97,9 @@ export class BookComponent implements OnInit {
         this.webService.getBook(bookId).subscribe((response: any) => {
           this.book = response.book;
           const userReadBook = this.user.have_read?.find((book: { _id: string; stars: number }) => book._id === this.book._id);
+          const userCurrentRead = this.user.currently_reading?.find((book: { _id: string }) => book._id === this.book._id);
+          const userTBRBook = this.user.want_to_read?.find((book: { _id: string }) => book._id === this.book._id);
+          const userFavourite = this.user.favourite_books?.find((book: { _id: string }) => book._id === this.book._id);
 
           if (userReadBook) {
             this.userBookRating = userReadBook.stars;
@@ -101,6 +107,18 @@ export class BookComponent implements OnInit {
             console.log('User Rating:', this.userBookRating)
           } else {
             this.userBookRating = null;
+          }
+
+          if (userCurrentRead) {
+            this.isCurrentlyReading = true;
+          }
+
+          if (userTBRBook) {
+            this.isAddedToTBR = true;
+          }
+
+          if (userFavourite){
+            this.isFavouriteBook = true;
           }
 
           console.log(this.book)
@@ -409,6 +427,15 @@ export class BookComponent implements OnInit {
       },
       (error) => {
         alert("Error adding book to TBR: " + error.error.error);
+      }
+    );
+  }
+
+  removeFromFavourite(bookId: string) {
+    this.webService.removeFromFavourites(bookId).subscribe(
+      (response: any) => {
+        alert(response.message);
+        this.isFavouriteBook = false;
       }
     );
   }

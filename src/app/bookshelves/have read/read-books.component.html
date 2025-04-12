@@ -32,16 +32,16 @@
         <form [formGroup]="editForms[book._id]" (ngSubmit)="submitEditForm(book._id)">
           <label for="stars">Rating (0-5):</label>
           <select formControlName="stars">
-            <option [value]="0.5">★½</option>
-            <option [value]="1">★</option>
-            <option [value]="1.5">★½</option>
-            <option [value]="2">★★</option>
-            <option [value]="2.5">★★½</option>
-            <option [value]="3">★★★</option>
-            <option [value]="3.5">★★★½</option>
-            <option [value]="4">★★★★</option>
-            <option [value]="4.5">★★★★½</option>
-            <option [value]="5">★★★★★</option>
+            <option value="0.5">1/2 star</option>
+            <option value="1">1 star</option>
+            <option value="1.5">1 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+            <option value="2">2 stars</option>
+            <option value="2.5">2 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+            <option value="3">3 stars</option>
+            <option value="3.5">3 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+            <option value="4">4 stars</option>
+            <option value="4.5">4 <sup>1</sup>&frasl;<sub>2</sub> stars</option>
+            <option value="5">5 stars</option>
           </select>
 
           <label for="date_read">Date Finished:</label>

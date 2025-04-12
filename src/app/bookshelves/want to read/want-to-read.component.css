@@ -1,0 +1,47 @@
+.tbr-books-container {
+  padding: 20px;
+  margin-top: 56px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+.no-books {
+  text-align: center;
+  font-style: italic;
+}
+
+.book-item {
+  display: flex;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.book-cover img {
+  max-width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.book-info {
+  flex-grow: 1;
+}
+
+.book-info h3 {
+  margin: 0;
+}
+
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  font-style: italic;
+}

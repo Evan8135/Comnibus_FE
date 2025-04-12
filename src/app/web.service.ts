@@ -63,7 +63,7 @@ export class WebService {
     formData.append("description", bookData.description);
     formData.append("language", bookData.language);
     formData.append("triggers", bookData.triggers);
-    formData.append("isbn", bookData.isbn);
+    formData.append("isbn", bookData.isbn.toString());
     formData.append("characters", bookData.characters);
     formData.append("bookFormat", bookData.bookFormat);
     formData.append("edition", bookData.edition || "");
@@ -245,6 +245,15 @@ export class WebService {
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/want-to-read', {}, { headers })
   }
 
+  getTBRBooks() {
+    const token = localStorage.getItem('x-access-token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('x-access-token', token);
+    }
+    return this.http.get<any>('http://localhost:5000/api/v1.0/want-to-read', { headers });
+  }
+
   removeBookFromTBR(id: any) {
     const token = localStorage.getItem('x-access-token');
     let headers = new HttpHeaders();
@@ -301,6 +310,12 @@ export class WebService {
     const token = localStorage.getItem('x-access-token');
     const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
     return this.http.post<any>('http://localhost:5000/api/v1.0/books/' + id + '/add-to-favourites', {}, { headers })
+  }
+
+  removeFromFavourites(id: any) {
+    const token = localStorage.getItem('x-access-token');
+    const headers = token ? new HttpHeaders().set('x-access-token', token) : new HttpHeaders();
+    return this.http.delete<any>('http://localhost:5000/api/v1.0/books/' + id + '/favourites', { headers });
   }
 
 
@@ -590,7 +605,7 @@ export class WebService {
       postData.append('series', request.series);
     }
     if (request.isbn) {
-      postData.append('isbn', request.isbn);
+      postData.append('isbn', request.isbn.toString());
     }
 
     return this.http.post<any>('http://localhost:5000/api/v1.0/add-requests', postData, { headers });

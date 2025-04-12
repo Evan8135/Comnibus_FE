@@ -27,6 +27,7 @@ import { ReportComponent } from './report/report.component';
 import { GoodbyeComponent } from './auth/delete account/goodbye/goodbye.component';
 import { DeleteAccountComponent } from './auth/delete account/delete-account.component';
 import { UserFeedbackComponent } from './auth/delete account/user feedback/user-feedback.component';
+import { TBRBooksComponent } from './bookshelves/want to read/want-to-read.component';
 
 export const routes: Routes = [
   {
@@ -93,6 +94,10 @@ export const routes: Routes = [
   {
     path: 'have-read',
     component: ReadBooksComponent
+  },
+  {
+    path: 'want-to-read',
+    component: TBRBooksComponent
   },
   {
     path: 'recommendations',

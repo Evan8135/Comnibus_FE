@@ -1,0 +1,27 @@
+<div class="tbr-books-container" *ngIf="!loading">
+  <h2>Your To Be Read (TBR) Books</h2>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="TBRBooks.length === 0" class="no-books">
+    <p>No books in your have read list.</p>
+  </div>
+
+  <div *ngFor="let book of TBRBooks" class="book-item">
+    <div class="book-cover">
+      <img [src]="book.coverImg" alt="{{ book.title }} cover">
+    </div>
+    <div class="book-info">
+      <h3 style="cursor: pointer" [routerLink]="['/books', book._id]">{{ book.title }}</h3>
+      <p><strong>Author:</strong> {{ book.author }}</p>
+      <p><strong>Genres:</strong> {{ book.genres.join(', ') }}</p>
+      <button (click)="removeTBRBook(book._id)">Remove from TBR</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <p>Loading...</p>
+</div>

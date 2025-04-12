@@ -47,7 +47,7 @@ export class AddBookComponent implements OnInit {
       language: ['', Validators.required],
       series: [''],
       publishDate: [''],
-      isbn: [''],
+      isbn: [0],
       description: [''],
       characters: [''],
       triggers: [''],

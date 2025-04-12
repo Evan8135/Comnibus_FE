@@ -66,6 +66,7 @@
         <button class="btn btn-outline-dark mt-2" *ngIf="!isAddedToTBR" (click)="addToTBR()">Add to TBR</button>
         <button class="btn btn-outline-dark mt-2" *ngIf="isAddedToTBR" (click)="removeFromTBR(book._id)">Remove from TBR</button>
         <button class="btn btn-outline-dark mt-2" *ngIf="!isFavouriteBook" (click)="markAsFavourite()">Add to Favourites</button>
+        <button class="btn btn-outline-dark mt-2" *ngIf="isFavouriteBook" (click)="removeFromFavourite(book._id)">Remove from Favourites</button>
 
         <div class="book-cover-container">
           <div class="book-cover-background" [style.background-image]="'url(' + (book.coverImg || '/images/no_cover.png') + ')'"></div>

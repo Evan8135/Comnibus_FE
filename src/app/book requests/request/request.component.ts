@@ -58,7 +58,7 @@ export class RequestComponent implements OnInit {
       language: [request.language, Validators.required],
       series: [request.series || ''],
       publishDate: [''],
-      isbn: [request.isbn || ''],
+      isbn: [request.isbn || 0],
       description: [''],
       characters: [''],
       triggers: [''],
@@ -156,7 +156,7 @@ export class RequestComponent implements OnInit {
       formData.append("language", approvedBook.language);
       formData.append("series", approvedBook.series || "");
       formData.append("publishDate", approvedBook.publishDate || "");
-      formData.append("isbn", approvedBook.isbn || "");
+      formData.append("isbn", approvedBook.isbn?.toString() || 0);
       formData.append("description", approvedBook.description || "");
 
       formData.append(

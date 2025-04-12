@@ -184,6 +184,9 @@
 
         <div *ngIf="tbrBooks.length > 0" class="book-section mb-4">
           <h5>TBR List</h5>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-link" [routerLink]="['/want-to-read']">Show All >>></button>
+          </div>
           <div class="book-grid">
             <div *ngFor="let book of tbrBooks" class="book-card">
               <img [src]="book.coverImg" alt="Book cover" class="book-cover" style="cursor: pointer" [routerLink]="['/books', book._id]">
