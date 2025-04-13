@@ -37,12 +37,13 @@ export class UserComponent implements OnInit {
       this.followersCount = response.user.followers.length;
       this.followingCount = response.user.following.length;
 
+
       this.webService.getProfile().subscribe((profileResponse: any) => {
         this.currentUser = profileResponse;
-
-        const followersData = this.authService.getFollowers();
-
-        this.isFollowing = followersData.includes(this.user._id);
+        const followedUser = this.currentUser.following?.find((following_user: { _id: string }) => following_user._id === this.user._id);
+        if (followedUser) {
+          this.isFollowing = true;
+        }
       });
     });
   }
@@ -68,9 +69,6 @@ export class UserComponent implements OnInit {
       this.followersCount -= 1;
     });
   }
-
-
-
 
 
 }
